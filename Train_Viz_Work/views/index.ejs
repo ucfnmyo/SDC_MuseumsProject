@@ -1,0 +1,130 @@
+s/index.ejsXHTML
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" dir="ltr">
+
+<head>
+  <meta http-equiv="content-type" content="application/xhtml+xml; charset=UTF-8" />
+
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="google" value="notranslate">
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
+  <!-- uses bootstrap3 because it is more stable and there's more info/questions about it avaiable on the web, but bootstrap 4 is current -->
+  <title>UK Trains</title>
+</head>
+
+<body>
+  <nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="#"> 	Home </a>
+      </div>
+      <div id="navbar" class="navbar-collapse collapse">
+         <div class = "navbar-header">
+            <a class = "navbar-brand" href = "#">Visualization</a>
+         </div>
+         <div class = "navbar-header">
+            <a class = "navbar-brand" href = "#">Analysis</a>
+         </div>
+         <div class = "navbar-header">
+            <a class = "navbar-brand" href = "#">About</a>
+         </div>
+
+
+        
+      </div>
+    </div>
+  </nav>
+
+  <div class="jumbotron">
+    <div class="container">
+      <h1>Trains in the United Kingdom</h1>
+      <p>
+        This is a template for a simple informational website. It includes a large callout
+        called a jumbotron and three supporting pieces of content. 
+      </p>
+      <p><a class="btn btn-primary btn-lg" href="https://en.wikipedia.org/wiki/Rail_transport_in_Great_Britain" role="button">Learn more &raquo;</a></p>
+    </div>
+  </div>
+
+  <div class="container">
+	<div class = "row">
+	<h2> tasks for getting this project done </h2>
+	<p> just trying to think about the areas we need to work on <p>
+	</div>
+    <div class="row">
+      <div class="col-md-4">
+        <h3>Basic needs</h3>
+	<ul> 
+		<li> get everyone database access</li>
+		<li> get everyone server access</li>
+		<li> make sure everyone can work with mo's github repo</li>
+		<li> figure out who wants to do which part</li>
+		<li> get everyone access to Mo's diagram? </li>
+	</ul>
+        <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
+      </div>
+      <div class="col-md-4">
+        <h3>Visualization</h3>
+        <p> 
+		need a template view with a basemap and javascript that can pull stations and train lines out of the sql database and plot them on the basemap  
+	</p>
+        <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
+      </div>
+      <div class="col-md-4">
+        <h3>Analysis</h3>
+        <p> once the back end analysis is done this is mostly using <a href = "https://www.highcharts.com/" > highcharts</a>  to get our charts high(ly interactive)</p>
+        <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
+      </div>
+</div> <!-- end row -->
+</div> <!-- end container -->
+
+
+  <div class="container">
+	<div class = "row">
+
+      <div class="col-md-4">
+        <h3>Server</h3>
+		<ul>
+			<li> we have a basic script for taking data from Darwin and uploading it to a mysql db </li>
+			<li> but it could be improved</li>
+			<li> and it needs to be run overnight or something</li>
+			<li> we also need to geocode the train stations </li>
+			<li> need to add census data to the database </li>
+			<li> and match it to train stations somehow </li>
+		</ul>
+        <p></p>
+        <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
+      </div>
+      <div class="col-md-4">
+        <h3>Story</h3>
+        <p> gotta keep thinking about what story we're going to tell... </p>
+	<p> link all the pages together</p>
+        <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
+      </div>
+      <div class="col-md-4">
+        <h3>Organizational Stuff</h3>
+        <p> keeping that flowchart thing updated and making sure people are hitting their task goals on time so we don't get into a bad position for the deadline</p>
+	<p> We still don't know the exact deadline i think...</p>
+        <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
+      </div>
+    </div>
+
+    <hr>
+
+    <footer>
+      <p>&copy; My App 2015</p>
+    </footer>
+  </div> <!-- /container -->
+
+  <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+</body>
+</html>
