@@ -53,6 +53,7 @@ auth = ("mohammadyounes08@gmail.com","CASAEliteSquad2019$$");
 # dates
 #       stations * stations * times * weekdays in year
 # means 3000 * 3000 * 2 * 250
+# 4.5 billion queries to get everything for one year
 
 
 from_station = "BTN"
@@ -105,4 +106,23 @@ except:
 print(len(info_from_api.index), "results returned")
 
 # use time.sleep("amount of time")  # to add patience between queries 
+
+
+
+# from: https://groups.google.com/forum/#!searchin/openraildata-talk/HSP%7Csort:date/openraildata-talk/avZnBv4q7OU/i1XECjR3CwAJ
+#
+#The user guide is correct. Due to the size of historic Darwin data, much beyond the original scope, these functions currently place an significant load on the database, which in turn causes knock on effects (and ultimately failure) on other services. Therefore, to protect the integrity of Darwin these functions had to be disabled in the Open version. Whilst technically available to 'authorised' users on the internal version, RDG do not currently allow any usage of these functions for the same reason (so eveyone's in the same boat, 'internal' or 'open').
+#
+#HSP (https://wiki.openraildata.com/index.php/HSP) was created as a partial replacement, not offering the same level of detail or control but allowing some ability to request historic performance information from Darwin data.
+
+#https://groups.google.com/forum/#!searchin/openraildata-talk/HSP%7Csort:date/openraildata-talk/DKAoo3TxOgk/rAiHya6dAgAJ
+
+
+# https://groups.google.com/forum/#!searchin/openraildata-talk/HSP|sort:date/openraildata-talk/h_0CCLVAVvM/LjwvQ-NDAgAJ
+#I have been having quite a time with 502 Proxy Errors over the past few days myself. It works, then the next request doesn't, then it does....  no clear reason why  - I've tried reducing the date range on the theory the amount of data is possible a factor, but still no good.  And the simple retry logic (retry the failed queries just once again) are successful, sometimes.
+#
+#I just tried with these parameters myself and got no data as well. This explains some failures that I hadn't yet examined - and I was trying to get data from January. There doesn't seem to be any pattern to what request might succeed and those that don't.
+
+
+
 
