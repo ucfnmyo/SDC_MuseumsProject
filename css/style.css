@@ -1,0 +1,90 @@
+html, body, #wrapper{
+    height: 100%;
+    width: 100%;
+    margin: 0px;
+}
+
+#header{
+    height: 100px;  //or whatever. Note px not %.
+    width: 100%;
+}
+
+#footer{
+    height: 100px;  //or whatever. Note px not %.
+    width: 100%;
+}
+
+#map-canvas{
+    height: 100%;
+    width: 100%;
+}
+
+#controlPanel{
+  position: absolute;
+  padding: 10px;
+  top: 100px;
+  left: 10px;
+  width: 300px;
+  height: 100px;
+  color: #ffffff;
+  z-index: 900;
+}
+
+#button{
+  position: absolute;
+  font-family: 'Roboto', sans-serif
+  font-size: 30px;
+  color: #ffffff;
+}
+
+#displayWrapper{
+    position: absolute;
+    background-color: rgba(255,255,255,0.1);
+    padding: 10px;
+    font-size: 30px;
+    bottom: 50px;
+    right: 10px;
+    color: #ffffff;
+    z-index: 900;
+}
+
+/* #displayInfo{
+    position: absolute;
+    font-family: 'Roboto', sans-serif;
+    background-color: rgba(255,255,255,0.1);
+    padding: 10px;
+    font-size: 15px;
+    bottom: 50px;
+    left: 10px;
+    color: #ffffff;
+    width: 300px;
+    z-index: 900;
+} */
+
+#titleHeader{
+    position: absolute;
+    font-family: 'Roboto', sans-serif;
+    background-color: rgba(255,255,255);
+    padding: 10px;
+    font-size: 15px;
+    top: 0px;
+    width: 600px;
+    left: 30%;
+    color: #ffffff;
+    text-align: center;
+    z-index: 900;
+}
+
+a{
+    color: white;
+    font-style: bold;
+}
+
+.right{
+    float: right;
+}
+
+/* for some reason this needs to be on main html file */
+/* .leaflet-overlay-pane svg path{
+    pointer-events: auto;
+} */
