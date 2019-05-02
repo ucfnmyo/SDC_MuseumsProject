@@ -60,7 +60,6 @@
 <script type="text/javascript">
 var map //leaflet obj
 var yearChart = dc.barChart('#year-chart');
-var areaGroup //crossfilter obj
 
 
 var map_level = "world"
@@ -89,7 +88,7 @@ function drawCharts(response) {
 	//	var ClassificationDimension = artworks.dimension(function(d) {return d.Classification;});
 
 	var yearGroup = yearDimension.group()
-	areaGroup = areaDimension.group()
+	var areaGroup = areaDimension.group()
 
 	yearChart /* dc.barChart('#year-chart', 'chartGroup') */
 	// .width()
@@ -120,7 +119,7 @@ function drawCharts(response) {
 		var g = svg.select("g")
 
 		var transform = d3.geoTransform({point: projectPoint});
-		var path = d3.geoPath().projection(transform)
+		var path = d3.geoPath().projection(transform);
 
 		var color = d3.scaleQuantize()
 		.domain([0, areaGroup.top(1)[0].value])  //this scales values to the max for the filtered group so not comparable over time

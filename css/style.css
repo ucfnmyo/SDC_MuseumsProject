@@ -1,5 +1,5 @@
 html, body, #wrapper{
-    height: 100%;
+    height: 80%;
     width: 100%;
     margin: 0px;
 }
@@ -73,6 +73,12 @@ html, body, #wrapper{
     color: #ffffff;
     text-align: center;
     z-index: 900;
+}
+
+#year-chart{
+  height: 30%;
+  width: 100%;
+  bottom:50px;
 }
 
 a{
