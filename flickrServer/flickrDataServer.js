@@ -15,14 +15,14 @@ var portNumber = 8872;
 var mysql = require('mysql');
 
 // MySQL Connection Variables
-var connection = mysql.createConnection({
-  host     : 'dev.spatialdatacapture.org',
-  user     : 'ucfnjma',
-  password : 'jucahedagu',
-  database : 'ucfnjma'
-});
+// var connection = mysql.createConnection({
+//   host     : 'dev.spatialdatacapture.org',
+//   user     : 'ucfnjma',
+//   password : 'jucahedagu',
+//   database : 'ucfnjma'
+// });
 
-connection.connect();
+// connection.connect();
 
 //  Setup the Express Server
 var express = require('express');
