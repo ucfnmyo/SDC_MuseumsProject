@@ -10,16 +10,16 @@
 
 var moment = require('moment');
 
-var portNumber = 0;
+var portNumber = 8872;
 
 var mysql = require('mysql');
 
 // MySQL Connection Variables
 var connection = mysql.createConnection({
   host     : 'dev.spatialdatacapture.org',
-  user     : '',
-  password : '',
-  database : ''
+  user     : 'ucfnjma',
+  password : 'jucahedagu',
+  database : 'ucfnjma'
 });
 
 connection.connect();
@@ -38,6 +38,28 @@ app.use(express.static(__dirname + '/images'));
 app.get('/', function(req, res) {
     return res.render('index');
 })
+
+
+// // serve other pages
+
+// // vizualization page
+// app.get('/vizualization', function(req, res) {
+//     return res.render('vizualization');
+// })
+
+// // analysis page
+// app.get('/analysis', function(req, res) {
+//     return res.render('analysis');
+// })
+
+// // about page
+// app.get('/about', function(req, res) {
+//     return res.render('about');
+// })
+
+
+
+
 
 
 //  API EndPoint to get data from specific area - /data/51.1/0.0/30 
