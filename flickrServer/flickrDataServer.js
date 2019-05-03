@@ -36,7 +36,7 @@ app.use(express.static(__dirname + '/images'));
 
 // Default API Endpoint - return the index.ejs file in the views folder
 app.get('/', function(req, res) {
-    return res.render('index');
+    return res.render('flickr_index');
 })
 
 
