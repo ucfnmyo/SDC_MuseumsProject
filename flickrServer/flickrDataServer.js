@@ -14,13 +14,13 @@ var portNumber = 8872;
 
 var mysql = require('mysql');
 
-// MySQL Connection Variables
-// var connection = mysql.createConnection({
-//   host     : 'dev.spatialdatacapture.org',
-//   user     : 'ucfnjma',
-//   password : 'jucahedagu',
-//   database : 'ucfnjma'
-// });
+ // MySQL Connection Variables
+var connection = mysql.createConnection({
+  host     : 'dev.spatialdatacapture.org',
+  user     : 'ucfnjma',
+  password : 'jucahedagu',
+  database : 'ucfnjma'
+});
 
 // connection.connect();
 
@@ -44,26 +44,41 @@ app.get('/test', function(req, res) {
     return res.sendFile(path.join(_dirname+'/index.html'));
 })
 
+//  API EndPoint to get points for a certain location 
+app.get('/location/:code', function (req, res) {
 
-// // serve other pages
-
-// // vizualization page
-// app.get('/vizualization', function(req, res) {
-//     return res.render('vizualization');
-// })
-
-// // analysis page
-// app.get('/analysis', function(req, res) {
-//     return res.render('analysis');
-// })
-
-// // about page
-// app.get('/about', function(req, res) {
-//     return res.render('about');
-// })
+      // Alows data to be downloaded from the server with security concerns
+      res.header("Access-Control-Allow-Origin", "*");
+      res.header("Access-Control-Allow-Headers", "X-Requested-WithD");
+      // If all the variables are provided connect to the database
+      if(req.params.code != ""){
+               
+                // Parse the values from the URL into numbers for the query
 
 
+                var code = reqparams.code;
 
+                // SQL Statement to run
+                var sql = "SELECT * FROM SpatialMET WHERE CountryMatch = " + location;
+                
+                // Log it on the screen for debugging
+                console.log(sql);
+
+                // Run the SQL Query
+                connection.query(sql, function(err, rows, fields) {
+                        if (err) console.log("Err:" + err);
+                        if(rows != undefined){
+                                // If we have data that comes bag send it to the user.
+                                res.send(rows);
+                        }else{
+                                res.send("empty query");
+                        }
+                });
+        }else{
+                // If all the URL variables are not passed send an empty string to the user
+                res.send("incorrect URL variables");
+        }
+});
 
 
 
