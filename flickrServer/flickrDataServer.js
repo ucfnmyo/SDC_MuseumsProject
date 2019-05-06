@@ -10,19 +10,19 @@
 
 var moment = require('moment');
 
-var portNumber = 0;
+var portNumber = 8872;
 
 var mysql = require('mysql');
 
 // MySQL Connection Variables
-var connection = mysql.createConnection({
-  host     : 'dev.spatialdatacapture.org',
-  user     : '',
-  password : '',
-  database : ''
-});
+// var connection = mysql.createConnection({
+//   host     : 'dev.spatialdatacapture.org',
+//   user     : 'ucfnjma',
+//   password : 'jucahedagu',
+//   database : 'ucfnjma'
+// });
 
-connection.connect();
+// connection.connect();
 
 //  Setup the Express Server
 var express = require('express');
@@ -35,9 +35,36 @@ app.use(express.static(__dirname + '/css'));
 app.use(express.static(__dirname + '/images'));
 
 // Default API Endpoint - return the index.ejs file in the views folder
+
 app.get('/', function(req, res) {
-    return res.render('index');
+    return res.render('flickr_index');
 })
+
+app.get('/test', function(req, res) {
+    return res.sendFile(path.join(_dirname+'/index.html'));
+})
+
+
+// // serve other pages
+
+// // vizualization page
+// app.get('/vizualization', function(req, res) {
+//     return res.render('vizualization');
+// })
+
+// // analysis page
+// app.get('/analysis', function(req, res) {
+//     return res.render('analysis');
+// })
+
+// // about page
+// app.get('/about', function(req, res) {
+//     return res.render('about');
+// })
+
+
+
+
 
 
 //  API EndPoint to get data from specific area - /data/51.1/0.0/30 
