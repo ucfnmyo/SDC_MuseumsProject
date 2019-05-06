@@ -22,7 +22,7 @@ var connection = mysql.createConnection({
   database : 'ucfnjma'
 });
 
-// connection.connect();
+connection.connect();
 
 //  Setup the Express Server
 var express = require('express');
