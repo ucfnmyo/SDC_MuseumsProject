@@ -66,9 +66,12 @@ app.get('/location/:code', function (req, res) {
 		// mysql_real_escape_string
 
     var code = req.params.code;
-    code = mysql_real_escape_string(code)
+    code1 = mysql_real_escape_string(code)
 
-		console.log(code);
+
+		console.log("code: ", code);
+    console.log("code1: ", code1);
+    console.log("\"DEU\"")
 
                 // SQL Statement to run
 		
