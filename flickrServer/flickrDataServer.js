@@ -53,8 +53,6 @@ app.get('/date', function(req, res) {
 
 
 
-
-
 //  API EndPoint to get points for a certain location 
 app.get('/location/:code', function (req, res) {
 
@@ -67,12 +65,14 @@ app.get('/location/:code', function (req, res) {
                 // Parse the values from the URL into numbers for the query
 		// mysql_real_escape_string
 
-                var code = req.params.code;
+    var code = req.params.code;
+    code = mysql_real_escape_string(code)
+
 		console.log(code);
 
                 // SQL Statement to run
 		
-		var sql = "SELECT * FROM SpatialMET LIMIT 10";
+		var sql = "SELECT * FROM SpatialMET LIMIT 10 WHERE CountryMatch = " +code;
                 // var sql = "SELECT * FROM SpatialMET WHERE CountryMatch = " +location;
                 
                 // Log it on the screen for debugging
