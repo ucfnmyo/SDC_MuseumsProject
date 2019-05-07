@@ -1,5 +1,5 @@
 html, body, #wrapper{
-    height: 80%;
+    height: 100%;
     width: 100%;
     margin: 0px;
 }
@@ -15,7 +15,7 @@ html, body, #wrapper{
 }
 
 #map-canvas{
-    height: 100%;
+    height: 60%;
     width: 100%;
 }
 
@@ -76,7 +76,13 @@ html, body, #wrapper{
 }
 
 #year-chart{
-  height: 30%;
+  height: 20%;
+  width: 100%;
+  bottom:500px;
+}
+
+#classification-chart{
+  height: 20%;
   width: 100%;
   bottom:50px;
 }
@@ -89,6 +95,7 @@ a{
 .right{
     float: right;
 }
+
 
 /* for some reason this needs to be on main html file */
 /* .leaflet-overlay-pane svg path{
