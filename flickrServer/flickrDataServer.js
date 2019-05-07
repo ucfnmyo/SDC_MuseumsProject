@@ -75,7 +75,7 @@ app.get('/location/:code', function (req, res) {
 
                 // SQL Statement to run
 		
-		var sql = "SELECT `Object Name`, `Object Begin Date`, `Medium`, `lat`, `lng` FROM SpatialMET WHERE CountryMatch = \""+code+"\" Limit 10";
+		var sql = "SELECT `Object ID`, `Object Name`, `Object Begin Date`, `Medium`, `lat`, `lng`, `Link Resource`  FROM SpatialMET WHERE CountryMatch = \""+code+"\" Limit 10";
                 // var sql = "SELECT * FROM SpatialMET WHERE CountryMatch = " +location;
                 
                 // Log it on the screen for debugging
