@@ -75,7 +75,7 @@ app.get('/location/:code', function (req, res) {
 
                 // SQL Statement to run
 		
-		var sql = "SELECT * FROM SpatialMET WHERE CountryMatch = \""+code+"\" Limit 10";
+		var sql = "SELECT `Object Name`, `Object Begin Date`, `Medium`, `lat`, `lng` FROM SpatialMET WHERE CountryMatch = \""+code+"\" Limit 10";
                 // var sql = "SELECT * FROM SpatialMET WHERE CountryMatch = " +location;
                 
                 // Log it on the screen for debugging
@@ -86,6 +86,7 @@ app.get('/location/:code', function (req, res) {
                         if (err) console.log("Err:" + err);
                         if(rows != undefined){
                                 // If we have data that comes back send it to the user.
+                                // does this need to be json'ed?
                                 res.send(rows);
                         }else{
 				console.log("empty query");
