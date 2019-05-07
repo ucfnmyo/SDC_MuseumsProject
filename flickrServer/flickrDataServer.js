@@ -41,25 +41,39 @@ app.get('/', function(req, res) {
 })
 
 app.get('/test', function(req, res) {
-    return res.sendFile(path.join(_dirname+'/index.html'));
+	return res.render('flickr_index');
 })
+
+app.get('/date', function(req, res) {
+	var d = new Date();
+	console.log(d);
+	return res.send(d);
+})
+
+
+
+
+
 
 //  API EndPoint to get points for a certain location 
 app.get('/location/:code', function (req, res) {
 
-      // Alows data to be downloaded from the server with security concerns
+      // Allows data to be downloaded from the server with security concerns
       res.header("Access-Control-Allow-Origin", "*");
       res.header("Access-Control-Allow-Headers", "X-Requested-WithD");
       // If all the variables are provided connect to the database
       if(req.params.code != ""){
                
                 // Parse the values from the URL into numbers for the query
+		// mysql_real_escape_string
 
-
-                var code = reqparams.code;
+                var code = req.params.code;
+		console.log(code);
 
                 // SQL Statement to run
-                var sql = "SELECT * FROM SpatialMET WHERE CountryMatch = " + location;
+		
+		var sql = "SELECT * FROM SpatialMET LIMIT 10";
+                // var sql = "SELECT * FROM SpatialMET WHERE CountryMatch = " +location;
                 
                 // Log it on the screen for debugging
                 console.log(sql);
@@ -68,14 +82,16 @@ app.get('/location/:code', function (req, res) {
                 connection.query(sql, function(err, rows, fields) {
                         if (err) console.log("Err:" + err);
                         if(rows != undefined){
-                                // If we have data that comes bag send it to the user.
+                                // If we have data that comes back send it to the user.
                                 res.send(rows);
                         }else{
+				console.log("empty query");
                                 res.send("empty query");
                         }
                 });
         }else{
                 // If all the URL variables are not passed send an empty string to the user
+		console.log("incorrect URL variables");
                 res.send("incorrect URL variables");
         }
 });
@@ -84,6 +100,8 @@ app.get('/location/:code', function (req, res) {
 
 //  API EndPoint to get data from specific area - /data/51.1/0.0/30 
 app.get('/data/:lat/:lon/:radius', function (req, res) {
+
+	console.log("data for a specific area");
 
       // Alows data to be downloaded from the server with security concerns
       res.header("Access-Control-Allow-Origin", "*");
@@ -115,12 +133,13 @@ app.get('/data/:lat/:lon/:radius', function (req, res) {
                 });
         }else{
                 // If all the URL variables are not passed send an empty string to the user
-                res.send("");
+                res.send("insufficient arguements");
         }
 });
 
 // API Endpoint to get data for specific photograph from database - /data/photoDescription/1234567
 app.get('/data/photoDescription/:pid', function (req, res) {
+	console.log("get specific photo data");
       res.header("Access-Control-Allow-Origin", "*");
       res.header("Access-Control-Allow-Headers", "X-Requested-WithD");
       if(req.params.pid != ""){
@@ -138,7 +157,7 @@ app.get('/data/photoDescription/:pid', function (req, res) {
                         }
                 });
         }else{
-                res.send("");
+                res.send("missing data");
         }
 });
 
