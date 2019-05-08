@@ -86,7 +86,7 @@ var info
 var yearChart = dc.barChart('#year-chart');
 var ClassificationChart = dc.pieChart('#classification-chart');
 var map_level = "world"
-var maps ={world:"maps/world.geojson",continent:"maps/countries.geojson",country:"maps/cities.geojson" }
+var maps ={world:"maps/worldCountriesMap_json.geojson",continent:"maps/countries.geojson",country:"maps/cities.geojson" }
 
 addMap()
 var svg = d3.select("#map-canvas").select("svg")
@@ -96,7 +96,7 @@ var svg = d3.select("#map-canvas").select("svg")
 /// Hugh to switch data source to API
 ////////////////////////////////////////////////////////////////////////////////////
 
-d3.csv("data/Met_noUSA.csv",drawCharts)  //REPLACE LOCAL DATA WITH API RESPONSES
+d3.csv("Join_Data/Met_noUSA.csv",drawCharts)  //REPLACE LOCAL DATA WITH API RESPONSES
 
 // print comparison of direct data and data from SQL, data structure could be an issue. 
 console.log()
@@ -283,7 +283,7 @@ function drawCharts(response) {
 		function zoomIn(d){
 			//need to return a selected geojson with matching id
 			map_level="country";
-			d3.csv("data/Met_noUSA.csv",drawCharts) // change to request zoom level data
+			d3.csv("Join_Data/Met_noUSA.csv",drawCharts) // change to request zoom level data
 		}
 
 		function refit(obj){
@@ -303,7 +303,7 @@ function zoomOut(){
 	//need to return a selected geojson with matching id
 	map_level="world";//d.properties.type
 	map.setView([0, 0], 2)
-	d3.csv("data/Met_noUSA.csv",drawCharts)//change to request zoom level data
+	d3.csv("Join_Data/Met_noUSA.csv",drawCharts)//change to request zoom level data
 }
 
 </script>
