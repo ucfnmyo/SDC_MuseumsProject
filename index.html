@@ -11,6 +11,30 @@
 		.leaflet-overlay-pane svg path{
 		    pointer-events: auto;
 		}
+		.info {
+		    padding: 6px 8px;
+		    font: 14px/16px Arial, Helvetica, sans-serif;
+		    background: white;
+		    background: rgba(255,255,255,0.8);
+		    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+		    border-radius: 5px;
+		}
+		.info h4 {
+		    margin: 0 0 5px;
+		    color: #777;
+		}
+
+		.legend {
+		    line-height: 18px;
+		    color: #555;
+		}
+		.legend i {
+		    width: 18px;
+		    height: 18px;
+		    float: left;
+		    margin-right: 8px;
+		    opacity: 0.7;
+		}
 	</style>
 </head>
 <body>
@@ -20,31 +44,16 @@
 				<button type="button" onclick="zoomOut()">Zoom Out</button>
 		 </div>
 		 <div id="titleHeader">
-     	 <h1>Artwork Explorer</h1>
+     	 <h1>FIDT: Flickr Interactive Display Tool</h1>
      </div>
-     <!-- <div id="displayInfo">
-     		<div>
-     		<h3>Display by Camera Type</h3>
-     		<p>
-     			<a href="#" id="iPhoneLink">iPhone</a>
-     		</p>
-
-     		<p>
-     			<small>
-     				<a href="#" id="resetLink">Reset Map</a>
-     				<a href="#" id="clearLink" class="right">Clear all Markers</a>
-     			</small>
-     		</p>
-     		</div> -->
 			 <div id='year-chart'></div>
-		 </div>
+			 <div id='classification-chart'></div>
+
 
      <div id="displayWrapper">
-     		<div><span id="photoNum">0</span> artworks returned</div>
+     		<div><span id="photoNum">0</span> photos returned</div>
      </div>
-		 <!-- <div class="infobox">
-			<p>Here is where we will say something.</p>
-		</div> -->
+
 </div>
 
 <!-- The Javascript from external websites gets Loaded Here -->
@@ -55,40 +64,58 @@
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/crossfilter/1.3.12/crossfilter.min.js"></script>
 <script type="text/javascript" src="https://unpkg.com/dc@3.0.10/dc.js"></script>
 
-
 <!--This section will create a Map using Leaflet.js  -->
 <script type="text/javascript">
-var map //leaflet obj
+var map //leaflet object
+var legend
+var info
 var yearChart = dc.barChart('#year-chart');
-
-
+var ClassificationChart = dc.pieChart('#classification-chart');
 var map_level = "world"
-var maps ={world:"maps/continent.geojson",continent:"maps/countries.geojson",country:"maps/cities.geojson" }
+var maps ={world:"maps/world.geojson",continent:"maps/countries.geojson",country:"maps/cities.geojson" }
 
-addLmaps()
+addMap()
+var svg = d3.select("#map-canvas").select("svg")
+.attr("pointer-events", "auto")
 
-d3.csv("data/MetCountry.csv",drawCharts)  //REPLACE LOCAL DATA WITH API RESPONSES
 
-function addLmaps() {
+d3.csv("data/Met_noUSA.csv",drawCharts)  //REPLACE LOCAL DATA WITH API RESPONSES
+
+function addMap(){
 	map = new L.map('map-canvas').setView([0, 0], 2);
-	var layer = new L.StamenTileLayer("toner-background", {
-		attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://www.openstreetmap.org/copyright">ODbL</a>.',
-	});
+	var layer = new L.StamenTileLayer("toner-background", {attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://www.openstreetmap.org/copyright">ODbL</a>.',});
 	map.addLayer(layer);
-
 	L.svg({clickable:true}).addTo(map);
+	legend = L.control({position: 'bottomright'});
+
+	legend.onAdd = function (map) {
+		this._legenddiv = L.DomUtil.create('div', 'info legend');
+		this.update();
+		return this._legenddiv;
+	};
+
+	info = L.control();
+
+	info.onAdd = function (map) {
+			this._div = L.DomUtil.create('div', 'info'); // create a div with a class "info"
+			this.update();
+			return this._div;
+	};
+
 }
 
 function drawCharts(response) {
-
+	var yearRounding = 25;
 	var artworks = crossfilter(response);
 	var all = artworks.groupAll();
-	var yearDimension = artworks.dimension(function(d) {return d['Object Begin Date'];});
-	var areaDimension = artworks.dimension(function(d) {return d.Country;});
-	//	var ClassificationDimension = artworks.dimension(function(d) {return d.Classification;});
+	var yearDimension = artworks.dimension(function(d) {return d['Object Begin Date']- d['Object Begin Date'] % yearRounding;});
+	var areaDimension = artworks.dimension(function(d) {return d.CountryMatch;});
+	var ClassificationDimension = artworks.dimension(function(d) {return d.Medium;});
 
 	var yearGroup = yearDimension.group()
 	var areaGroup = areaDimension.group()
+	var ClassificationGroup = ClassificationDimension.group()
+
 
 	yearChart /* dc.barChart('#year-chart', 'chartGroup') */
 	// .width()
@@ -99,8 +126,31 @@ function drawCharts(response) {
 	.elasticY(true)
 	.round(dc.round.floor)
 	.alwaysUseRounding(true)
-	.x(d3.scaleLinear().domain([-5000, 2020]))
+	.x(d3.scaleLinear().domain([-0, 2000]))
 	.renderHorizontalGridLines(true)
+
+
+ ClassificationChart
+	 .radius(80)
+	 .dimension(ClassificationDimension)
+ 	 .group(ClassificationGroup)
+	// ClassificationRowChart /* dc.Chart('#classification-chart', 'chartGroup') */
+	//        // .width(180)
+	//       //  .height(180)
+	//         .margins({top: 0, left: 0, right: 0, bottom: 0})
+	//         .group(ClassificationGroup)
+	//         .dimension(ClassificationDimension)
+	// 				.ordinalColors(['#3182bd', '#6baed6', '#9ecae1', '#c6dbef', '#dadaeb'])
+	// 			//	.label(function (d) {
+	// 				//            return d.key.split('.')[1];
+	// 			//	        })
+	// 			//	.title(function (d) {
+  //       //    return d.value;
+	//        // })
+	//         .elasticX(true)
+	//         .xAxis().ticks(4);
+
+
 
 	dc.renderAll();
 	d3.json(maps[map_level],drawFeatures)
@@ -110,70 +160,95 @@ function drawCharts(response) {
 		this.stream.point(point.x, point.y);
 	}
 
+	const array_column = (array, column) => array.map(e => e[column]);
+
+	var color = d3.scaleQuantile()
+	.domain([0,areaGroup.top(1)[0].value])//array_column(areaGroup.all(),"value")) to produce proper quantiles
+	.range(["f7fbff","#deebf7","#c6dbef","#9ecae1","#6baed6","#4292c6","#2171b5","#08519c","#08306b"])
+
+
+
+	legend.update = function (d) {
+		grades = color.quantiles(),
+		labels = [];
+		grades.unshift(0);
+		// loop through our density intervals and generate a label with a colored square for each interval
+	this._legenddiv.innerHTML=''
+		for (var i = 0; i < grades.length; i++) {
+			this._legenddiv.innerHTML +=
+			'<i style="background:' + color(grades[i] + 1) + '"></i> ' +
+			grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
+		}
+	};
+	legend.addTo(map);
+
+
+
+	// method that we will use to update the control based on feature properties passed
+	info.update = function (d) {
+	    this._div.innerHTML = '<h4>Artworks</h4>' +  (d ?
+	        '<b>' + d.properties.NAME + '</b><br/>' + artworksCount(d) + ' artworks'
+	        : 'Hover over a country');
+	};
+
+	info.addTo(map);
+
+	function artworksCount(d){
+		var v = areaGroup.all().filter(function(item) { return item.key === d.properties.GMI_CNTRY; })
+		if (v.length==0)
+			{return (0)}
+		else
+			{return (v[0].value)}
+	}
+
 	function drawFeatures(data) {
-		var svg = d3.select("#map-canvas").select("svg")
-		.attr("pointer-events", "auto")
-
-		// d3.select("#map-canvas").on('mousemove', myMouseMoveFunction)    //trying to add an infobox to be defined
-
-		var g = svg.select("g")
-
+		var polygons = svg.append("g");
 		var transform = d3.geoTransform({point: projectPoint});
 		var path = d3.geoPath().projection(transform);
 
-		var color = d3.scaleQuantize()
-		.domain([0, areaGroup.top(1)[0].value])  //this scales values to the max for the filtered group so not comparable over time
-		.range(d3.schemeCategory10) //this is a set of colours removed in v5. needs to be upgraded somehow  or color brewer used.
-		//d3.schemeCategory10)
-
-		var featureElement = g.selectAll("path")
+		var featureElement = polygons.selectAll("path")
 		.data(data.features)
 		.enter()
 		.append("path")
-		.attr("stroke", "gray")
-		.attr("fill", d => color(areaGroup.all().filter(function(item) { return item.key === d.properties.name; })[0].value))
+		.attr("stroke", "gray") //stroke versus color??
+		.attr("weight",1)
+		.attr("dashArray", '3')
+		.attr("fill", d => color(artworksCount(d)))
 		.attr("fill-opacity", 0.6)
-		// .on("mouseover", d=> myMouseOverFunction(d))
-		// .on("mouseout", myMouseOutFunction)
-		.on("click", function(d){
-			//d3.select(this).attr("fill", "green")
-			//alert(d.properties.name)
-			refit(d3.select(this));
-			zoomIn(d);
+		.on("mouseover", function(d){
+			d3.select(this)
+			.attr("stroke", "white")
+			.attr("weight",4)
+			.attr("dashArray", ' ')
+			d3.select(this).raise();
+			info.update(d)
 		})
-		//
-		//  function myMouseOverFunction(d) {
-		// 	//var poly = d3.select(this);
-		//
-		// 	// show infobox div on mouseover.
-		// 	// block means sorta "render on the page" whereas none would mean "don't render at all"
-		// 	d3.select(".infobox").style("display", "block")
-		// 	d3.select("p").text(d.properties.name);
-		// }
-		//
-		// function myMouseOutFunction() {
-		// 	d3.select(".infobox").style("display", "none");
-		// }
-		//
-		// function myMouseMoveFunction() {
-		// 	// save selection of infobox so that we can later change it's position
-		// 	var infobox = d3.select(".infobox");
-		// 	// this returns x,y coordinates of the mouse in relation to our svg canvas
-		// 	var coord = d3.svg.mouse(this)
-		// 	// now we just position the infobox roughly where our mouse is
-		// 	infobox.style("left", coord[0] + 15  + "px" );
-		// 	infobox.style("top", coord[1] + "px");
-		// }
+		.on("mouseout", function(d){
+			d3.select(this)
+			.attr("stroke", "gray")
+			.attr("weight",1)
+			.attr("dashArray", '3')
+			info.update()
+		})
+		.on("click", function(d){
+			refit(d3.select(this));
+			//zoomIn(d);
+		})
 
-
-		g.selectAll("path").data(data.features).exit().remove()
-
+//		polygons.selectAll("path").data(data.features).exit().remove()
 		map.on("moveend", update);
-
 		update();
 
 		yearChart.on('filtered', function(chart) {
-      featureElement.attr("fill", d => color(areaGroup.all().filter(function(item) { return item.key === d.properties.name; })[0].value));
+			color.domain([0,areaGroup.top(1)[0].value])
+			featureElement.attr("fill", d => color(artworksCount(d)));
+			legend.update();
+	  });
+
+		ClassificationChart.on('filtered', function(chart) {
+			color.domain([0,areaGroup.top(1)[0].value])
+			featureElement.attr("fill", d => color(artworksCount(d)));
+			legend.update();
 	  });
 
 		function update() {
@@ -182,29 +257,27 @@ function drawCharts(response) {
 
 		function zoomIn(d){
 			//need to return a selected geojson with matching id
-			map_level="continent";//d.properties.Type
-			d3.csv("data/MetCountry.csv",drawCharts) // change to request zoom level data
+			map_level="country";
+			d3.csv("data/Met_noUSA.csv",drawCharts) // change to request zoom level data
 		}
-
-
 
 		function refit(obj){
 			var bounds = obj.node().getBBox();
-			console.log("corner in x,y space: " + L.point(bounds.x,bounds.y));
-			console.log("lower corner in x,y space: " +L.point(bounds.x+bounds.width,bounds.y+bounds.height));
 			var b = [map.layerPointToLatLng(L.point(bounds.x,bounds.y)),map.layerPointToLatLng(L.point(bounds.x+bounds.width,bounds.y+bounds.height))];
-			console.log("corner in lat,lng space: " + b[0]);
-			console.log("corner in lat,lng space: " + b[1])		;
 			map.fitBounds(b);
 		}
 	}
+
 }
+
+
+
 
 function zoomOut(){
 	//need to return a selected geojson with matching id
 	map_level="world";//d.properties.type
 	map.setView([0, 0], 2)
-	d3.csv("data/MetCountry.csv",drawCharts)//change to request zoom level data
+	d3.csv("data/Met_noUSA.csv",drawCharts)//change to request zoom level data
 }
 
 </script>
