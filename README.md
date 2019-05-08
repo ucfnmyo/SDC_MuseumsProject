@@ -26,6 +26,10 @@ The geoJSON file is the countries one on github. The csv file is a temporary dat
 
 ## to run the server
 
+a separate apache server will deliver the file "public_html/index.html"  whenever you visit the address "http://dev.spatialdatacapture.org/~username"
+
+so to host the web page on your own server, just replace the index.html file that's there currently with the one from the repo. 
+
 clone the repo onto the case server
 navigate to the Server directory using "cd"
 
