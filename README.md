@@ -35,6 +35,8 @@ navigate to the Server directory using "cd"
 
 use `node DataServer.js` to start the server
 
+
+Replace the 4 digit port number with the one you are using. 
 in a web browser go to http://dev.spatialdatacapture.org:8872/location/DEU to test api. 
 if that doesn't respond, go to http://dev.spatialdatacapture.org:8872, to check if server is working at all. 
 
