@@ -109,7 +109,7 @@ var info
 var yearChart = dc.barChart('#year-chart');
 var ClassificationChart = dc.pieChart('#classification-chart');
 var map_level = "world"
-var maps ={world:"WorldCountriesMap_json.geojson",continent:"maps/countries.geojson",country:"maps/cities.geojson" }
+var maps ={world:"maps/WorldCountriesMap_json.geojson",continent:"maps/countries.geojson",country:"maps/cities.geojson" }
 
 addMap()
 var svg = d3.select("#map-canvas").select("svg")
@@ -120,7 +120,7 @@ var svg = d3.select("#map-canvas").select("svg")
 
 var url = "http://dev.spatialdatacapture.org:8872/MetNoUsa"
 
-d3.json("url", drawCharts)
+d3.json(url, drawCharts)
 
  // var url = "http://storageName.blob.core.windows.net/containerName/file.json";
  // d3.json("url", function (json) {
@@ -153,6 +153,9 @@ function addMap(){
 }
 
 function drawCharts(response) {
+
+	console.log("drawCharts function running")
+
 	var yearRounding = 25;
 	var artworks = crossfilter(response);
 	var all = artworks.groupAll();
@@ -203,6 +206,9 @@ function drawCharts(response) {
 
 
 	dc.renderAll();
+
+	console.log("map_level: ", map_level)
+
 	d3.json(maps[map_level],drawFeatures)
 
 	function projectPoint(x, y) {
@@ -244,20 +250,33 @@ function drawCharts(response) {
 	info.addTo(map);
 
 	function artworksCount(d){
+		console.log("function artworksCount running")
 		var v = areaGroup.all().filter(function(item) { return item.key === d.properties.GMI_CNTRY; })
 		if (v.length==0)
 			{return (0)}
 		else
 			{return (v[0].value)}
+	
+	console.log("function artworksCount done")
 	}
 
 	function drawFeatures(data) {
+
+
+		console.log("function drawFeatures running")
+
 		var polygons = svg.append("g");
 		var transform = d3.geoTransform({point: projectPoint});
 		var path = d3.geoPath().projection(transform);
 
 		var featureElement = polygons.selectAll("path")
+
+		// error here: Uncaught TypeError: Cannot read property 'features' of null
+
 		.data(data.features)
+
+
+
 		.enter()
 		.append("path")
 		.attr("stroke", "gray") //stroke versus color??
@@ -318,26 +337,43 @@ function drawCharts(response) {
 			var b = [map.layerPointToLatLng(L.point(bounds.x,bounds.y)),map.layerPointToLatLng(L.point(bounds.x+bounds.width,bounds.y+bounds.height))];
 			map.fitBounds(b);
 		}
+		
+		console.log("function drawFeatures finished")
+
 	}
+
+	console.log("end of drawCharts function")
 
 }
 
 
 
 function zoomOut(){
+
+console.log("function zoomOut running")
+
 	//need to return a selected geojson with matching id
 	map_level="world";//d.properties.type
 	map.setView([0, 0], 2)
 	d3.csv("Join_data/Met_noUSA.csv",drawCharts)//change to request zoom level data
+
+console.log("function zoomOut done")
+
 }
 
 function myFunction() {
+
+console.log("function myFunction running")
+
   var x = document.getElementById("navDemo");
   if (x.className.indexOf("w3-show") == -1) {
     x.className += " w3-show";
   } else { 
     x.className = x.className.replace(" w3-show", "");
   }
+
+console.log("function myFunction done")
+
 }
 
 
