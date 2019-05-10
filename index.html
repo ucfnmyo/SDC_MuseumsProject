@@ -115,7 +115,19 @@ addMap()
 var svg = d3.select("#map-canvas").select("svg")
 .attr("pointer-events", "auto")
 
-d3.csv("Join_data/Met_noUSA.csv",drawCharts)  //REPLACE LOCAL DATA WITH API RESPONSES
+// d3.csv("Join_data/Met_noUSA.csv",drawCharts)  //REPLACE LOCAL DATA WITH API RESPONSES
+
+
+var url = "http://dev.spatialdatacapture.org:8872/MetNoUsa"
+
+d3.json("url", drawCharts)
+
+ // var url = "http://storageName.blob.core.windows.net/containerName/file.json";
+ // d3.json("url", function (json) {
+  //  //code here
+ // })
+
+
 
 function addMap(){
 	map = new L.map('map-canvas').setView([0, 0], 2);
