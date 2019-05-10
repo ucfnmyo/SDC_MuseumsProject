@@ -59,7 +59,7 @@ app.get('/MetNoUsa', function (req, res) {
       res.header("Access-Control-Allow-Headers", "X-Requested-WithD");
       // If all the variables are provided connect to the database
 
-      var sql = "SELECT * FROM Met_noUSA LIMIT 10000";
+      var sql = "SELECT * FROM Met_noUSA";
 
       connection.query(sql, function(err, rows, fields) {
             if (err) console.log("Err:" + err);
