@@ -2,17 +2,13 @@
 Interactive web visualization of museum data.
 
 ## website to-dos
-1. Formatting - work on div dimensions so that the elements display nicely.
-2. Choropleth scale. Decide on color scaling.
-3. Scaling and legend. Tidy up the domain to nice round numbers.
-4. Refactor code.
 5. Replace pie chart with row chart once the categorisation has been cleaned up (currently too many categories to display properly)
 6. Add graph labels and ability to reset filters
 7. Add records table to list selected records
 8. Add listener on records table to select clusters and bring through images of artwork
 9. Create a ZoomIn function which locates artwork by cities.
 10. Add website pages to detail analysis and clustering statistics.
-11. Erorr check on d3 node updates and removals
+
 
 
 
