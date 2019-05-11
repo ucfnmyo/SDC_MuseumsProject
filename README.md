@@ -2,12 +2,15 @@
 Interactive web visualization of museum data.
 
 ## website to-dos
-5. Replace pie chart with row chart once the categorisation has been cleaned up (currently too many categories to display properly)
-6. Add graph labels and ability to reset filters
-7. Add records table to list selected records
-8. Add listener on records table to select clusters and bring through images of artwork
-9. Create a ZoomIn function which locates artwork by cities.
-10. Add website pages to detail analysis and clustering statistics.
+1. Replace pie chart with row chart once the categorisation has been cleaned up (currently too many categories to display properly)
+2.Improve styling of chart titles and axes. Create wider bars in the barchart (think this will require redefining the xaxis scale function)
+
+Only if we have time
+1. rewrite to use a dc geochoropleth map as a svg layer in leaflet - tricky but would speed things up massively.
+2. Add records table to list selected records
+3. Add listener on records table to select clusters and bring through images of artwork
+4. Create a ZoomIn function which locates artwork by cities.
+
 
 
 
