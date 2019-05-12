@@ -41,12 +41,12 @@
 <div id='wrapper'>
      <div id='map-canvas'></div>
 		 <div id="controlPanel">
-				<button type="button" onclick="zoomOut()">Zoom Out</button>				
+				<button type="button" onclick="zoomOut()">Zoom Out</button>
 		 </div>
 		 <div id="titleHeader", style="background-color:#cc0000">
      	 <h1>MET Museum Artwork Visualizator</h1>
      </div>
-	 
+
 	 <div class="container">
 			 <div id='year-chart'>
 			 </div>
@@ -75,7 +75,7 @@ var info
 var yearChart = dc.barChart('#year-chart');
 var ClassificationChart = dc.pieChart('#classification-chart');
 var map_level = "world"
-var maps ={world:"WorldCountriesMap_json.geojson",continent:"maps/countries.geojson",country:"maps/cities.geojson" }
+var maps ={world:"maps/WorldCountriesMap_json.geojson",continent:"maps/countries.geojson",country:"maps/cities.geojson" }
 
 addMap()
 var svg = d3.select("#map-canvas").select("svg")

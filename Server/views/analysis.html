@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<head>
+  <title>MET Artwork Analysis</title>
+
+  <link rel="stylesheet" type="text/css" href="./css/WebStyle.css">
+  <link href="https://fonts.googleapis.com/css?family=Stylish" rel="stylesheet">
+  </head>
+
+
+<body>
+
+  <!-- Load highcharts libraries -->
+  <script src="http://code.highcharts.com/highcharts.js"></script>
+  <script src="https://code.highcharts.com/highcharts.js"></script>
+  <script src="https://code.highcharts.com/modules/exporting.js"></script>
+  <script src="https://code.highcharts.com/modules/export-data.js"></script>
+
+
+<div class = 'header'>
+  <h1> MET Artwork Analysis </h2>
+
+</div>
+
+  <h2>Aims</h2>
+
+  <p>
+    -	To create an exploratory map of the MET dataset, allowing users to spatially navigate all types of artworks from different time periods.
+    <br> -	Present insight on artwork medium, including the materials and techniques used.
+  </p>
+
+  <h2>Methodology</h2>
+
+  <p>
+    -  Natural language processing (NLP) was implemented to obtain material and technique keywords from artwork medium data.
+    <br> - Keyword extraction vectorized the data according to the material or technique employed in the artwork.
+    <br> - Artworks with similar materials and techniques were clustered using a DBSCAN algorithm.
+  </p>
+
+  <h2>Results</h2>
+
+  <p>
+    With this approach, we were able to correlate artworks from differing geographical areas and time periods based on the similarity between materials or techniques used in their creation. Interesting trends on the prominance of certain materials or techniques in international artworks could then be uncovered, providing an understanding of how art progressed over time and space.
+    Below, we will present some examples of interesting findings from our analysis.
+
+  <p>
+    <b>Materials</b> - A total of 385 clusters were formed, with 5,190 artworks not attributed to a cluster.
+
+      <br> The DBSCAN algorithm identified 43 artworks that similarly featured wood and shells. Lets investigate this group further.
+      <br> Below represents the proportion of categories in this cluster, Chordophones and Sculptures contituted most of the artwork.
+  </p>
+
+      <div id="graph" style="min-width: 310px; height: 400px; max-width: 600px; margin: 0 auto">
+
+        <!-- Figure 1. piechart of artwork class in Cluster 70 -->
+        <script>
+
+        Highcharts.chart('graph', {
+          chart: {
+              plotBackgroundColor: null,
+              plotBorderWidth: null,
+              plotShadow: false,
+              type: 'pie'
+          },
+          title: {
+              text: 'Artwork Types made of Wood and Shell'
+          },
+          tooltip: {
+              pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+          },
+          plotOptions: {
+              pie: {
+                  allowPointSelect: true,
+                  cursor: 'pointer',
+                  dataLabels: {
+                      enabled: true,
+                      format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                      style: {
+                          color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                      }
+                  }
+              }
+          },
+          series: [{
+            name: 'Artwork Classes',
+            colorByPoint: true,
+            data: [{
+              name: 'Aerophones'
+              y: 1
+              sliced: true,
+              selected: true
+            }, {
+              name: 'Beads'
+              y: 1
+              sliced: true,
+              selected: true
+            },{
+              name: 'Chordophones'
+              y: 16
+              sliced: true,
+              selected: true
+            },{
+            name: 'Containers'
+            y: 5
+            sliced: true,
+            selected: true
+          }, {
+            name: 'Idiophones'
+            y: 2
+            sliced: true,
+            selected: true
+          },{
+          name: 'Natural substances'
+          y: 1
+          sliced: true,
+          selected: true
+          },{
+            name: 'Ornaments'
+            y: 1
+            sliced: true,
+            selected: true
+            },{
+              name: 'Sculptures'
+              y: 14
+              sliced: true,
+              selected: true
+            }]
+          }
+        });
+
+      </script>
+    </div>
+
+    <p>
+      <br><b>Where did the artwork in this cluster come from?</b> We can see below that New Zealand, Congo, Papua New Guinea and Guinea are the main producers of artworks composed of wood and shell.
+      <!-- Insert bar chart of counts of artwork in cluster 70 for each country -->
+      <br><b>When did these materials become prominent?</b> The graph below shows that between 1700-1850 there was am major surge in artwork incorporating wood and shells.
+    </p>
+    <!-- Insert Line chart of artwork count over time -->
+
+    <p>
+      <b>Techniques</b> - A total of 49 groups with similar artwork techniques were generated by the DBSCAN, over 60,000 artworks were note associated with these groupings.
+
+      A cluster of 45 artworks produced by carving and incision techniques was intruiging, so we dug deeper to understand what was going on.
+
+      <br><b>What categories of art belonged to this group?</b>
+      <!-- Insert piechart -->
+      <br><b>Where did the artwork come from?</b>
+      <!-- Insert Barchart -->
+      <br><b>When did this artwork technique become prominent?</b>
+      <!--Insert line graph -->
+
+    </p>
+
+</body>
