@@ -115,9 +115,9 @@ app.get('/subset/:code/:value', function (req, res) {
         var value = mysql_real_escape_string(req.params.value);
 
         // SQL Statement to run
-        var sql = "SELECT * FROM XXXTABLE_NAMEXXX WHERE "  code1 = value ;
-        var sql = "SELECT `Object ID`, `Object Name`, `Object Begin Date`, `Medium`, `lat`, `lng`, `Link Resource`  FROM SpatialMET WHERE CountryMatch = \""+code+"\" Limit 10";
-        // var sql = "SELECT * FROM photo_locations WHERE DISTANCE(points, POINT("+lon+","+lat+") ) <= " + radius;
+        var sql = "SELECT *  FROM SpatialMET WHERE  \""+code+"\" = \""+value+"\ Limit 10";
+
+
 
         // Log it on the screen for debugging
         console.log(sql);
