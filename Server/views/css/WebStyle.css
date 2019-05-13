@@ -1,0 +1,116 @@
+
+header{
+  background-color: :#FF3D3D
+  text-align:center;
+  padding: 20px;
+}
+.topnav{
+  font-family: Lucida Sans Unicode;
+  font-size: 30px
+  overflow:hidden;
+  color: #ffb399;
+  text-align:center;
+  margin: 20px;
+}
+.topnav a{
+  float: ;
+  display:inline;
+  color:#ffb399
+  text-align:center;
+  padding : 14px 16px;
+  text-decoration: underline;
+}
+.topnav a:hover{
+  background-color: #ddd;
+  color: black;
+}
+.leftcolumn{
+  float:left;
+  width: 30%;
+  height: 50%;
+  background-color: #ffffff;
+  padding-top: 10px;
+  padding-left: 15px;
+  margin: 5px;
+
+}
+.rightcolumn{
+  float: left;
+  height: 50%;
+  width: 22%;
+  background-color: #ffffff;
+  padding-top: 10px;
+  padding-left: 15px;
+  border-color: "black";
+  margin: 5px;
+}
+.middlecolumn{
+  float:left;
+  height: 50%;
+  width:40%;
+  background-color: #ffffff;
+  padding-top: 10px;
+  padding-left: 15px;
+  border-color: "black";
+  margin: 5px;
+  margin-bottom: 20px;
+
+}
+.container img.wide{
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+
+}
+.container img.tall{
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+
+}
+.ToolOutput{
+  max-width: 100%;
+  max-height: 100%;
+  padding-left: 20px;
+  width: 60px;
+
+}
+.card {
+
+  background-color: white;
+  padding: 20px;
+  margin-top: 20px;
+}
+.row after{
+  content: "";
+  display: table;
+  clear: both;
+
+}
+
+
+body{
+  background-color: #CEBB9F;
+  background-image: url("zenbg.png");
+}
+
+h1{
+  font-family: 'Stylish', sans-serif;
+  text-align: center;
+}
+
+h2{
+  font-family: 'Stylish', sans-serif;
+}
+
+p{
+  font-family: 'Stylish', sans-serif;
+  font-size: 20px
+}
+
+@media screen and (max-width: 600px){
+  .leftcolumn, .middlecolumn,.rightcolumn,.footer{
+    width: 100%;
+  }
+
+}
