@@ -58,7 +58,7 @@ app.get('/data', function (req, res) {
       res.header("Access-Control-Allow-Headers", "X-Requested-WithD");
       // If all the variables are provided connect to the database
 
-      var sql = "SELECT * FROM Final_Table";
+      var sql = "SELECT * FROM Final_Data";
 
       connection.query(sql, function(err, rows, fields) {
             if (err) console.log("Err:" + err);
@@ -81,7 +81,7 @@ app.get('/dataLimited', function (req, res) {
       res.header("Access-Control-Allow-Headers", "X-Requested-WithD");
       // If all the variables are provided connect to the database
 
-      var sql = "SELECT * FROM Final_Table LIMIT 100";
+      var sql = "SELECT * FROM Final_Data LIMIT 100";
 
       connection.query(sql, function(err, rows, fields) {
             if (err) console.log("Err:" + err);
