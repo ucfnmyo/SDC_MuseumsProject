@@ -1,0 +1,47 @@
+<html>
+<head>
+<title>Flickr API Information</title>
+<link href='http://fonts.googleapis.com/css?family=Raleway:400,700' rel='stylesheet' type='text/css'>
+<link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+<link rel="stylesheet" href="style.css" type="text/css">
+</head>
+<body>
+<script src="./jquery.min.js"></script>
+<div id="container">
+	<h1>
+		Flickr DB API
+	</h1>
+	
+	<h2>
+	 Data Endpoints
+	</h2>
+
+	<p>
+		http://dev.spatialdatacapture.org:8872/data - <a href="http://dev.spatialdatacapture.org:8872/dataLimited" target="_BLANK">Example</a><br/>
+		<b>Returns the entire Met Holdings Database, this "/dataLimited" example is limited to the first 100 rows. Use "/data" for unlimited query</b>
+	</p>
+
+	<p>
+		http://dev.spatialdatacapture.org:8872/summary/:key - <a href="http://dev.spatialdatacapture.org:8872/summary/:key" target="_BLANK">Example</a><br/>
+		<b>Returns a summary of the Met holdings grouped by the column specified by "key"</b>
+	</p>
+
+	<p>
+		http://dev.spatialdatacapture.org:8872/subset/:code/:value - <a href="http://dev.spatialdatacapture.org:8872/subset/:code/:value" target="_BLANK">Example</a><br/>
+		<b>Returns a subset of the Met holdings data of rows where the column specified by "code" matches the value specified by "key"</b>
+	</p>
+
+
+	<p>
+		http://dev.spatialdatacapture.org:8870/data/:lat/:lon/:radius - <a href="http://dev.spatialdatacapture.org:8870/data/51.514756/-0.104345/50" target="_BLANK">Example</a><br/>
+		<b>Returns all photos inside our flickr photo databse with a radius (in meters) for a given lat/lng point</b>
+	</p>	
+	
+	<p>
+		http://dev.spatialdatacapture.org:8870/data/photoDescription/:pid - <a href="http://dev.spatialdatacapture.org:8870/data/photoDescription/4279893539" target="_BLANK">Example</a> <br/>
+		<b>Returns a single photos metadata inside our flickr photo databse for a given Photo ID</b>
+ 	
+	</p>
+</div>
+</body>
+</html>

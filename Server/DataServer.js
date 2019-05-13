@@ -37,28 +37,28 @@ app.use(express.static(__dirname + '/images'));
 // Default API Endpoint - return the index.ejs file in the views folder
 
 app.get('/', function(req, res) {
-    return res.render('flickr_index');
+    return res.render('api_index');
 })
 
-app.get('/test', function(req, res) {
-	return res.render('flickr_index');
-})
+// app.get('/test', function(req, res) {
+// 	return res.render('flickr_index');
+// })
 
-app.get('/date', function(req, res) {
-	var d = new Date();
-	console.log(d);
-	return res.send(d);
-})
+// app.get('/date', function(req, res) {
+// 	var d = new Date();
+// 	console.log(d);
+// 	return res.send(d);
+// })
 
 //  API EndPoint to get all data
-app.get('/Data', function (req, res) {
+app.get('/data', function (req, res) {
 
       // Allows data to be downloaded from the server with security concerns
       res.header("Access-Control-Allow-Origin", "*");
       res.header("Access-Control-Allow-Headers", "X-Requested-WithD");
       // If all the variables are provided connect to the database
 
-      var sql = "SELECT * FROM Met_noUSA LIMIT 100";
+      var sql = "SELECT * FROM Final_Table";
 
       connection.query(sql, function(err, rows, fields) {
             if (err) console.log("Err:" + err);
@@ -73,6 +73,28 @@ app.get('/Data', function (req, res) {
                 });
 });
 
+// API endpoint to get a limited full table select for demonstration purposes
+app.get('/dataLimited', function (req, res) {
+
+      // Allows data to be downloaded from the server with security concerns
+      res.header("Access-Control-Allow-Origin", "*");
+      res.header("Access-Control-Allow-Headers", "X-Requested-WithD");
+      // If all the variables are provided connect to the database
+
+      var sql = "SELECT * FROM Final_Table LIMIT 100";
+
+      connection.query(sql, function(err, rows, fields) {
+            if (err) console.log("Err:" + err);
+            if(rows != undefined){
+                // If we have data that comes back send it to the user.
+                // does this need to be json'ed?
+                res.send(rows);
+                }else{
+                    console.log("empty query");
+                    res.send("empty query");
+                    }
+                });
+});
 
 
 //  API EndPoint to get summary data
