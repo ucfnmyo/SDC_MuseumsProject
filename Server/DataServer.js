@@ -50,9 +50,33 @@ app.get('/date', function(req, res) {
 	return res.send(d);
 })
 
+//  API EndPoint to get all data
+app.get('/Data', function (req, res) {
 
-//  API EndPoint to get Met_noUSA
-app.get('/MetNoUsa', function (req, res) {
+      // Allows data to be downloaded from the server with security concerns
+      res.header("Access-Control-Allow-Origin", "*");
+      res.header("Access-Control-Allow-Headers", "X-Requested-WithD");
+      // If all the variables are provided connect to the database
+
+      var sql = "SELECT * FROM Met_noUSA LIMIT 100";
+
+      connection.query(sql, function(err, rows, fields) {
+            if (err) console.log("Err:" + err);
+            if(rows != undefined){
+                // If we have data that comes back send it to the user.
+                // does this need to be json'ed?
+                res.send(rows);
+                }else{
+                    console.log("empty query");
+                    res.send("empty query");
+                    }
+                });
+});
+
+
+
+//  API EndPoint to get summary data
+app.get('/summary/:key', function (req, res) {
 
       // Allows data to be downloaded from the server with security concerns
       res.header("Access-Control-Allow-Origin", "*");
@@ -72,14 +96,71 @@ app.get('/MetNoUsa', function (req, res) {
                     res.send("empty query");
                     }
                 });
-
-////////////////
-
-
 });
 
 
+//  API EndPoint to get data subset for one value of a code
+app.get('/subset/:code/:value', function (req, res) {
 
+      // Allows data to be downloaded from the server with security concerns
+      res.header("Access-Control-Allow-Origin", "*");
+      res.header("Access-Control-Allow-Headers", "X-Requested-WithD");
+      // If all the variables are provided connect to the database
+
+      if(req.params.code != ""){
+               
+        // Parse the values from the URL into numbers for the query, and use function to escape special characters
+        var code = req.params.code;
+        code1 = mysql_real_escape_string(code);
+        var value = mysql_real_escape_string(req.params.value);
+
+        // SQL Statement to run
+        var sql = "SELECT * FROM XXXTABLE_NAMEXXX WHERE "  code1 = value ;
+        var sql = "SELECT `Object ID`, `Object Name`, `Object Begin Date`, `Medium`, `lat`, `lng`, `Link Resource`  FROM SpatialMET WHERE CountryMatch = \""+code+"\" Limit 10";
+        // var sql = "SELECT * FROM photo_locations WHERE DISTANCE(points, POINT("+lon+","+lat+") ) <= " + radius;
+
+        // Log it on the screen for debugging
+        console.log(sql);
+
+        // Run the SQL Query
+        connection.query(sql, function(err, rows, fields) {
+          if (err) console.log("Err:" + err);
+          if(rows != undefined){
+            // If we have data that comes back send it to the user.
+            res.send(rows);
+          }else{
+            console.log("empty query");
+            res.send("empty query");
+          }
+        });
+      }else{
+        // If all the URL variables are not passed send an empty string to the user
+        console.log("incorrect URL variables");
+        res.send("incorrect URL variables");
+      }
+
+
+
+
+
+
+
+      
+/////////////////////////////////////////////////////////
+      var sql = "SELECT * FROM XXXTABLE_NAMEXXX WHERE " ;
+
+      connection.query(sql, function(err, rows, fields) {
+            if (err) console.log("Err:" + err);
+            if(rows != undefined){
+                // If we have data that comes back send it to the user.
+                // does this need to be json'ed?
+                res.send(rows);
+                }else{
+                    console.log("empty query");
+                    res.send("empty query");
+                    }
+                });
+});
 
 
 //  API EndPoint to get points for a certain location 
