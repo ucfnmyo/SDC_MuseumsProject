@@ -1,3 +1,0 @@
-MET430k.psd filter=lfs diff=lfs merge=lfs -text
-Met430k.psd filter=lfs diff=lfs merge=lfs -text
-Met430k.csv filter=lfs diff=lfs merge=lfs -text

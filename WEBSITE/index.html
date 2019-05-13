@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<head>
+	<title>Artwork Explorer</title>
+	<!-- <link rel='stylesheet' id='font-css'  href='http://fonts.googleapis.com/css?family=Roboto:400,300,100' type='text/css' media='all' /> -->
+	<link rel='stylesheet' id='font-css'  href='./css/style.css' type='text/css' media='all' />
+	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css"
+    integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
+    crossorigin=""/>
+	<link href='https://unpkg.com/dc@3.0.10/dc.css' rel='stylesheet' type='text/css'>
+	<style>
+		.leaflet-overlay-pane svg path{
+		    pointer-events: auto;
+		}
+		.info {
+		    padding: 6px 8px;
+		    font: 14px/16px Arial, Helvetica, sans-serif;
+		    background: white;
+		    background: rgba(255,255,255,0.8);
+		    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+		    border-radius: 5px;
+		}
+		.info h4 {
+		    margin: 0 0 5px;
+		    color: #777;
+		}
+
+		.legend {
+		    line-height: 18px;
+		    color: #555;
+		}
+		.legend i {
+		    width: 18px;
+		    height: 18px;
+		    float: left;
+		    margin-right: 8px;
+		    opacity: 0.7;
+		}
+	</style>
+</head>
+<body>
+<div id='wrapper'>
+     <div id='map-canvas'></div>
+		 <div id="controlPanel">
+				<button type="button" onclick="zoomOut()">Zoom Out</button>
+		 </div>
+		 <div id="titleHeader", style="background-color:#cc0000">
+     	 <h1>MET Museum Artwork Visualizator</h1>
+     </div>
+
+	 <div class="container">
+			 <div id='year-chart'>
+			 </div>
+			 <div id='classification-chart'>
+			 </div>
+			 </div>
+     <div id="displayWrapper">
+     		<div><span id="photoNum">0</span> photos returned</div>
+     </div>
+
+</div>
+
+<!-- The Javascript from external websites gets Loaded Here -->
+<script type='text/javascript' src='http://code.jquery.com/jquery-1.10.2.min.js?ver=1.10.2'></script>
+<script type="text/javascript" src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js" integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcxCPavG10IcrVGSmPh6Qw5lwrg==" crossorigin=""></script>
+<script type="text/javascript" src="http://maps.stamen.com/js/tile.stamen.js?v1.3.0"></script>
+<script type="text/javascript" src="https://d3js.org/d3.v4.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/crossfilter/1.3.12/crossfilter.min.js"></script>
+<script type="text/javascript" src="https://unpkg.com/dc@3.0.10/dc.js"></script>
+
+<!--This section will create a Map using Leaflet.js  -->
+<script type="text/javascript">
+var map //leaflet object
+var legend
+var info
+var yearChart = dc.barChart('#year-chart');
+var ClassificationChart = dc.pieChart('#classification-chart');
+var map_level = "world"
+var maps ={world:"maps/WorldCountriesMap_json.geojson",continent:"maps/countries.geojson",country:"maps/cities.geojson" }
+
+addMap()
+var svg = d3.select("#map-canvas").select("svg")
+.attr("pointer-events", "auto")
+
+// d3.csv("Join_data/Met_noUSA.csv",drawCharts)  //REPLACE LOCAL DATA WITH API RESPONSES
+
+
+var url = "http://dev.spatialdatacapture.org:8872/MetNoUsa"
+
+d3.json(url, drawCharts)
+
+ // var url = "http://storageName.blob.core.windows.net/containerName/file.json";
+ // d3.json("url", function (json) {
+  //  //code here
+ // })
+
+
+
+function addMap(){
+	map = new L.map('map-canvas').setView([0, 0], 2);
+	var layer = new L.StamenTileLayer("toner-background", {attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://www.openstreetmap.org/copyright">ODbL</a>.',});
+	map.addLayer(layer);
+	L.svg({clickable:true}).addTo(map);
+	legend = L.control({position: 'bottomright'});
+
+	legend.onAdd = function (map) {
+		this._legenddiv = L.DomUtil.create('div', 'info legend');
+		this.update();
+		return this._legenddiv;
+	};
+
+	info = L.control();
+
+	info.onAdd = function (map) {
+			this._div = L.DomUtil.create('div', 'info'); // create a div with a class "info"
+			this.update();
+			return this._div;
+	};
+
+}
+
+function drawCharts(response) {
+
+	console.log("drawCharts function running")
+
+	var yearRounding = 25;
+	var artworks = crossfilter(response);
+	var all = artworks.groupAll();
+	var yearDimension = artworks.dimension(function(d) {return d['Object Begin Date']- d['Object Begin Date'] % yearRounding;});
+	var areaDimension = artworks.dimension(function(d) {return d.CountryMatch;});
+	var ClassificationDimension = artworks.dimension(function(d) {return d.Medium;});
+
+	var yearGroup = yearDimension.group()
+	var areaGroup = areaDimension.group()
+	var ClassificationGroup = ClassificationDimension.group()
+
+
+	yearChart /* dc.barChart('#year-chart', 'chartGroup') */
+	// .width()
+	// .height()
+	.margins({top: 10, right: 50, bottom: 30, left: 40})
+	.dimension(yearDimension)
+	.group(yearGroup)
+	.elasticY(true)
+	.round(dc.round.floor)
+	.alwaysUseRounding(true)
+	.x(d3.scaleLinear().domain([-0, 2000]))
+	.renderHorizontalGridLines(true)
+	.yAxisLabel("Number of artwork pieces")
+	.xAxisLabel("Year")
+
+
+ ClassificationChart
+	 .radius(80)
+	 .dimension(ClassificationDimension)
+ 	 .group(ClassificationGroup)
+	// ClassificationRowChart /* dc.Chart('#classification-chart', 'chartGroup') */
+	//        // .width(180)
+	//       //  .height(180)
+	//         .margins({top: 0, left: 0, right: 0, bottom: 0})
+	//         .group(ClassificationGroup)
+	//         .dimension(ClassificationDimension)
+	// 				.ordinalColors(['#3182bd', '#6baed6', '#9ecae1', '#c6dbef', '#dadaeb'])
+	// 			//	.label(function (d) {
+	// 				//            return d.key.split('.')[1];
+	// 			//	        })
+	// 			//	.title(function (d) {
+  //       //    return d.value;
+	//        // })
+	//         .elasticX(true)
+	//         .xAxis().ticks(4);
+
+
+
+	dc.renderAll();
+
+	console.log("map_level: ", map_level)
+
+	d3.json(maps[map_level],drawFeatures)
+
+	function projectPoint(x, y) {
+		var point = map.latLngToLayerPoint(new L.LatLng(y, x));
+		this.stream.point(point.x, point.y);
+	}
+
+	const array_column = (array, column) => array.map(e => e[column]);
+
+	var color = d3.scaleQuantile()
+	.domain([0,areaGroup.top(1)[0].value])//array_column(areaGroup.all(),"value")) to produce proper quantiles
+	.range(["f7fbff","#deebf7","#c6dbef","#9ecae1","#6baed6","#4292c6","#2171b5","#08519c","#08306b"])
+
+
+
+	legend.update = function (d) {
+		grades = color.quantiles(),
+		labels = [];
+		grades.unshift(0);
+		// loop through our density intervals and generate a label with a colored square for each interval
+	this._legenddiv.innerHTML=''
+		for (var i = 0; i < grades.length; i++) {
+			this._legenddiv.innerHTML +=
+			'<i style="background:' + color(grades[i] + 1) + '"></i> ' +
+			grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
+		}
+	};
+	legend.addTo(map);
+
+
+
+	// method that we will use to update the control based on feature properties passed
+	info.update = function (d) {
+	    this._div.innerHTML = '<h4>Artworks</h4>' +  (d ?
+	        '<b>' + d.properties.NAME + '</b><br/>' + artworksCount(d) + ' artworks'
+	        : 'Hover over a country');
+	};
+
+	info.addTo(map);
+
+	function artworksCount(d){
+		console.log("function artworksCount running")
+		var v = areaGroup.all().filter(function(item) { return item.key === d.properties.GMI_CNTRY; })
+		if (v.length==0)
+			{return (0)}
+		else
+			{return (v[0].value)}
+	
+	console.log("function artworksCount done")
+	}
+
+	function drawFeatures(data) {
+
+
+		console.log("function drawFeatures running")
+
+		var polygons = svg.append("g");
+		var transform = d3.geoTransform({point: projectPoint});
+		var path = d3.geoPath().projection(transform);
+
+		var featureElement = polygons.selectAll("path")
+
+		// error here: Uncaught TypeError: Cannot read property 'features' of null
+
+		.data(data.features)
+
+
+
+		.enter()
+		.append("path")
+		.attr("stroke", "gray") //stroke versus color??
+		.attr("weight",1)
+		.attr("dashArray", '3')
+		.attr("fill", d => color(artworksCount(d)))
+		.attr("fill-opacity", 0.6)
+		.on("mouseover", function(d){
+			d3.select(this)
+			.attr("stroke", "white")
+			.attr("fill", "red")
+			.attr("weight",4)
+			.attr("dashArray", ' ')
+			d3.select(this).raise();
+			info.update(d)
+		})
+		.on("mouseout", function(d){
+			d3.select(this)
+			.attr("fill", d => color(artworksCount(d)))
+			.attr("stroke", "gray")
+			.attr("weight",1)
+			.attr("dashArray", '3')
+			info.update()
+		})
+		.on("click", function(d){
+			refit(d3.select(this));
+			//zoomIn(d);
+		})
+
+//		polygons.selectAll("path").data(data.features).exit().remove()
+		map.on("moveend", update);
+		update();
+
+		yearChart.on('filtered', function(chart) {
+			color.domain([0,areaGroup.top(1)[0].value])
+			featureElement.attr("fill", d => color(artworksCount(d)));
+			legend.update();
+	  });
+
+		ClassificationChart.on('filtered', function(chart) {
+			color.domain([0,areaGroup.top(1)[0].value])
+			featureElement.attr("fill", d => color(artworksCount(d)));
+			legend.update();
+	  });
+
+		function update() {
+			featureElement.attr("d", path);
+		}
+
+		function zoomIn(d){
+			//need to return a selected geojson with matching id
+			map_level="country";
+			d3.csv("Join_data/Met_noUSA.csv",drawCharts) // change to request zoom level data
+		}
+
+		function refit(obj){
+			var bounds = obj.node().getBBox();
+			var b = [map.layerPointToLatLng(L.point(bounds.x,bounds.y)),map.layerPointToLatLng(L.point(bounds.x+bounds.width,bounds.y+bounds.height))];
+			map.fitBounds(b);
+		}
+		
+		console.log("function drawFeatures finished")
+
+	}
+
+	console.log("end of drawCharts function")
+
+}
+
+
+
+function zoomOut(){
+
+console.log("function zoomOut running")
+
+	//need to return a selected geojson with matching id
+	map_level="world";//d.properties.type
+	map.setView([0, 0], 2)
+	d3.csv("Join_data/Met_noUSA.csv",drawCharts)//change to request zoom level data
+
+console.log("function zoomOut done")
+
+}
+
+
+
+
+
+</script>
+
+</body>
+</html>
