@@ -58,7 +58,7 @@ app.get('/bubble', function (req, res) {
       res.header("Access-Control-Allow-Headers", "X-Requested-WithD");
       // If all the variables are provided connect to the database
 
-      var sql = "SELECT `region`, `country` FROM Final_Data";
+      var sql = "SELECT `region`, `country` Count(`Object ID`) FROM Final_Data Groupby `country`";
 
       connection.query(sql, function(err, rows, fields) {
             if (err) console.log("Err:" + err);
