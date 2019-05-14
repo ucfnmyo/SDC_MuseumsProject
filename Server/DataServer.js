@@ -50,6 +50,30 @@ app.get('/', function(req, res) {
 // 	return res.send(d);
 // })
 
+
+app.get('/bubble', function (req, res) {
+
+      // Allows data to be downloaded from the server with security concerns
+      res.header("Access-Control-Allow-Origin", "*");
+      res.header("Access-Control-Allow-Headers", "X-Requested-WithD");
+      // If all the variables are provided connect to the database
+
+      var sql = "SELECT `regions`, `countries` FROM Final_Data";
+
+      connection.query(sql, function(err, rows, fields) {
+            if (err) console.log("Err:" + err);
+            if(rows != undefined){
+                // If we have data that comes back send it to the user.
+                // does this need to be json'ed?
+                res.send(rows);
+                }else{
+                    console.log("empty query");
+                    res.send("empty query");
+                    }
+                });
+});
+
+
 //  API EndPoint to get all data
 app.get('/data', function (req, res) {
 
