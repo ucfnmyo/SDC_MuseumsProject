@@ -35,11 +35,14 @@ app.use(express.static(__dirname + '/images'));
 // Default API Endpoint - return the index.ejs file in the views folder
 
 app.get('/', function(req, res) {
+    console.log("api homepage endpoint")
     return res.render('api_index');
 })
 
 //  API EndPoint to get all data
 app.get('/data', function (req, res) {
+
+  console.log("all data endpoint")
 
       // Allows data to be downloaded from the server with security concerns
       res.header("Access-Control-Allow-Origin", "*");
@@ -65,6 +68,8 @@ app.get('/data', function (req, res) {
 // gets summary data for country bubble chart
 app.get('/bubble', function (req, res) {
 
+  console.log("bubble endpoint")
+
       // Allows data to be downloaded from the server with security concerns
       res.header("Access-Control-Allow-Origin", "*");
       res.header("Access-Control-Allow-Headers", "X-Requested-WithD");
@@ -88,6 +93,8 @@ app.get('/bubble', function (req, res) {
 
 // API endpoint to get a limited full table select for demonstration purposes
 app.get('/dataLimited', function (req, res) {
+
+  console.log("dataLimited endpoint")
 
       // Allows data to be downloaded from the server with security concerns
       res.header("Access-Control-Allow-Origin", "*");
@@ -114,6 +121,8 @@ app.get('/dataLimited', function (req, res) {
 //  API EndPoint to get summary data
 // works for "region" "country", "acq_year", "Class_General",  
 app.get('/summary/:key/:year', function (req, res) {
+
+  console.log("summary endpoint")
 
       // Allows data to be downloaded from the server with security concerns
       res.header("Access-Control-Allow-Origin", "*");
@@ -217,6 +226,8 @@ app.get('/summary/:key/:year', function (req, res) {
 //  API EndPoint to get data subset for one value of a code
 app.get('/subset/:code/:value', function (req, res) {
 
+  console.log("subset endpoint")
+
       // Allows data to be downloaded from the server with security concerns
       res.header("Access-Control-Allow-Origin", "*");
       res.header("Access-Control-Allow-Headers", "X-Requested-WithD");
@@ -257,6 +268,8 @@ app.get('/subset/:code/:value', function (req, res) {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //  API EndPoint to get data subset for timeline of acquisitions by year
 app.get('/acq/:early/:late', function (req, res) {
+
+    console.log("acq endpoint")
 
       // Allows data to be downloaded from the server with security concerns
       res.header("Access-Control-Allow-Origin", "*");
