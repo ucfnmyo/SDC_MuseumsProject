@@ -244,6 +244,77 @@ app.get('/subset/:code/:value', function (req, res) {
           }
         }); // end sql query
 
+      }else{
+        // if code or value is blank
+        console.log("missing URL variables");
+        res.send("missing URL variables");
+
+      }
+});
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//  API EndPoint to get data subset for timeline of acquisitions by year
+app.get('/acq/:code/:value', function (req, res) {
+
+      // Allows data to be downloaded from the server with security concerns
+      res.header("Access-Control-Allow-Origin", "*");
+      res.header("Access-Control-Allow-Headers", "X-Requested-WithD");
+      // If all the variables are provided connect to the database
+
+      if(req.params.code != "" && req.params.value != ""){
+
+
+        console.log("get parameters ok");
+        var code = mysql_real_escape_string(req.params.code);
+        var value = mysql_real_escape_string(req.params.value);
+
+        // check if the two values are "no"
+
+        if(code == "no" && value == "no"){
+
+          console.log("no year range")
+          var sql = "SELECT * FROM donation_data";
+
+          // console.log("query: ", sql)
+
+          // Run the SQL Query
+          connection.query(sql, function(err, rows, fields) {
+            if (err) console.log("Err:" + err);
+            if(rows != undefined){
+              // If we have data that comes back send it to the user.
+              res.send(rows);
+            }else{
+              console.log("empty query");
+              res.send("empty query");
+            }
+          }); // end sql query
+
+
+        }
+
+////////////////////////////////////////////////
+
+
+        var sql = "SELECT * FROM donation_data";
+        // var sql = "SELECT * FROM Final_Data WHERE `"+code+"` = \'"+value+"\'";
+
+        // console.log("query: ", sql)
+
+        // Run the SQL Query
+        connection.query(sql, function(err, rows, fields) {
+          if (err) console.log("Err:" + err);
+          if(rows != undefined){
+            // If we have data that comes back send it to the user.
+            res.send(rows);
+          }else{
+            console.log("empty query");
+            res.send("empty query");
+          }
+        }); // end sql query
+
+//////////////////////////////////////////////////////////////////
 
       }else{
         // if code or value is blank
@@ -252,6 +323,7 @@ app.get('/subset/:code/:value', function (req, res) {
 
       }
 });
+
 
 // Setup the server and print a string to the screen when server is ready
 var server = app.listen(portNumber, function () {
