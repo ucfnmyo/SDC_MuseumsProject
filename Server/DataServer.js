@@ -126,6 +126,7 @@ app.get('/dataLimited', function (req, res) {
 
 
 //  API EndPoint to get summary data
+// works for "region" "country", "acq_year", "Class_General",  
 app.get('/summary/:key/:year', function (req, res) {
 
       // Allows data to be downloaded from the server with security concerns
@@ -136,7 +137,7 @@ app.get('/summary/:key/:year', function (req, res) {
       // check for key
       if(req.params.key != "" && req.params.key != ""){
 
-        console.log("parameters correct");
+        // console.log("parameters correct");
 
         // Parse the values from the URL into numbers for the query, and use function to escape special characters
         var key = mysql_real_escape_string(req.params.key);
@@ -148,12 +149,12 @@ app.get('/summary/:key/:year', function (req, res) {
 
           if(year == "year"){
 
-            console.log("include year in group by");
+            // console.log("include year in group by");
             // if year is right
-            console.log("key: ", key);
+            // console.log("key: ", key);
 
             var sql = "SELECT `"+key+"`, `object_begin_date`, COUNT(*) AS count FROM Final_Data GROUP BY  `"+key+"`, `object_begin_date`";
-            console.log("test sql query: ", sql)
+            // console.log("test sql query: ", sql)
 
             // var sql = "SELECT `region`, COUNT(*) AS count FROM Final_Data GROUP BY  `region`";
 
@@ -168,7 +169,7 @@ app.get('/summary/:key/:year', function (req, res) {
                 // If we have data that comes back send it to the user.
                 res.send(rows);
               }else{
-                console.log("empty query");
+                // console.log("empty query");
                 res.send("empty query");
               }
 
@@ -176,7 +177,7 @@ app.get('/summary/:key/:year', function (req, res) {
 
           }else{
               // if year is wrong
-              console.log("year value is not 'year'");
+              // console.log("year value is not 'year'");
               // res.send("value in year position unrecognized");
 
 
@@ -184,7 +185,7 @@ app.get('/summary/:key/:year', function (req, res) {
           if (year == "no"){
 
                     // if year value is blank
-          console.log("no year");
+          // console.log("no year");
 
             // var sql = "SELECT \'"+key+"\', COUNT(*) AS count FROM Final_Data GROUP BY  \'"+key+"\'";
             // var sql = "SELECT COUNT(*) AS count FROM Final_Data GROUP BY  `region`";
@@ -200,7 +201,7 @@ app.get('/summary/:key/:year', function (req, res) {
                   // If we have data that comes back send it to the user.
                   res.send(rows);
                 }else{
-                  console.log("empty query");
+                  // console.log("empty query");
                   res.send("empty query");
                 }
 
@@ -208,7 +209,7 @@ app.get('/summary/:key/:year', function (req, res) {
 
           }else{
 
-            console.log("year parameter incorrect");
+            // console.log("year parameter incorrect");
             res.send("year parameter incorrect");
 
           }
