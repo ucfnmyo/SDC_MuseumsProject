@@ -278,10 +278,8 @@ app.get('/acq/:early/:late', function (req, res) {
 
       if(req.params.early != "" && req.params.late != ""){
 
-
-        console.log("get parameters ok");
-        var early = parseInt(req.params.early);
-        var late = parseInt(req.params.late);
+        var early = mysql_real_escape_string(req.params.early);
+        var late = mysql_real_escape_string(req.params.late);
         console.log("early: ", early);
         console.log("late: ", late);
 
@@ -308,6 +306,13 @@ app.get('/acq/:early/:late', function (req, res) {
 
 
         }else{
+
+        console.log("early and late are not both no");
+        var early = parseInt(req.params.early);
+        var late = parseInt(req.params.late);
+        console.log("early: ", early);
+        console.log("late: ", late);
+
           // if there is a date range
 
           var sql = "SELECT country, count FROM donation_data WHERE year >= \'"+early+"\' AND year <= \'"+late+"\'";
