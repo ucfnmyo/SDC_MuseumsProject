@@ -8,6 +8,13 @@
 
 //  CREATE FUNCTION distance(a POINT, b POINT) RETURNS double DETERMINISTIC RETURN ifnull(acos(sin(X(a)) * sin(X(b)) + cos(X(a)) * cos(X(b)) * cos(Y(b) - Y(a))) * 6380, 0)
 
+/////////////////////////////////////////////////////
+//// WARNING
+////  This script basically ignores memory management and doesn't free any memory after it's used except by accident
+//// After ~12 API calls or so, there's a good chance  the heap will be totally full and the server will crash. ` forever` will restart it but it's still not optimal. 
+///////////////////////
+
+
 var moment = require('moment');
 var portNumber = 8872;
 var mysql = require('mysql');
@@ -35,18 +42,21 @@ app.use(express.static(__dirname + '/images'));
 // Default API Endpoint - return the index.ejs file in the views folder
 
 app.get('/', function(req, res) {
+    console.log("api homepage endpoint")
     return res.render('api_index');
 })
 
 //  API EndPoint to get all data
 app.get('/data', function (req, res) {
 
+  console.log("all data endpoint")
+
       // Allows data to be downloaded from the server with security concerns
       res.header("Access-Control-Allow-Origin", "*");
       res.header("Access-Control-Allow-Headers", "X-Requested-WithD");
       // If all the variables are provided connect to the database
 
-      var sql = "SELECT * FROM Final_Data";
+      var sql = "SELECT `Object ID`, `object_begin_date`, `Class_General`, `country` FROM Final_Data";
 
       connection.query(sql, function(err, rows, fields) {
             if (err) console.log("Err:" + err);
@@ -61,9 +71,10 @@ app.get('/data', function (req, res) {
                 });
 });
 
-
 // gets summary data for country bubble chart
 app.get('/bubble', function (req, res) {
+
+  console.log("bubble endpoint")
 
       // Allows data to be downloaded from the server with security concerns
       res.header("Access-Control-Allow-Origin", "*");
@@ -79,7 +90,7 @@ app.get('/bubble', function (req, res) {
                 // does this need to be json'ed?
                 res.send(rows);
                 }else{
-                    console.log("empty query");
+                    // console.log("empty query");
                     res.send("empty query");
                     }
                 });
@@ -88,6 +99,8 @@ app.get('/bubble', function (req, res) {
 
 // API endpoint to get a limited full table select for demonstration purposes
 app.get('/dataLimited', function (req, res) {
+
+  console.log("dataLimited endpoint")
 
       // Allows data to be downloaded from the server with security concerns
       res.header("Access-Control-Allow-Origin", "*");
@@ -103,7 +116,7 @@ app.get('/dataLimited', function (req, res) {
                 // does this need to be json'ed?
                 res.send(rows);
                 }else{
-                    console.log("empty query");
+                    // console.log("empty query");
                     res.send("empty query");
                     }
                 });
@@ -114,6 +127,8 @@ app.get('/dataLimited', function (req, res) {
 //  API EndPoint to get summary data
 // works for "region" "country", "acq_year", "Class_General",  
 app.get('/summary/:key/:year', function (req, res) {
+
+  console.log("summary endpoint")
 
       // Allows data to be downloaded from the server with security concerns
       res.header("Access-Control-Allow-Origin", "*");
@@ -129,7 +144,7 @@ app.get('/summary/:key/:year', function (req, res) {
 
         if(req.params.year != ""){
 
-          console.log("year variable");
+          // console.log("year variable");
           var year = mysql_real_escape_string(req.params.year);
 
           if(year == "year"){
@@ -217,6 +232,8 @@ app.get('/summary/:key/:year', function (req, res) {
 //  API EndPoint to get data subset for one value of a code
 app.get('/subset/:code/:value', function (req, res) {
 
+  console.log("subset endpoint")
+
       // Allows data to be downloaded from the server with security concerns
       res.header("Access-Control-Allow-Origin", "*");
       res.header("Access-Control-Allow-Headers", "X-Requested-WithD");
@@ -244,6 +261,47 @@ app.get('/subset/:code/:value', function (req, res) {
           }
         }); // end sql query
 
+      }else{
+        // if code or value is blank
+        console.log("missing URL variables");
+        res.send("missing URL variables");
+
+      }
+});
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//  API EndPoint to get data subset for one value of a code
+app.get('/specific/:country/:class/:early/:late', function (req, res) {
+
+  console.log("subset endpoint")
+
+      // Allows data to be downloaded from the server with security concerns
+      res.header("Access-Control-Allow-Origin", "*");
+      res.header("Access-Control-Allow-Headers", "X-Requested-WithD");
+      // If all the variables are provided connect to the database
+
+      if(req.params.code != "" && req.params.value != ""){
+
+        console.log("get parameters ok");
+        var code = mysql_real_escape_string(req.params.code);
+        var value = mysql_real_escape_string(req.params.value);
+
+        var sql = "SELECT * FROM Final_Data WHERE `"+code+"` = \'"+value+"\'";
+
+        // console.log("query: ", sql)
+
+        // Run the SQL Query
+        connection.query(sql, function(err, rows, fields) {
+          if (err) console.log("Err:" + err);
+          if(rows != undefined){
+            // If we have data that comes back send it to the user.
+            res.send(rows);
+          }else{
+            console.log("empty query");
+            res.send("empty query");
+          }
+        }); // end sql query
 
       }else{
         // if code or value is blank
@@ -252,6 +310,91 @@ app.get('/subset/:code/:value', function (req, res) {
 
       }
 });
+
+
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//  API EndPoint to get data subset for timeline of acquisitions by year
+app.get('/acq/:early/:late', function (req, res) {
+
+    console.log("acq endpoint")
+
+      // Allows data to be downloaded from the server with security concerns
+      res.header("Access-Control-Allow-Origin", "*");
+      res.header("Access-Control-Allow-Headers", "X-Requested-WithD");
+      // If all the variables are provided connect to the database
+
+      if(req.params.early != "" && req.params.late != ""){
+
+        var early = mysql_real_escape_string(req.params.early);
+        var late = mysql_real_escape_string(req.params.late);
+        console.log("early: ", early);
+        console.log("late: ", late);
+
+        // check if the two values are "no"
+
+        if(early == "no" && late == "no"){
+
+          console.log("no year range")
+          var sql = "SELECT country, count FROM donation_data";
+
+          // console.log("query: ", sql)
+
+          // Run the SQL Query
+          connection.query(sql, function(err, rows, fields) {
+            if (err) console.log("Err:" + err);
+            if(rows != undefined){
+              // If we have data that comes back send it to the user.
+              res.send(rows);
+            }else{
+              console.log("empty query");
+              res.send("empty query");
+            }
+          }); // end sql query
+
+
+        }else{
+
+        // console.log("early and late are not both no");
+        var early = parseInt(req.params.early);
+        var late = parseInt(req.params.late);
+        // console.log("early: ", early);
+        // console.log("late: ", late);
+
+          // if there is a date range
+
+          var sql = "SELECT country, count FROM donation_data WHERE year >= \'"+early+"\' AND year <= \'"+late+"\'";
+          // var sql = "SELECT * FROM Final_Data WHERE `"+code+"` = \'"+value+"\'";
+
+          // console.log("query: ", sql)
+
+          // Run the SQL Query
+          connection.query(sql, function(err, rows, fields) {
+            if (err) console.log("Err:" + err);
+            if(rows != undefined){
+              // If we have data that comes back send it to the user.
+              res.send(rows);
+            }else{
+              // console.log("empty query");
+              res.send("empty query");
+            }
+          }); // end sql query
+
+        }
+
+
+      }else{
+        // if code or value is blank
+        // console.log("missing URL variables");
+        res.send("missing URL variables");
+
+      }
+});
+
+////////////////////////////////////////////////////////////////////////////////////////
 
 // Setup the server and print a string to the screen when server is ready
 var server = app.listen(portNumber, function () {
