@@ -310,7 +310,7 @@ app.get('/acq/:early/:late', function (req, res) {
         }else{
           // if there is a date range
 
-          var sql = "SELECT country, count FROM donation_data WHERE year >= \'"+early+"\' AND year <= \'"+late"\'";
+          var sql = "SELECT country, count FROM donation_data WHERE year >= \'"+early+"\' AND year <= \'"+late+"\'";
           // var sql = "SELECT * FROM Final_Data WHERE `"+code+"` = \'"+value+"\'";
 
           // console.log("query: ", sql)
