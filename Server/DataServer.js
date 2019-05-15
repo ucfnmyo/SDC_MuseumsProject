@@ -136,6 +136,8 @@ app.get('/summary/:key/:year', function (req, res) {
       // check for key
       if(req.params.key != "" && req.params.key != ""){
 
+        console.log("parameters correct")
+
         // Parse the values from the URL into numbers for the query, and use function to escape special characters
         var key = mysql_real_escape_string(req.params.key);
 
@@ -145,9 +147,15 @@ app.get('/summary/:key/:year', function (req, res) {
           var year = mysql_real_escape_string(req.params.year);
 
           if(year == "year"){
+
+            console.log("include year in group by")
             // if year is right
+            console.log("key: ", key)
+
             var sql = "SELECT \`"+key+"\`, `object_begin_date`, COUNT(*) AS count FROM Final_Data GROUP BY  \'"+key+"\', `object_begin_date`";
-            var sql = "SELECT COUNT(*) AS count FROM Final_Data GROUP BY  `region`";
+            console.log("test sql query: ", sql)
+
+            var sql = "SELECT 'region', COUNT(*) AS count FROM Final_Data GROUP BY  `region`";
 
 
             // Log it on the screen for debugging
@@ -175,8 +183,10 @@ app.get('/summary/:key/:year', function (req, res) {
 
       }else{
 
-        // if year value is blank
+        if (year == "no"){
 
+                  // if year value is blank
+        console.log("no year")
 
           // var sql = "SELECT \'"+key+"\', COUNT(*) AS count FROM Final_Data GROUP BY  \'"+key+"\'";
           var sql = "SELECT COUNT(*) AS count FROM Final_Data GROUP BY  `region`";
@@ -184,7 +194,7 @@ app.get('/summary/:key/:year', function (req, res) {
           // Log it on the screen for debugging
           console.log(sql);
 
-            // Run the SQL Query
+                      // Run the SQL Query
             connection.query(sql, function(err, rows, fields) {
               if (err) console.log("Err:" + err);
               if(rows != undefined){
@@ -197,6 +207,12 @@ app.get('/summary/:key/:year', function (req, res) {
 
             })   // end connection query
 
+        }else{
+
+          console.log("year parameter incorrect")
+          res.send("year parameter incorrect");
+
+        }
 
       } // end check for key
 
