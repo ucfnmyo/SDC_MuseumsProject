@@ -1,6 +1,6 @@
 <html>
 <head>
-<title>Flickr API Information</title>
+<title>Metropolitan Museum API Information</title>
 <link href='http://fonts.googleapis.com/css?family=Raleway:400,700' rel='stylesheet' type='text/css'>
 <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
 <link rel="stylesheet" href="style.css" type="text/css">
@@ -8,19 +8,21 @@
 <body>
 <script src="./jquery.min.js"></script>
 <div id="container">
-	<h1>
-		Flickr DB API
-	</h1>
-	
 	<h2>
-	 Data Endpoints
+		Metropolitan Museum Data API Documentation
 	</h2>
+	
+	<h3>
+	 Data Endpoints
+	</h3>
 
+	<h4> All Data </h4>
 	<p>
 		http://dev.spatialdatacapture.org:8872/data - <a href="http://dev.spatialdatacapture.org:8872/dataLimited" target="_BLANK">Example</a><br/>
 		<b>Returns the entire Met Holdings Database, this "/dataLimited" example is limited to the first 100 rows. Use "/data" for unlimited query</b>
 	</p>
 
+	<h4> Summary Data</h4>
 	<p>
 		http://dev.spatialdatacapture.org:8872/summary/:key/:year - <a href="http://dev.spatialdatacapture.org:8872/summary/Class_General/no" target="_BLANK">Example</a><br/>
 
@@ -29,6 +31,7 @@
 		Possible Key values include: ObjectName, City, Country, Classification, 
 	</p>
 
+	<h4>Data Subsets</h4>
 	<p>
 		http://dev.spatialdatacapture.org:8872/subset/:code/:value - <a href="http://dev.spatialdatacapture.org:8872/subset/country/United States" target="_BLANK">Example</a><br/>
 		<b>Returns a subset of the Met holdings data of rows where the column specified by "code" matches the value specified by "key".</b><br/>
@@ -37,8 +40,15 @@
 
 	</p>
 
-
+	<h4>Specific Objects</h4>
 	<p>
+		http://dev.spatialdatacapture.org:8872/specific/:id - <a href="http://dev.spatialdatacapture.org:8872/subset/country/United States" target="_BLANK">Example</a><br/>
+		<b>Returns the data for a single object from the collection, including the url to the Met website for that object.</b><br/>
+	</p>
+
+
+
+<!-- 	<p>
 		http://dev.spatialdatacapture.org:8870/data/:lat/:lon/:radius - <a href="http://dev.spatialdatacapture.org:8870/data/51.514756/-0.104345/50" target="_BLANK">Example</a><br/>
 		<b>Returns all photos inside our flickr photo databse with a radius (in meters) for a given lat/lng point</b>
 	</p>	
@@ -47,7 +57,7 @@
 		http://dev.spatialdatacapture.org:8870/data/photoDescription/:pid - <a href="http://dev.spatialdatacapture.org:8870/data/photoDescription/4279893539" target="_BLANK">Example</a> <br/>
 		<b>Returns a single photos metadata inside our flickr photo databse for a given Photo ID</b>
  	
-	</p>
+	</p> -->
 </div>
 </body>
 </html>
