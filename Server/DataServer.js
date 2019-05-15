@@ -136,7 +136,6 @@ app.get('/summary/:key/:year', function (req, res) {
 
       // check for key
       if(req.params.key != "" && req.params.key != ""){
-
         // console.log("parameters correct");
 
         // Parse the values from the URL into numbers for the query, and use function to escape special characters
@@ -155,10 +154,7 @@ app.get('/summary/:key/:year', function (req, res) {
 
             var sql = "SELECT `"+key+"`, `object_begin_date`, COUNT(*) AS count FROM Final_Data GROUP BY  `"+key+"`, `object_begin_date`";
             // console.log("test sql query: ", sql)
-
             // var sql = "SELECT `region`, COUNT(*) AS count FROM Final_Data GROUP BY  `region`";
-
-
             // Log it on the screen for debugging
             console.log(sql);
 
@@ -180,13 +176,10 @@ app.get('/summary/:key/:year', function (req, res) {
               // console.log("year value is not 'year'");
               // res.send("value in year position unrecognized");
 
-
-
           if (year == "no"){
 
-                    // if year value is blank
-          // console.log("no year");
-
+            // if year value is blank
+            // console.log("no year");
             // var sql = "SELECT \'"+key+"\', COUNT(*) AS count FROM Final_Data GROUP BY  \'"+key+"\'";
             // var sql = "SELECT COUNT(*) AS count FROM Final_Data GROUP BY  `region`";
               var sql = "SELECT `"+key+"`, COUNT(*) AS count FROM Final_Data GROUP BY  `"+key+"`";
@@ -218,71 +211,22 @@ app.get('/summary/:key/:year', function (req, res) {
 
             }  // end catch wrong year value
 
-      }else{
+      }else{ // if year is blank (technically redundant but not harmful)
 
-            console.log("year parameter missing");
-            res.send("year parameter mising");
+              console.log("year parameter missing");
+              res.send("year parameter mising");
 
-      } // end check for key
+            } // end check for key
+    }else {         // if the key argument is blank
 
-/////////////////////////////////
-    }else {
-
-    // if the key argument is blank
     // If all the URL variables are not passed send an empty string to the user
     console.log("missing URL variables");
     res.send("missing URL variables");
 
           }
 
-  });
+  });   // end of summary endpoint
 
-////////////////////////////////////////////////////////////////////////////////////////
-
-//           // include year in group by
-
-
-
-//         }else{
-
-
-
-//           // Run the SQL Query
-//           connection.query(sql, function(err, rows, fields) {
-//             if (err) console.log("Err:" + err);
-//             if(rows != undefined){
-//               // If we have data that comes back send it to the user.
-//               res.send(rows);
-//             }else{
-//               console.log("empty query");
-//               res.send("empty query");
-//             }
-
-//           }   // end connection query
-
-//         // SQL Statement to run
-//         var sql = "SELECT *  FROM SpatialMET WHERE  \""+code+"\" = \""+value+"\ Limit 10";
-
-
-
-//         // Log it on the screen for debugging
-//         console.log(sql);
-
-//         // Run the SQL Query
-//         connection.query(sql, function(err, rows, fields) {
-//           if (err) console.log("Err:" + err);
-//           if(rows != undefined){
-//             // If we have data that comes back send it to the user.
-//             res.send(rows);
-//           }else{
-//             console.log("empty query");
-//             res.send("empty query");
-//           }
-//         });
-//       }else{
-
-//       }  // end params check
-// });     /// end function
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -294,20 +238,15 @@ app.get('/subset/:code/:value', function (req, res) {
       res.header("Access-Control-Allow-Headers", "X-Requested-WithD");
       // If all the variables are provided connect to the database
 
-      if(req.params.code != ""){
-               
-        // Parse the values from the URL into numbers for the query, and use function to escape special characters
-        var code = req.params.code;
-        code1 = mysql_real_escape_string(code);
+      if(req.params.code != "" && req.params.value != ""){
+
+        console.log("get parameters ok");
+        var code = mysql_real_escape_string(req.params.code);
         var value = mysql_real_escape_string(req.params.value);
 
-        // SQL Statement to run
-        var sql = "SELECT *  FROM SpatialMET WHERE  \""+code+"\" = \""+value+"\ Limit 10";
+        var sql = "SELECT * FROM Final_Data WHERE `"+code+"` = `"+value"`";
 
-
-
-        // Log it on the screen for debugging
-        console.log(sql);
+        console.log("query: ", sql)
 
         // Run the SQL Query
         connection.query(sql, function(err, rows, fields) {
@@ -319,34 +258,48 @@ app.get('/subset/:code/:value', function (req, res) {
             console.log("empty query");
             res.send("empty query");
           }
-        });
+        }); // end sql query
+
+
       }else{
-        // If all the URL variables are not passed send an empty string to the user
-        console.log("incorrect URL variables");
-        res.send("incorrect URL variables");
+        // if code or value is blank
+        console.log("missing URL variables");
+        res.send("missing URL variables");
+
       }
+               
+//         // Parse the values from the URL into numbers for the query, and use function to escape special characters
+//         var code = req.params.code;
+//         code1 = mysql_real_escape_string(code);
+//         var value = mysql_real_escape_string(req.params.value);
+
+//         // SQL Statement to run
+//         var sql = "SELECT *  FROM SpatialMET WHERE  \""+code+"\" = \""+value+"\ Limit 10";
+
+//         // Log it on the screen for debugging
+//         console.log(sql);
 
 
-
-
-
-
-
+//       }else{
+//         // If all the URL variables are not passed send an empty string to the user
+//         console.log("incorrect URL variables");
+//         res.send("incorrect URL variables");
+//       }
       
-/////////////////////////////////////////////////////////
-      var sql = "SELECT * FROM XXXTABLE_NAMEXXX WHERE " ;
+// /////////////////////////////////////////////////////////
+//       var sql = "SELECT * FROM XXXTABLE_NAMEXXX WHERE " ;
 
-      connection.query(sql, function(err, rows, fields) {
-            if (err) console.log("Err:" + err);
-            if(rows != undefined){
-                // If we have data that comes back send it to the user.
-                // does this need to be json'ed?
-                res.send(rows);
-                }else{
-                    console.log("empty query");
-                    res.send("empty query");
-                    }
-                });
+//       connection.query(sql, function(err, rows, fields) {
+//             if (err) console.log("Err:" + err);
+//             if(rows != undefined){
+//                 // If we have data that comes back send it to the user.
+//                 // does this need to be json'ed?
+//                 res.send(rows);
+//                 }else{
+//                     console.log("empty query");
+//                     res.send("empty query");
+//                     }
+//                 });
 });
 
 
