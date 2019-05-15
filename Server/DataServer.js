@@ -40,16 +40,6 @@ app.get('/', function(req, res) {
     return res.render('api_index');
 })
 
-// app.get('/test', function(req, res) {
-// 	return res.render('flickr_index');
-// })
-
-// app.get('/date', function(req, res) {
-// 	var d = new Date();
-// 	console.log(d);
-// 	return res.send(d);
-// })
-
 //  API EndPoint to get all data
 app.get('/data', function (req, res) {
 
@@ -268,38 +258,7 @@ app.get('/subset/:code/:value', function (req, res) {
 
       }
                
-//         // Parse the values from the URL into numbers for the query, and use function to escape special characters
-//         var code = req.params.code;
-//         code1 = mysql_real_escape_string(code);
-//         var value = mysql_real_escape_string(req.params.value);
 
-//         // SQL Statement to run
-//         var sql = "SELECT *  FROM SpatialMET WHERE  \""+code+"\" = \""+value+"\ Limit 10";
-
-//         // Log it on the screen for debugging
-//         console.log(sql);
-
-
-//       }else{
-//         // If all the URL variables are not passed send an empty string to the user
-//         console.log("incorrect URL variables");
-//         res.send("incorrect URL variables");
-//       }
-      
-// /////////////////////////////////////////////////////////
-//       var sql = "SELECT * FROM XXXTABLE_NAMEXXX WHERE " ;
-
-//       connection.query(sql, function(err, rows, fields) {
-//             if (err) console.log("Err:" + err);
-//             if(rows != undefined){
-//                 // If we have data that comes back send it to the user.
-//                 // does this need to be json'ed?
-//                 res.send(rows);
-//                 }else{
-//                     console.log("empty query");
-//                     res.send("empty query");
-//                     }
-//                 });
 });
 
 
