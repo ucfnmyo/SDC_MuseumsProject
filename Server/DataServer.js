@@ -134,7 +134,7 @@ app.get('/summary/:key/:year', function (req, res) {
       // If all the variables are provided connect to the database
 
       // check for key
-      if(req.params.key != ""){
+      if(req.params.key != "" && req.params.key != ""){
 
         // Parse the values from the URL into numbers for the query, and use function to escape special characters
         var key = mysql_real_escape_string(req.params.key);
@@ -147,6 +147,9 @@ app.get('/summary/:key/:year', function (req, res) {
           if(year == "year"){
             // if year is right
             var sql = "SELECT \`"+key+"\`, `object_begin_date`, COUNT(*) AS count FROM Final_Data GROUP BY  \'"+key+"\', `object_begin_date`";
+            var sql = "SELECT COUNT(*) AS count FROM Final_Data GROUP BY  `region`";
+
+
             // Log it on the screen for debugging
             console.log(sql);
 
@@ -175,7 +178,8 @@ app.get('/summary/:key/:year', function (req, res) {
         // if year value is blank
 
 
-          var sql = "SELECT \'"+key+"\', COUNT(*) AS count FROM Final_Data GROUP BY  \'"+key+"\'";
+          // var sql = "SELECT \'"+key+"\', COUNT(*) AS count FROM Final_Data GROUP BY  \'"+key+"\'";
+          var sql = "SELECT COUNT(*) AS count FROM Final_Data GROUP BY  `region`";
 
           // Log it on the screen for debugging
           console.log(sql);
