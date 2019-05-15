@@ -244,7 +244,7 @@ app.get('/subset/:code/:value', function (req, res) {
         var code = mysql_real_escape_string(req.params.code);
         var value = mysql_real_escape_string(req.params.value);
 
-        var sql = "SELECT * FROM Final_Data WHERE `"+code+"` = `"+value+"`";
+        var sql = "SELECT * FROM Final_Data WHERE `"+code+"` = \'"+value+"\'";
 
         console.log("query: ", sql)
 
