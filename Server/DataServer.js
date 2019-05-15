@@ -122,6 +122,9 @@ app.get('/dataLimited', function (req, res) {
 });
 
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 //  API EndPoint to get summary data
 app.get('/summary/:key/:year', function (req, res) {
 
@@ -130,19 +133,20 @@ app.get('/summary/:key/:year', function (req, res) {
       res.header("Access-Control-Allow-Headers", "X-Requested-WithD");
       // If all the variables are provided connect to the database
 
+      // check for key
       if(req.params.key != ""){
-               
+
         // Parse the values from the URL into numbers for the query, and use function to escape special characters
         var key = mysql_real_escape_string(req.params.key);
 
         if(req.params.year != ""){
+
           console.log("year variable")
           var year = mysql_real_escape_string(req.params.year);
 
-          if(year == "year") {
+          if(year == "year"){
+            // if year is right
             var sql = "SELECT \`"+key+"\`, `object_begin_date`, COUNT(*) AS count FROM Final_Data GROUP BY  \'"+key+"\', `object_begin_date`";
-//////////////////////////////
-
             // Log it on the screen for debugging
             console.log(sql);
 
@@ -157,66 +161,101 @@ app.get('/summary/:key/:year', function (req, res) {
                 res.send("empty query");
               }
 
-            }   // end connection query
+            })   // end connection query
 
-
-
-/////////////////////////////////
-          }else {
+          }else{
+            // if year is wrong
             console.log("year variable incorrect")
             res.send("value in year position unrecognized");
-          }
 
-          // include year in group by
+          }  // end catch wrong year value
 
+      }else{
 
+        // if year value is blank
 
-        }else{
 
           var sql = "SELECT \'"+key+"\', COUNT(*) AS count FROM Final_Data GROUP BY  \'"+key+"\'";
 
           // Log it on the screen for debugging
           console.log(sql);
 
-          // Run the SQL Query
-          connection.query(sql, function(err, rows, fields) {
-            if (err) console.log("Err:" + err);
-            if(rows != undefined){
-              // If we have data that comes back send it to the user.
-              res.send(rows);
-            }else{
-              console.log("empty query");
-              res.send("empty query");
-            }
+            // Run the SQL Query
+            connection.query(sql, function(err, rows, fields) {
+              if (err) console.log("Err:" + err);
+              if(rows != undefined){
+                // If we have data that comes back send it to the user.
+                res.send(rows);
+              }else{
+                console.log("empty query");
+                res.send("empty query");
+              }
 
-          }   // end connection query
-
-        // SQL Statement to run
-        var sql = "SELECT *  FROM SpatialMET WHERE  \""+code+"\" = \""+value+"\ Limit 10";
+            })   // end connection query
 
 
+      } // end check for key
 
-        // Log it on the screen for debugging
-        console.log(sql);
+/////////////////////////////////
+    }else {
 
-        // Run the SQL Query
-        connection.query(sql, function(err, rows, fields) {
-          if (err) console.log("Err:" + err);
-          if(rows != undefined){
-            // If we have data that comes back send it to the user.
-            res.send(rows);
-          }else{
-            console.log("empty query");
-            res.send("empty query");
+    // if the key argument is blank
+    // If all the URL variables are not passed send an empty string to the user
+    console.log("missing URL variables");
+    res.send("missing URL variables");
+
           }
-        });
-      }else{
-        // If all the URL variables are not passed send an empty string to the user
-        console.log("missing URL variables");
-        res.send("missing URL variables");
-      }  // end params check
-});     /// end function
 
+  });
+
+////////////////////////////////////////////////////////////////////////////////////////
+
+//           // include year in group by
+
+
+
+//         }else{
+
+
+
+//           // Run the SQL Query
+//           connection.query(sql, function(err, rows, fields) {
+//             if (err) console.log("Err:" + err);
+//             if(rows != undefined){
+//               // If we have data that comes back send it to the user.
+//               res.send(rows);
+//             }else{
+//               console.log("empty query");
+//               res.send("empty query");
+//             }
+
+//           }   // end connection query
+
+//         // SQL Statement to run
+//         var sql = "SELECT *  FROM SpatialMET WHERE  \""+code+"\" = \""+value+"\ Limit 10";
+
+
+
+//         // Log it on the screen for debugging
+//         console.log(sql);
+
+//         // Run the SQL Query
+//         connection.query(sql, function(err, rows, fields) {
+//           if (err) console.log("Err:" + err);
+//           if(rows != undefined){
+//             // If we have data that comes back send it to the user.
+//             res.send(rows);
+//           }else{
+//             console.log("empty query");
+//             res.send("empty query");
+//           }
+//         });
+//       }else{
+
+//       }  // end params check
+// });     /// end function
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //  API EndPoint to get data subset for one value of a code
 app.get('/subset/:code/:value', function (req, res) {
