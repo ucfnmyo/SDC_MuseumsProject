@@ -9,9 +9,7 @@
 //  CREATE FUNCTION distance(a POINT, b POINT) RETURNS double DETERMINISTIC RETURN ifnull(acos(sin(X(a)) * sin(X(b)) + cos(X(a)) * cos(X(b)) * cos(Y(b) - Y(a))) * 6380, 0)
 
 var moment = require('moment');
-
 var portNumber = 8872;
-
 var mysql = require('mysql');
 
  // MySQL Connection Variables
@@ -113,8 +111,6 @@ app.get('/dataLimited', function (req, res) {
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
 //  API EndPoint to get summary data
 // works for "region" "country", "acq_year", "Class_General",  
 app.get('/summary/:key/:year', function (req, res) {
@@ -214,12 +210,10 @@ app.get('/summary/:key/:year', function (req, res) {
     res.send("missing URL variables");
 
           }
-
   });   // end of summary endpoint
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 //  API EndPoint to get data subset for one value of a code
 app.get('/subset/:code/:value', function (req, res) {
 
@@ -257,8 +251,6 @@ app.get('/subset/:code/:value', function (req, res) {
         res.send("missing URL variables");
 
       }
-               
-
 });
 
 
