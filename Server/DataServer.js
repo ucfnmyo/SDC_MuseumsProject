@@ -176,8 +176,8 @@ app.get('/summary/:key/:year', function (req, res) {
 
           }else{
             // if year is wrong
-            console.log("year variable incorrect")
-            res.send("value in year position unrecognized");
+            console.log("year value is not 'year'")
+            // res.send("value in year position unrecognized");
 
           }  // end catch wrong year value
 
