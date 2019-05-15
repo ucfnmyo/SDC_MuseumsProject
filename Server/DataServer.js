@@ -50,52 +50,6 @@ app.get('/', function(req, res) {
 // 	return res.send(d);
 // })
 
-
-app.get('/bubble', function (req, res) {
-
-      // Allows data to be downloaded from the server with security concerns
-      res.header("Access-Control-Allow-Origin", "*");
-      res.header("Access-Control-Allow-Headers", "X-Requested-WithD");
-      // If all the variables are provided connect to the database
-
-      var sql = "SELECT `region`, `country`, Count(*) AS count_value FROM Final_Data Group by `region`, `country`";
-
-      connection.query(sql, function(err, rows, fields) {
-            if (err) console.log("Err:" + err);
-            if(rows != undefined){
-                // If we have data that comes back send it to the user.
-                // does this need to be json'ed?
-                res.send(rows);
-                }else{
-                    console.log("empty query");
-                    res.send("empty query");
-                    }
-                });
-});
-
-app.get('/temp_point', function (req, res) {
-
-      // Allows data to be downloaded from the server with security concerns
-      res.header("Access-Control-Allow-Origin", "*");
-      res.header("Access-Control-Allow-Headers", "X-Requested-WithD");
-      // If all the variables are provided connect to the database
-
-      var sql = "SELECT `region`, `country`, Count(*) AS count_value FROM Final_Data Group by `region`, `country`";
-
-      connection.query(sql, function(err, rows, fields) {
-            if (err) console.log("Err:" + err);
-            if(rows != undefined){
-                // If we have data that comes back send it to the user.
-                // does this need to be json'ed?
-                res.send(rows);
-                }else{
-                    console.log("empty query");
-                    res.send("empty query");
-                    }
-                });
-});
-
-
 //  API EndPoint to get all data
 app.get('/data', function (req, res) {
 
@@ -118,6 +72,31 @@ app.get('/data', function (req, res) {
                     }
                 });
 });
+
+
+// gets summary data for country bubble chart
+app.get('/bubble', function (req, res) {
+
+      // Allows data to be downloaded from the server with security concerns
+      res.header("Access-Control-Allow-Origin", "*");
+      res.header("Access-Control-Allow-Headers", "X-Requested-WithD");
+      // If all the variables are provided connect to the database
+
+      var sql = "SELECT `region`, `country`, Count(*) AS count_value FROM Final_Data Group by `region`, `country`";
+
+      connection.query(sql, function(err, rows, fields) {
+            if (err) console.log("Err:" + err);
+            if(rows != undefined){
+                // If we have data that comes back send it to the user.
+                // does this need to be json'ed?
+                res.send(rows);
+                }else{
+                    console.log("empty query");
+                    res.send("empty query");
+                    }
+                });
+});
+
 
 // API endpoint to get a limited full table select for demonstration purposes
 app.get('/dataLimited', function (req, res) {
@@ -144,27 +123,99 @@ app.get('/dataLimited', function (req, res) {
 
 
 //  API EndPoint to get summary data
-app.get('/summary/:key', function (req, res) {
+app.get('/summary/:key/:year', function (req, res) {
 
       // Allows data to be downloaded from the server with security concerns
       res.header("Access-Control-Allow-Origin", "*");
       res.header("Access-Control-Allow-Headers", "X-Requested-WithD");
       // If all the variables are provided connect to the database
 
-      var sql = "SELECT * FROM Met_noUSA";
+      if(req.params.key != ""){
+               
+        // Parse the values from the URL into numbers for the query, and use function to escape special characters
+        var key = mysql_real_escape_string(req.params.key);
 
-      connection.query(sql, function(err, rows, fields) {
+        if(req.params.year != ""){
+          console.log("year variable")
+          var year = mysql_real_escape_string(req.params.year);
+
+          if(year == "year") {
+            var sql = "SELECT \`"+key+"\`, `object_begin_date`, COUNT(*) AS count FROM Final_Data GROUP BY  \'"+key+"\', `object_begin_date`";
+//////////////////////////////
+
+            // Log it on the screen for debugging
+            console.log(sql);
+
+            // Run the SQL Query
+            connection.query(sql, function(err, rows, fields) {
+              if (err) console.log("Err:" + err);
+              if(rows != undefined){
+                // If we have data that comes back send it to the user.
+                res.send(rows);
+              }else{
+                console.log("empty query");
+                res.send("empty query");
+              }
+
+            }   // end connection query
+
+
+
+/////////////////////////////////
+          }else {
+            console.log("year variable incorrect")
+            res.send("value in year position unrecognized");
+          }
+
+          // include year in group by
+
+
+
+        }else{
+
+          var sql = "SELECT \'"+key+"\', COUNT(*) AS count FROM Final_Data GROUP BY  \'"+key+"\'";
+
+          // Log it on the screen for debugging
+          console.log(sql);
+
+          // Run the SQL Query
+          connection.query(sql, function(err, rows, fields) {
             if (err) console.log("Err:" + err);
             if(rows != undefined){
-                // If we have data that comes back send it to the user.
-                // does this need to be json'ed?
-                res.send(rows);
-                }else{
-                    console.log("empty query");
-                    res.send("empty query");
-                    }
-                });
-});
+              // If we have data that comes back send it to the user.
+              res.send(rows);
+            }else{
+              console.log("empty query");
+              res.send("empty query");
+            }
+
+          }   // end connection query
+
+        // SQL Statement to run
+        var sql = "SELECT *  FROM SpatialMET WHERE  \""+code+"\" = \""+value+"\ Limit 10";
+
+
+
+        // Log it on the screen for debugging
+        console.log(sql);
+
+        // Run the SQL Query
+        connection.query(sql, function(err, rows, fields) {
+          if (err) console.log("Err:" + err);
+          if(rows != undefined){
+            // If we have data that comes back send it to the user.
+            res.send(rows);
+          }else{
+            console.log("empty query");
+            res.send("empty query");
+          }
+        });
+      }else{
+        // If all the URL variables are not passed send an empty string to the user
+        console.log("missing URL variables");
+        res.send("missing URL variables");
+      }  // end params check
+});     /// end function
 
 
 //  API EndPoint to get data subset for one value of a code
