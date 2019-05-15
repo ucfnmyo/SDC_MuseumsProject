@@ -256,23 +256,25 @@ app.get('/subset/:code/:value', function (req, res) {
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //  API EndPoint to get data subset for timeline of acquisitions by year
-app.get('/acq/:code/:value', function (req, res) {
+app.get('/acq/:early/:late', function (req, res) {
 
       // Allows data to be downloaded from the server with security concerns
       res.header("Access-Control-Allow-Origin", "*");
       res.header("Access-Control-Allow-Headers", "X-Requested-WithD");
       // If all the variables are provided connect to the database
 
-      if(req.params.code != "" && req.params.value != ""){
+      if(req.params.early != "" && req.params.late != ""){
 
 
         console.log("get parameters ok");
-        var code = mysql_real_escape_string(req.params.code);
-        var value = mysql_real_escape_string(req.params.value);
+        var early = parseInt(req.params.early);
+        var late = parseInt(req.params.late);
+        console.log("early: ", early);
+        console.log("late: ", late);
 
         // check if the two values are "no"
 
-        if(code == "no" && value == "no"){
+        if(early == "no" && late == "no"){
 
           console.log("no year range")
           var sql = "SELECT country, count FROM donation_data";
@@ -293,9 +295,9 @@ app.get('/acq/:code/:value', function (req, res) {
 
 
         }else{
-          // if there are database
+          // if there is a date range
 
-          var sql = "SELECT country, count FROM donation_data";
+          var sql = "SELECT country, count FROM donation_data WHERE year >= \'"+early+"\' AND year <= \'"+late"\'";
           // var sql = "SELECT * FROM Final_Data WHERE `"+code+"` = \'"+value+"\'";
 
           // console.log("query: ", sql)
