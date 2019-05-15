@@ -275,7 +275,7 @@ app.get('/acq/:code/:value', function (req, res) {
         if(code == "no" && value == "no"){
 
           console.log("no year range")
-          var sql = "SELECT * FROM donation_data";
+          var sql = "SELECT country, count FROM donation_data";
 
           // console.log("query: ", sql)
 
@@ -295,7 +295,7 @@ app.get('/acq/:code/:value', function (req, res) {
         }else{
           // if there are database
 
-          var sql = "SELECT * FROM donation_data";
+          var sql = "SELECT country, count FROM donation_data";
           // var sql = "SELECT * FROM Final_Data WHERE `"+code+"` = \'"+value+"\'";
 
           // console.log("query: ", sql)
