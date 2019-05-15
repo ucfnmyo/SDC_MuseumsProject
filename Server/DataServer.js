@@ -246,7 +246,7 @@ app.get('/subset/:code/:value', function (req, res) {
 
         var sql = "SELECT * FROM Final_Data WHERE `"+code+"` = \'"+value+"\'";
 
-        console.log("query: ", sql)
+        // console.log("query: ", sql)
 
         // Run the SQL Query
         connection.query(sql, function(err, rows, fields) {
