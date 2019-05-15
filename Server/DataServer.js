@@ -152,7 +152,7 @@ app.get('/summary/:key/:year', function (req, res) {
             // if year is right
             console.log("key: ", key)
 
-            var sql = "SELECT \`"+key+"\`, `object_begin_date`, COUNT(*) AS count FROM Final_Data GROUP BY  \'"+key+"\', `object_begin_date`";
+            var sql = "SELECT `"+key+"`, `object_begin_date`, COUNT(*) AS count FROM Final_Data GROUP BY  `"+key+"`, `object_begin_date`";
             console.log("test sql query: ", sql)
 
             // var sql = "SELECT `region`, COUNT(*) AS count FROM Final_Data GROUP BY  `region`";
