@@ -422,7 +422,6 @@ app.get('/specific/:country/:cat/:early/:late', function (req, res) {
 
       res.send("must use at least one parameter");
     }else{
-
       // Run the SQL Query
       connection.query(sql, function(err, rows, fields) {
         if (err) console.log("Err:" + err);
@@ -434,13 +433,14 @@ app.get('/specific/:country/:cat/:early/:late', function (req, res) {
           res.send("empty query");
         }
       }); // end sql query
-    }else{
-      // if code or value is blank
-      console.log("missing URL variables");
-      res.send("missing URL variables");
     }
+
+  }else{
+    // if code or value is blank
+    console.log("missing URL variables");
+    res.send("missing URL variables");
   }   // end check if params are blanks
-});
+});    // end function
 
 
 
