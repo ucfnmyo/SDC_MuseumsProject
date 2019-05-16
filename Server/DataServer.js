@@ -458,69 +458,23 @@ app.get('/timeline/group', function (req, res) {
       res.header("Access-Control-Allow-Headers", "X-Requested-WithD");
       // If all the variables are provided connect to the database
 
- //var sql = "SELECT country, count FROM donation_data WHERE country ='United States' OR country = 'United Kingdom' OR country = 'Japan' OR country = 'Egypt' OR country = 'Zaire' OR country = 'Australia'";
-   var sql = "SELECT country FROM donation_data LIMIT 10"       
+    var sql = "SELECT country, count FROM donation_data WHERE country ='United States' OR country = 'United Kingdom' OR country = 'Japan' OR country = 'Egypt' OR country = 'Zaire' OR country = 'Australia'";
+   //var sql = "SELECT country FROM donation_data LIMIT 10"  
+
+       // Run the SQL Query
+    connection.query(sql, function(err, rows, fields) {
+      if (err) console.log("Err:" + err);
+      if(rows != undefined){
+        // If we have data that comes back send it to the user.
+        res.send(rows);
+      }else{
+        // console.log("empty query");
+        res.send("empty query");
+      }
+    }); // end sql query     
 
 /////////////////////////////////////////////////////////////////
 
-
-      if(req.params.region != ""){
-
-        var country = mysql_real_escape_string(req.params.country);
-        console.log("country: ", country);
-
-        // check if the two values are "no"
-
-        if(country == "no"){
-
-          console.log("no country");
-          var sql = "SELECT country, count FROM donation_data";
-
-          // console.log("query: ", sql)
-
-          // Run the SQL Query
-          connection.query(sql, function(err, rows, fields) {
-            if (err) console.log("Err:" + err);
-            if(rows != undefined){
-              // If we have data that comes back send it to the user.
-              res.send(rows);
-            }else{
-              console.log("empty query");
-              res.send("empty query");
-            }
-          }); // end sql query
-
-
-        }else{
-
-
-
-          var sql = "SELECT country, count FROM donation_data WHERE country = \'"+country+"\'";
-          // var sql = "SELECT * FROM Final_Data WHERE `"+code+"` = \'"+value+"\'";
-
-          // console.log("query: ", sql)
-
-          // Run the SQL Query
-          connection.query(sql, function(err, rows, fields) {
-            if (err) console.log("Err:" + err);
-            if(rows != undefined){
-              // If we have data that comes back send it to the user.
-              res.send(rows);
-            }else{
-              // console.log("empty query");
-              res.send("empty query");
-            }
-          }); // end sql query
-
-        }
-
-
-      }else{
-        // if code or value is blank
-        // console.log("missing URL variables");
-        res.send("missing URL variables");
-
-      }
 });
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
