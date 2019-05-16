@@ -1,17 +1,13 @@
 #!/usr/bin/env node
 
-//  FlickrData API Server
-//  Author:  Steven Gray
-//  Description:  This FlickrAPI server allows users to connect to the Flickr Database and return values to explore on a mpa
-//                for Workshop 8 - 9 of the course.
-//  Notes:        This API assumes you have an SQL function called DISTANCE defined which can be created by running the following query in MySQL:
-
-//  CREATE FUNCTION distance(a POINT, b POINT) RETURNS double DETERMINISTIC RETURN ifnull(acos(sin(X(a)) * sin(X(b)) + cos(X(a)) * cos(X(b)) * cos(Y(b) - Y(a))) * 6380, 0)
+//  Met Museum Collection API Server
 
 /////////////////////////////////////////////////////
 //// WARNING
 ////  This script basically ignores memory management and doesn't free any memory after it's used except by accident
-//// After ~12 API calls or so, there's a good chance  the heap will be totally full and the server will crash. ` forever` will restart it but it's still not optimal. 
+//// After ~12 API calls or so, there's a good chance  the heap will be totally full and the server will crash. 
+// ` forever` will restart it but it's still not optimal and will be a problem if 
+// you're running a temporary server with `node`. 
 ///////////////////////
 
 
@@ -72,6 +68,7 @@ app.get('/data', function (req, res) {
 });
 
 // gets summary data for country bubble chart
+// 1
 app.get('/bubble', function (req, res) {
 
   console.log("bubble endpoint")
@@ -96,8 +93,61 @@ app.get('/bubble', function (req, res) {
                 });
 });
 
+// gets summary data for country bubble chart
+// 2
+app.get('/bubble/Prints', function (req, res) {
+
+  console.log("bubble endpoint")
+
+      // Allows data to be downloaded from the server with security concerns
+      res.header("Access-Control-Allow-Origin", "*");
+      res.header("Access-Control-Allow-Headers", "X-Requested-WithD");
+      // If all the variables are provided connect to the database
+
+      var sql = "SELECT `region`, `country`, Count(*) AS count_value FROM Final_Data WHERE `Class_General` = 'Prints' GROUP BY `region`, `country`";
+
+      connection.query(sql, function(err, rows, fields) {
+            if (err) console.log("Err:" + err);
+            if(rows != undefined){
+                // If we have data that comes back send it to the user.
+                // does this need to be json'ed?
+                res.send(rows);
+                }else{
+                    // console.log("empty query");
+                    res.send("empty query");
+                    }
+                });
+});
+
+// gets summary data for country bubble chart
+// 3
+app.get('/bubble/Metal', function (req, res) {
+
+  console.log("bubble endpoint")
+
+      // Allows data to be downloaded from the server with security concerns
+      res.header("Access-Control-Allow-Origin", "*");
+      res.header("Access-Control-Allow-Headers", "X-Requested-WithD");
+      // If all the variables are provided connect to the database
+
+      var sql = "SELECT `region`, `country`, Count(*) AS count_value FROM Final_Data WHERE `Class_General` = 'Metal' Group by `region`, `country`";
+
+      connection.query(sql, function(err, rows, fields) {
+            if (err) console.log("Err:" + err);
+            if(rows != undefined){
+                // If we have data that comes back send it to the user.
+                // does this need to be json'ed?
+                res.send(rows);
+                }else{
+                    // console.log("empty query");
+                    res.send("empty query");
+                    }
+                });
+});
+
 
 // API endpoint to get a limited full table select for demonstration purposes
+// 3
 app.get('/dataLimited', function (req, res) {
 
   console.log("dataLimited endpoint")
@@ -281,7 +331,7 @@ app.get('/specific/:country/:class/:early/:late', function (req, res) {
       res.header("Access-Control-Allow-Headers", "X-Requested-WithD");
       // If all the variables are provided connect to the database
 
-      if(req.params.code != "" && req.params.value != ""){
+      if(req.params.country != "" && req.params.class != "" && req.params.){
 
         console.log("get parameters ok");
         var code = mysql_real_escape_string(req.params.code);
