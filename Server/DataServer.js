@@ -373,7 +373,7 @@ app.get('/specific/:country/:cat/:early/:late', function (req, res) {
       if(cat == "no"){
 
         if( early == "no" || late == "no"){
-          res.send("must use at least one parameter");
+          var sql = "no"
         }else{ // neither year is no
            // only year values
            var sql = "SELECT * FROM Final_Data WHERE acq_year >= \'"+early+"\' AND acq_year <= \'"+late+"\' ";
@@ -418,24 +418,28 @@ app.get('/specific/:country/:cat/:early/:late', function (req, res) {
     // var sql = "SELECT * FROM Final_Data WHERE country = \'"+country+"\' AND Class_General = \'"+cat+"\' AND acq_year >= \'"+early+"\' AND acq_year <= \'"+late+"\'  ";
     console.log("query: ", sql)
 
-    // Run the SQL Query
-    connection.query(sql, function(err, rows, fields) {
-      if (err) console.log("Err:" + err);
-      if(rows != undefined){
-        // If we have data that comes back send it to the user.
-        res.send(rows);
-      }else{
-        console.log("empty query");
-        res.send("empty query");
-      }
-    }); // end sql query
+    if(sql == "no"){
 
-  }else{
-    // if code or value is blank
-    console.log("missing URL variables");
-    res.send("missing URL variables");
+      res.send("must use at least one parameter");
+    }else{
 
-  }
+      // Run the SQL Query
+      connection.query(sql, function(err, rows, fields) {
+        if (err) console.log("Err:" + err);
+        if(rows != undefined){
+          // If we have data that comes back send it to the user.
+          res.send(rows);
+        }else{
+          console.log("empty query");
+          res.send("empty query");
+        }
+      }); // end sql query
+    }else{
+      // if code or value is blank
+      console.log("missing URL variables");
+      res.send("missing URL variables");
+    }
+  }   // end check if params are blanks
 });
 
 
