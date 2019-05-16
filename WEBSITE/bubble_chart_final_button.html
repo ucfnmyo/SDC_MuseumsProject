@@ -60,7 +60,7 @@
 
 <script type="text/javascript">
 
-
+console.log("Hi!")
 
 var data = [];
 
@@ -75,91 +75,91 @@ document.getElementById("full_button").addEventListener("click", function() {
    
   
 function my_function (){
-<!-- First we fetch the data from the API Call -->
+
+    //<!-- First we fetch the data from the API Call -->
+
+    // what are resp and body? 
 fetch(data).then((resp) => resp.text()).then((body) => {
 
-<!-- A function is defined in order to group the data by country,region... -->
-Array.prototype.groupBy = function(prop) {
-  return this.reduce(function(groups, item) {
-    const val = item[prop]
-    groups[val] = groups[val] || []
-    groups[val].push(item)
-    return groups
-  }, {})
-}
-
-
-<!-- Parse the JSON and group by regions -->
-var country_data = JSON.parse(body);
-var grouped_countries = country_data.groupBy('region');
-
-
-var output1 = [], region;
-for (var name in grouped_countries) {
-    region = {};
-    region.name = name;
-    region.data = grouped_countries[name];
-    output1.push(region);
-}
-
-
-var i;
-for (i = 0; i < output1.length; i++) {
-  for (var count in output1[i].data){
-	output1[i].data[count].name = output1[i].data[count].country
-	output1[i].data[count].value =output1[i].data[count].count_value
-	delete output1[i].data[count].region;
-	delete output1[i].data[count].count_value;
-	delete output1[i].data[count].country;
-  }
-}
-
-
-<!-- The following section creates a highcharts split packed bubble chart by using the data inserted in "output" -->
-Highcharts.chart('container', {
-    chart: {
-        type: 'packedbubble',
-        height: '80%'
-    },
-    title: {
-        text: 'Number of artworks per country'
-    },
-    tooltip: {
-        useHTML: true,
-        pointFormat: '<b>{point.name}:</b> {point.value} artworks'
-    },
-    plotOptions: {
-        packedbubble: {
-            minSize: 1,
-            maxSize: 30,
-            zMin: 1,
-            zMax: 100,
-            layoutAlgorithm: {
-                gravitationalConstant: 0.05,
-                splitSeries: true,
-                seriesInteraction: false,
-                dragBetweenSeries: true,
-                parentNodeLimit: true
-            },
-            dataLabels: {
-                enabled: true,
-                format: '{point.name}',
-                filter: {
-                    property: 'y',
-                    operator: '>',
-                    value: 100
-                },
-                style: {
-                    color: 'black',
-                    textOutline: 'none',
-                    fontWeight: 'normal'
-                }
-            }
+        //<!-- A function is defined in order to group the data by country,region... -->
+        Array.prototype.groupBy = function(prop) {
+          return this.reduce(function(groups, item) {
+            const val = item[prop]
+            groups[val] = groups[val] || []
+            groups[val].push(item)
+            return groups
+          }, {})
         }
-    },
-    series: output1
-	});
-	}) }
+
+        //<!-- Parse the JSON and group by regions -->
+        var country_data = JSON.parse(body);
+        var grouped_countries = country_data.groupBy('region');
+
+        var output1 = [], region;
+        for (var name in grouped_countries) {
+            region = {};
+            region.name = name;
+            region.data = grouped_countries[name];
+            output1.push(region);
+        }
+
+        var i;
+        for (i = 0; i < output1.length; i++) {
+          for (var count in output1[i].data){
+        	output1[i].data[count].name = output1[i].data[count].country
+        	output1[i].data[count].value =output1[i].data[count].count_value
+        	delete output1[i].data[count].region;
+        	delete output1[i].data[count].count_value;
+        	delete output1[i].data[count].country;
+          }
+        }
+
+        //<!-- The following section creates a highcharts split packed bubble chart by using the data inserted in "output" -->
+        Highcharts.chart('container', {
+            chart: {
+                type: 'packedbubble',
+                height: '80%'
+            },
+            title: {
+                text: 'Number of artworks per country'
+            },
+            tooltip: {
+                useHTML: true,
+                pointFormat: '<b>{point.name}:</b> {point.value} artworks'
+            },
+            plotOptions: {
+                packedbubble: {
+                    minSize: 1,
+                    maxSize: 30,
+                    zMin: 1,
+                    zMax: 100,
+                    layoutAlgorithm: {
+                        gravitationalConstant: 0.05,
+                        splitSeries: true,
+                        seriesInteraction: false,
+                        dragBetweenSeries: true,
+                        parentNodeLimit: true
+                    },
+                    dataLabels: {
+                        enabled: true,
+                        format: '{point.name}',
+                        filter: {
+                            property: 'y',
+                            operator: '>',
+                            value: 100
+                        },
+                        style: {
+                            color: 'black',
+                            textOutline: 'none',
+                            fontWeight: 'normal'
+                        }
+                    }
+                }
+            },
+            series: output1
+        	});     // end HighCharts container
+        	})  // end data block thing from "body"  
+        }  // end my function
 	
 
 
