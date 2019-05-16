@@ -445,9 +445,9 @@ app.get('/specific/:country/:cat/:early/:late', function (req, res) {
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //  API EndPoint to get data subset for timeline of acquisitions by year for bubble chart
-app.get('/timeline/:region/:', function (req, res) {
+app.get('/timeline/:region', function (req, res) {
 
-    console.log("acq endpoint")
+    console.log("timeline endpoint")
 
       // Allows data to be downloaded from the server with security concerns
       res.header("Access-Control-Allow-Origin", "*");
@@ -512,10 +512,6 @@ app.get('/timeline/:region/:', function (req, res) {
 
       }
 });
-
-
-
-
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //  API EndPoint to get data subset for timeline of acquisitions by year for bubble chart
