@@ -10,6 +10,10 @@
 // you're running a temporary server with `node` because that won't restart. 
 ///////////////////////
 
+// if the node process gets orphaned by a dropped network connection 
+// use ps -ef | grep node to find the pid of the process you need to stop
+// use kill <pid> to kill that process
+
 
 var moment = require('moment');
 var portNumber = 8872;
