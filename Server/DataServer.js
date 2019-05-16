@@ -515,7 +515,35 @@ app.get('/timeline/group', function (req, res) {
         // console.log("empty query");
         res.send("empty query");
       }
-    }); // end sql query     
+    }); // end sql query   
+
+
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//  API EndPoint to get data subset for timeline of acquisitions by year for bubble chart
+app.get('/timeline/secondgroup', function (req, res) {
+
+    console.log("timeline endpoint")
+
+      // Allows data to be downloaded from the server with security concerns
+      res.header("Access-Control-Allow-Origin", "*");
+      res.header("Access-Control-Allow-Headers", "X-Requested-WithD");
+      // If all the variables are provided connect to the database
+
+    var sql = "SELECT country, count FROM donation_data WHERE country ='France' OR country = 'Mexico' OR country = 'Iran' OR country = 'China' OR country = 'Italy' OR country = 'Brazil' OR country = 'India'";
+   //var sql = "SELECT country FROM donation_data LIMIT 10"  
+
+       // Run the SQL Query
+    connection.query(sql, function(err, rows, fields) {
+      if (err) console.log("Err:" + err);
+      if(rows != undefined){
+        // If we have data that comes back send it to the user.
+        res.send(rows);
+      }else{
+        // console.log("empty query");
+        res.send("empty query");
+      }
+    }); // end sql query   
 
 /////////////////////////////////////////////////////////////////
 
