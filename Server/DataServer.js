@@ -294,7 +294,7 @@ app.get('/summary/:key/:year', function (req, res) {
 //  API EndPoint to get data subset for one value of a code
 app.get('/cluster/:value', function (req, res) {
 
-  console.log("subset endpoint")
+  console.log("cluster endpoint")
 
       // Allows data to be downloaded from the server with security concerns
       res.header("Access-Control-Allow-Origin", "*");
@@ -305,6 +305,8 @@ app.get('/cluster/:value', function (req, res) {
 
         console.log("get parameters ok");
         var value = mysql_real_escape_string(req.params.value);
+        console.log("cluster id: ", value);
+        value = parseInt(value);
 
         var sql = "SELECT `Object ID`, `object_begin_date`, `Class_General`, `country` FROM Final_Data WHERE 'Cluster ID' = \'"+value+"\'";
 
