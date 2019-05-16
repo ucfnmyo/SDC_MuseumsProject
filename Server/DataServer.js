@@ -359,7 +359,7 @@ app.get('/specific/:country/:cat/:early/:late', function (req, res) {
     console.log("early: ", early);
     console.log("late: ", late);
 
-    var sql = "SELECT * FROM Final_Data WHERE country = \'"+country+"\' AND Class_General = \'"+cat+"\' AND year >= \'"+early+"\' AND year <= \'"+late+"\'  ";
+    var sql = "SELECT * FROM Final_Data WHERE country = \'"+country+"\' AND Class_General = \'"+cat+"\' AND acq_year >= \'"+early+"\' AND acq_year <= \'"+late+"\'  ";
 
     console.log("query: ", sql)
 
