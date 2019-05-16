@@ -348,6 +348,9 @@ app.get('/specific/:country/:cat/:early/:late', function (req, res) {
     var early = mysql_real_escape_string(req.params.early);
     var late = mysql_real_escape_string(req.params.late);
 
+    console.log("early pre parse: ", early)
+    console.log("late pre parse: ", late)
+
     early = parseInt(early);
     late = parseInt(late);
 
