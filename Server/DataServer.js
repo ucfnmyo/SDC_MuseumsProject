@@ -456,12 +456,12 @@ app.get('/timeline/:country', function (req, res) {
 
       if(req.params.region != ""){
 
-        var region = mysql_real_escape_string(req.params.country);
+        var country = mysql_real_escape_string(req.params.country);
         console.log("country: ", country);
 
         // check if the two values are "no"
 
-        if(region == "no"){
+        if(country == "no"){
 
           console.log("no country");
           var sql = "SELECT country, count FROM donation_data";
