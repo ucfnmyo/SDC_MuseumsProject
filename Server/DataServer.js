@@ -445,7 +445,7 @@ app.get('/specific/:country/:cat/:early/:late', function (req, res) {
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //  API EndPoint to get data subset for timeline of acquisitions by year for bubble chart
-app.get('/timeline/:region', function (req, res) {
+app.get('/timeline/:country', function (req, res) {
 
     console.log("timeline endpoint")
 
@@ -456,14 +456,14 @@ app.get('/timeline/:region', function (req, res) {
 
       if(req.params.region != ""){
 
-        var region = mysql_real_escape_string(req.params.region);
-        console.log("region: ", region);
+        var region = mysql_real_escape_string(req.params.country);
+        console.log("country: ", country);
 
         // check if the two values are "no"
 
         if(region == "no"){
 
-          console.log("no region");
+          console.log("no country");
           var sql = "SELECT country, count FROM donation_data";
 
           // console.log("query: ", sql)
@@ -485,7 +485,7 @@ app.get('/timeline/:region', function (req, res) {
 
 
 
-          var sql = "SELECT country, count FROM donation_data WHERE region = \'"+region+"\'";
+          var sql = "SELECT country, count FROM donation_data WHERE country = \'"+country+"\'";
           // var sql = "SELECT * FROM Final_Data WHERE `"+code+"` = \'"+value+"\'";
 
           // console.log("query: ", sql)
