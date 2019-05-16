@@ -161,6 +161,8 @@ function addMap(){
 	};
 
 	var info = L.control();
+	
+	var showRecord; //function created here, but defined in data section
 
 	info.onAdd = function (map) {
 		this._div = L.DomUtil.create('div', 'info'); // create a div with a class "info"
@@ -199,16 +201,13 @@ function addMap(){
 		layer.on({
 			mouseover: highlightFeature,
 			mouseout: resetHighlight,
-			click: showRecord//zoomToFeature     	//zoom part of cities functionality
+			click: clickFeature//zoomToFeature     	//zoom part of cities functionality
 		});
 	}
-
-	function showRecord(e){
-		var layer = e.target;
-		countryDimension.filter(function (d) {return d === layer.feature.properties.NAME ;});
-		console.log(countryDimension.All);
-	}
 	
+	function clickFeature(e){
+		showRecord(e)
+	}
 // The following code is for cities functionality
 	// $.getJSON("maps/countries.geojson", function (data) {
 	// 	cities = L.geoJson(data, {
@@ -235,6 +234,7 @@ function addMap(){
 	// 	});
 	// }
 	//
+	
 	function highlightFeature(e) {
 		var layer = e.target;
 		layer.setStyle({color: "white",weight: 4});
@@ -310,7 +310,7 @@ function addMap(){
 		classificationChart.on('filtered', function(chart) {
 			updateMap()
 		});
-
+	
 		function updateMap() {  //redraws map when filters change
 			// if (mapZoom) {
 			// 	colorDomain(cityGroup.all());
@@ -456,7 +456,30 @@ function addMap(){
 			}
 
 			L.Util.setOptions(countries,{style:countryStyle})
-
+			
+			showRecord=function (e){
+				var layer = e.target;
+				countryDimension.filter(function (d) {return d === layer.feature.properties.NAME ;});
+				var records =countryDimension.top(Infinity);
+				var length = Math.min(20, records.length)
+				function shuffle(array) {
+					var results = new Array(length)
+					var i = array.length
+					while(0!=length) {
+						var j = Math.floor(Math.random() * (i));
+						i--;
+						length--;
+						var temp = array[i];
+						array[i] = array[j];
+						array[j] = temp;
+						results[length]=array[i]
+					}
+					return results
+				}
+				countryDimension.filterAll();
+				console.log(shuffle(records))
+				
+			}	
 		}
 
 
