@@ -454,7 +454,7 @@ app.get('/timeline/group', function (req, res) {
       res.header("Access-Control-Allow-Headers", "X-Requested-WithD");
       // If all the variables are provided connect to the database
 
- var sql = "SELECT country, count FROM donation_data WHERE country = 'United States' OR country = 'United Kingdom' OR country = 'Japan' OR country = 'Egypt' OR country = 'Zaire' OR country = 'Australia';
+ var sql = "SELECT country, count FROM donation_data WHERE country = 'United States' OR country = 'United Kingdom' OR country = 'Japan' OR country = 'Egypt' OR country = 'Zaire' OR country = 'Australia'";
           
 
 /////////////////////////////////////////////////////////////////
