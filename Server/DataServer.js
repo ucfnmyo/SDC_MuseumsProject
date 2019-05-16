@@ -351,8 +351,7 @@ app.get('/specific/:country/:cat/:early/:late', function (req, res) {
     console.log("early pre parse: ", early);
     console.log("late pre parse: ", late);
 
-    early = parseInt(early);
-    late = parseInt(late);
+
 
     console.log("country: ", country);
     console.log("category: ", cat);
@@ -360,6 +359,14 @@ app.get('/specific/:country/:cat/:early/:late', function (req, res) {
     console.log("late: ", late);
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
+    if( early != "no" || late != "no"){
+      early = parseInt(early);
+      late = parseInt(late);
+    };
+
+    console.log("early: ", early);
+    console.log("late: ", late);
+
 
 // conditional sql string here
     if(country == "no"){
