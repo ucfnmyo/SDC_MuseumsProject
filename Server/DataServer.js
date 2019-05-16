@@ -348,15 +348,15 @@ app.get('/specific/:country/:cat/:early/:late', function (req, res) {
     var early = mysql_real_escape_string(req.params.early);
     var late = mysql_real_escape_string(req.params.late);
 
-    console.log("early pre parse: ", early);
-    console.log("late pre parse: ", late);
+    // console.log("early pre parse: ", early);
+    // console.log("late pre parse: ", late);
 
 
 
-    console.log("country: ", country);
-    console.log("category: ", cat);
-    console.log("early: ", early);
-    console.log("late: ", late);
+    // console.log("country: ", country);
+    // console.log("category: ", cat);
+    // console.log("early: ", early);
+    // console.log("late: ", late);
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
     if( early != "no" || late != "no"){
@@ -364,8 +364,8 @@ app.get('/specific/:country/:cat/:early/:late', function (req, res) {
       late = parseInt(late);
     };
 
-    console.log("early: ", early);
-    console.log("late: ", late);
+    // console.log("early: ", early);
+    // console.log("late: ", late);
 
 
 // conditional sql string here
