@@ -442,6 +442,81 @@ app.get('/specific/:country/:cat/:early/:late', function (req, res) {
   }   // end check if params are blanks
 });    // end function
 
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//  API EndPoint to get data subset for timeline of acquisitions by year for bubble chart
+app.get('/timeline/:region/:', function (req, res) {
+
+    console.log("acq endpoint")
+
+      // Allows data to be downloaded from the server with security concerns
+      res.header("Access-Control-Allow-Origin", "*");
+      res.header("Access-Control-Allow-Headers", "X-Requested-WithD");
+      // If all the variables are provided connect to the database
+
+      if(req.params.region != ""){
+
+        var region = mysql_real_escape_string(req.params.region);
+        console.log("region: ", region);
+
+        // check if the two values are "no"
+
+        if(region == "no"){
+
+          console.log("no region");
+          var sql = "SELECT country, count FROM donation_data";
+
+          // console.log("query: ", sql)
+
+          // Run the SQL Query
+          connection.query(sql, function(err, rows, fields) {
+            if (err) console.log("Err:" + err);
+            if(rows != undefined){
+              // If we have data that comes back send it to the user.
+              res.send(rows);
+            }else{
+              console.log("empty query");
+              res.send("empty query");
+            }
+          }); // end sql query
+
+
+        }else{
+
+
+
+          var sql = "SELECT country, count FROM donation_data WHERE region >= \'"+region+"\'";
+          // var sql = "SELECT * FROM Final_Data WHERE `"+code+"` = \'"+value+"\'";
+
+          // console.log("query: ", sql)
+
+          // Run the SQL Query
+          connection.query(sql, function(err, rows, fields) {
+            if (err) console.log("Err:" + err);
+            if(rows != undefined){
+              // If we have data that comes back send it to the user.
+              res.send(rows);
+            }else{
+              // console.log("empty query");
+              res.send("empty query");
+            }
+          }); // end sql query
+
+        }
+
+
+      }else{
+        // if code or value is blank
+        // console.log("missing URL variables");
+        res.send("missing URL variables");
+
+      }
+});
+
+
+
+
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //  API EndPoint to get data subset for timeline of acquisitions by year for bubble chart
 app.get('/acq/:early/:late', function (req, res) {
