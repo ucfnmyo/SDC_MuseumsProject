@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+
+<head>
+	<title>Artwork Explorer</title>
+	<!-- <link rel='stylesheet' id='font-css'  href='http://fonts.googleapis.com/css?family=Roboto:400,300,100' type='text/css' media='all' /> -->
+	<link rel='stylesheet' id='font-css'  href='./css/style.css' type='text/css' media='all' />
+	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css"
+    integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
+    crossorigin=""/>
+	<link href='https://unpkg.com/dc@3.0.10/dc.css' rel='stylesheet' type='text/css'>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">	
+	<style>
+
+		
+		#container {
+	min-width: 320px;
+	max-width: 800px;
+	margin: 0 auto;
+	#chartdiv {
+	width: 100%;
+	height: 500px;
+	}
+
+}
+	</style>
+</head>
+<body>
+
+<!-- Resources -->
+<script src="https://www.amcharts.com/lib/4/core.js"></script>
+<script src="https://www.amcharts.com/lib/4/charts.js"></script>
+<script src="https://www.amcharts.com/lib/4/themes/kelly.js"></script>  
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/highcharts-more.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src = "https://cdn.jsdelivr.net/npm/lodash@4.17.11/lodash.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+
+<!-- Create div -->
+
+<h2>JavaScript addEventListener()</h2>
+
+<p>This example uses the addEventListener() method to attach a click event to a button.</p>
+
+<button id="full_button">Full Dataset</button>
+<button id="metals_button">Metals</button>
+
+<script>
+
+</script>
+
+<div id="container" style="min-width: 310px; max-width: 600px; height: 1000px; margin: 0 auto"></div>
+
+
+<script type="text/javascript">
+
+
+
+var data = [];
+
+var full_data = "http://dev.spatialdatacapture.org:8872/bubble"
+var metals_data = "http://dev.spatialdatacapture.org:8872/bubble/Metal"
+
+document.getElementById("metals_button").addEventListener("click", function() {
+  data.push(metals_data); my_function();})
+
+document.getElementById("full_button").addEventListener("click", function() {
+  data.push(full_data); my_function()	})
+   
+  
+function my_function (){
+<!-- First we fetch the data from the API Call -->
+fetch(data).then((resp) => resp.text()).then((body) => {
+
+<!-- A function is defined in order to group the data by country,region... -->
+Array.prototype.groupBy = function(prop) {
+  return this.reduce(function(groups, item) {
+    const val = item[prop]
+    groups[val] = groups[val] || []
+    groups[val].push(item)
+    return groups
+  }, {})
+}
+
+
+<!-- Parse the JSON and group by regions -->
+var country_data = JSON.parse(body);
+var grouped_countries = country_data.groupBy('region');
+
+
+var output1 = [], region;
+for (var name in grouped_countries) {
+    region = {};
+    region.name = name;
+    region.data = grouped_countries[name];
+    output1.push(region);
+}
+
+
+var i;
+for (i = 0; i < output1.length; i++) {
+  for (var count in output1[i].data){
+	output1[i].data[count].name = output1[i].data[count].country
+	output1[i].data[count].value =output1[i].data[count].count_value
+	delete output1[i].data[count].region;
+	delete output1[i].data[count].count_value;
+	delete output1[i].data[count].country;
+  }
+}
+
+
+<!-- The following section creates a highcharts split packed bubble chart by using the data inserted in "output" -->
+Highcharts.chart('container', {
+    chart: {
+        type: 'packedbubble',
+        height: '80%'
+    },
+    title: {
+        text: 'Number of artworks per country'
+    },
+    tooltip: {
+        useHTML: true,
+        pointFormat: '<b>{point.name}:</b> {point.value} artworks'
+    },
+    plotOptions: {
+        packedbubble: {
+            minSize: 1,
+            maxSize: 30,
+            zMin: 1,
+            zMax: 100,
+            layoutAlgorithm: {
+                gravitationalConstant: 0.05,
+                splitSeries: true,
+                seriesInteraction: false,
+                dragBetweenSeries: true,
+                parentNodeLimit: true
+            },
+            dataLabels: {
+                enabled: true,
+                format: '{point.name}',
+                filter: {
+                    property: 'y',
+                    operator: '>',
+                    value: 100
+                },
+                style: {
+                    color: 'black',
+                    textOutline: 'none',
+                    fontWeight: 'normal'
+                }
+            }
+        }
+    },
+    series: output1
+	});
+	}) }
+	
+
+
+
+
+
+
+</script>  
+</script>
+</body>
+</html>
