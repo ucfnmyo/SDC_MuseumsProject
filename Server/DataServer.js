@@ -331,7 +331,7 @@ app.get('/specific/:country/:class/:early/:late', function (req, res) {
       res.header("Access-Control-Allow-Headers", "X-Requested-WithD");
       // If all the variables are provided connect to the database
 
-      if(req.params.code != "" && req.params.value != ""){
+      if(req.params.country != "" && req.params.class != "" && req.params.){
 
         console.log("get parameters ok");
         var code = mysql_real_escape_string(req.params.code);
