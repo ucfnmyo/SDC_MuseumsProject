@@ -445,7 +445,7 @@ app.get('/specific/:country/:cat/:early/:late', function (req, res) {
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //  API EndPoint to get data subset for timeline of acquisitions by year for bubble chart
-app.get('/timeline/:country', function (req, res) {
+app.get('/timeline/group', function (req, res) {
 
     console.log("timeline endpoint")
 
@@ -453,6 +453,12 @@ app.get('/timeline/:country', function (req, res) {
       res.header("Access-Control-Allow-Origin", "*");
       res.header("Access-Control-Allow-Headers", "X-Requested-WithD");
       // If all the variables are provided connect to the database
+
+ var sql = "SELECT country, count FROM donation_data WHERE country = 'United States' OR country = 'United Kingdom' OR country = 'Japan' OR country = 'Egypt' OR country = 'Zaire' OR country = 'Australia';
+          
+
+/////////////////////////////////////////////////////////////////
+
 
       if(req.params.region != ""){
 
