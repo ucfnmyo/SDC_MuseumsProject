@@ -22,7 +22,7 @@ Having done this we can see that the data, the x co-ordinate forms three distinc
 Our final task was to normalise the artwork dates {write up here or separately?}
 
 
-##Website Version
+# Website Version
 We are clustering by two numerical variables, the artwork age and the location, and three categorical variables, the classification given by the MET and our extracted keywords for materials and method.
 
 This may seem a straight-forward task, but there are three important aspects of our dataset:
