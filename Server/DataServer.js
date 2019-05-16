@@ -290,6 +290,48 @@ app.get('/summary/:key/:year', function (req, res) {
           }
   });   // end of summary endpoint
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//  API EndPoint to get data subset for one value of a code
+app.get('/cluster/:value', function (req, res) {
+
+  console.log("subset endpoint")
+
+      // Allows data to be downloaded from the server with security concerns
+      res.header("Access-Control-Allow-Origin", "*");
+      res.header("Access-Control-Allow-Headers", "X-Requested-WithD");
+      // If all the variables are provided connect to the database
+
+      if(req.params.value != ""){
+
+        console.log("get parameters ok");
+        var value = mysql_real_escape_string(req.params.value);
+
+        var sql = "SELECT `Object ID`, `object_begin_date`, `Class_General`, `country` FROM Final_Data WHERE 'Cluster ID' = \'"+value+"\'";
+
+        // console.log("query: ", sql)
+
+        // Run the SQL Query
+        connection.query(sql, function(err, rows, fields) {
+          if (err) console.log("Err:" + err);
+          if(rows != undefined){
+            // If we have data that comes back send it to the user.
+            res.send(rows);
+          }else{
+            console.log("empty query");
+            res.send("empty query");
+          }
+        }); // end sql query
+
+      }else{
+        // if code or value is blank
+        console.log("missing URL variables");
+        res.send("missing URL variables");
+
+      }
+});
+
+
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //  API EndPoint to get data subset for one value of a code
