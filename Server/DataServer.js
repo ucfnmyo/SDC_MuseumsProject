@@ -330,7 +330,7 @@ app.get('/subset/:code/:value', function (req, res) {
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//  API EndPoint to get data subset for one value of a code
+//  API EndPoint to get data for a specific country, classification and year range
 app.get('/specific/:country/:cat/:early/:late', function (req, res) {
 
   console.log("specific endpoint")
