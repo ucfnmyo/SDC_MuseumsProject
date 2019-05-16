@@ -26,12 +26,11 @@ Our final task was to normalise the artwork dates {write up here or separately?}
 We are clustering by two numerical variables, the artwork age and the location, and three categorical variables, the classification given by the MET and our extracted keywords for materials and method.
 
 This may seem a straight-forward task, but there are three important aspects of our dataset:
+1. We don't know how many clusters to expect; the clusters are likely to vary greatly in size; and there will be points that don't naturally form a cluster. This rules out k-means clustering and leans towards a density based approach such as DBSCAN. 
 
-We don't know how many clusters to expect; the clusters are likely to vary greatly in size; and there will be points that don't naturally form a cluster. This rules out k-means clustering and leans towards a density based approach such as DBSCAN.
+2. But we are also dealing with BIG DATA, at over 400,000 records. Processes such as DBSCAN that depend on pairwise distance comparisons naturally scale quadratically. 
 
-But we are also dealing with BIG DATA, at over 400,000 records. Processes such as DBSCAN that depend on pairwise distance comparisons naturally scale quadratically.
-
-As an additional complication, our categorical variables have a very large number of categories; furthermore not all records have a single value in each category - there are records with no information for the category AND there are records which have multiple category values e.g. the artwork has been produced using more than one material.
+3. As an additional complication, our categorical variables have a very large number of categories; furthermore not all records have a single value in each category - there are records with no information for the category AND there are records which have multiple category values e.g. the artwork has been produced using more than one material.
 
 We overcame the categorical problem with a one-hot encoding approach:creating a binary parameter for each potential category value. Vectorizing the data in this manner allowed us to create distances that would be captured by the DBSCAN. Artworks that did not match with any category or medium keywords were dropped to avoid artifical clusters.   
 
