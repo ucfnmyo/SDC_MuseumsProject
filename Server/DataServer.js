@@ -308,7 +308,7 @@ app.get('/cluster/:value', function (req, res) {
         console.log("cluster id: ", value);
         value = parseInt(value);
 
-        var sql = "SELECT `Object ID`, `object_begin_date`, `Class_General`, `country` FROM Final_Data WHERE Cluster_ID = \'"+value+"\'";
+        var sql = "SELECT `Object ID`, `object_name`, `object_begin_date`, `Class_General`, `country`, `Cluster_ID` FROM Final_Data WHERE Cluster_ID = \'"+value+"\'";
 
         // console.log("query: ", sql)
 
