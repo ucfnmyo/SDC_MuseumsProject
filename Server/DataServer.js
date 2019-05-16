@@ -67,6 +67,8 @@ app.get('/data', function (req, res) {
                 });
 });
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // gets summary data for country bubble chart
 // 1
 app.get('/bubble', function (req, res) {
@@ -93,6 +95,10 @@ app.get('/bubble', function (req, res) {
                 });
 });
 
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 // gets summary data for country bubble chart
 // 2
 app.get('/bubble/Prints', function (req, res) {
@@ -118,6 +124,9 @@ app.get('/bubble/Prints', function (req, res) {
                     }
                 });
 });
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
 // gets summary data for country bubble chart
 // 3
@@ -321,44 +330,57 @@ app.get('/subset/:code/:value', function (req, res) {
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//  API EndPoint to get data subset for one value of a code
-app.get('/specific/:country/:class/:early/:late', function (req, res) {
+//  API EndPoint to get data for a specific country, classification and year range
+app.get('/specific/:country/:cat/:early/:late', function (req, res) {
 
-  console.log("subset endpoint")
+  console.log("specific endpoint")
 
-      // Allows data to be downloaded from the server with security concerns
-      res.header("Access-Control-Allow-Origin", "*");
-      res.header("Access-Control-Allow-Headers", "X-Requested-WithD");
-      // If all the variables are provided connect to the database
+  // Allows data to be downloaded from the server with security concerns
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "X-Requested-WithD");
+  // If all the variables are provided connect to the database
 
-      if(req.params.country != "" && req.params.class != "" && req.params.){
+  if(req.params.country != "" && req.params.class != "" && req.params.early != "" && req.params.late != ""){
 
-        console.log("get parameters ok");
-        var code = mysql_real_escape_string(req.params.code);
-        var value = mysql_real_escape_string(req.params.value);
+    console.log("get parameters ok");
+    var country = mysql_real_escape_string(req.params.country);
+    var cat = mysql_real_escape_string(req.params.cat);
+    var early = mysql_real_escape_string(req.params.early);
+    var late = mysql_real_escape_string(req.params.late);
 
-        var sql = "SELECT * FROM Final_Data WHERE `"+code+"` = \'"+value+"\'";
+    console.log("early pre parse: ", early)
+    console.log("late pre parse: ", late)
 
-        // console.log("query: ", sql)
+    early = parseInt(early);
+    late = parseInt(late);
 
-        // Run the SQL Query
-        connection.query(sql, function(err, rows, fields) {
-          if (err) console.log("Err:" + err);
-          if(rows != undefined){
-            // If we have data that comes back send it to the user.
-            res.send(rows);
-          }else{
-            console.log("empty query");
-            res.send("empty query");
-          }
-        }); // end sql query
+    console.log("country: ", country);
+    console.log("category: ", cat);
+    console.log("early: ", early);
+    console.log("late: ", late);
 
+    var sql = "SELECT * FROM Final_Data WHERE country = \'"+country+"\' AND Class_General = \'"+cat+"\' AND acq_year >= \'"+early+"\' AND acq_year <= \'"+late+"\'  ";
+
+    console.log("query: ", sql)
+
+    // Run the SQL Query
+    connection.query(sql, function(err, rows, fields) {
+      if (err) console.log("Err:" + err);
+      if(rows != undefined){
+        // If we have data that comes back send it to the user.
+        res.send(rows);
       }else{
-        // if code or value is blank
-        console.log("missing URL variables");
-        res.send("missing URL variables");
-
+        console.log("empty query");
+        res.send("empty query");
       }
+    }); // end sql query
+
+  }else{
+    // if code or value is blank
+    console.log("missing URL variables");
+    res.send("missing URL variables");
+
+  }
 });
 
 
