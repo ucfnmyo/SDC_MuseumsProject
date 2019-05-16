@@ -485,7 +485,7 @@ app.get('/timeline/:region', function (req, res) {
 
 
 
-          var sql = "SELECT country, count FROM donation_data WHERE region >= \'"+region+"\'";
+          var sql = "SELECT country, count FROM donation_data WHERE region = \'"+region+"\'";
           // var sql = "SELECT * FROM Final_Data WHERE `"+code+"` = \'"+value+"\'";
 
           // console.log("query: ", sql)
