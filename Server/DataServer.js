@@ -6,8 +6,8 @@
 //// WARNING
 ////  This script basically ignores memory management and doesn't free any memory after it's used except by accident
 //// After ~12 API calls or so, there's a good chance  the heap will be totally full and the server will crash. 
-// ` forever` will restart it but it's still not optimal and will be a problem if 
-// you're running a temporary server with `node`. 
+// ` forever` will restart it, freeing the memory but it's still not optimal and will be a problem if 
+// you're running a temporary server with `node` because that won't restart. 
 ///////////////////////
 
 
