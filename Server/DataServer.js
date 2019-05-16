@@ -535,7 +535,8 @@ app.get('/timeline/secondgroup', function (req, res) {
       // If all the variables are provided connect to the database
 
     var sql = "SELECT country, count FROM donation_data WHERE country ='France' OR country = 'Mexico' OR country = 'Iran' OR country = 'China' OR country = 'Brazil' OR country = 'Italy', OR country = 'India'";
-   //var sql = "SELECT country FROM donation_data LIMIT 10"  
+    console.log("query: ", sql);
+    //var sql = "SELECT country FROM donation_data LIMIT 10"  
 
        // Run the SQL Query
     connection.query(sql, function(err, rows, fields) {
