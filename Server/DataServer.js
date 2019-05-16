@@ -442,13 +442,8 @@ app.get('/specific/:country/:cat/:early/:late', function (req, res) {
   }   // end check if params are blanks
 });    // end function
 
-
-
-
-
-
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//  API EndPoint to get data subset for timeline of acquisitions by year
+//  API EndPoint to get data subset for timeline of acquisitions by year for bubble chart
 app.get('/acq/:early/:late', function (req, res) {
 
     console.log("acq endpoint")
