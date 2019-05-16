@@ -20,3 +20,21 @@ A similar problem comes into our notion of distance. For this we are using the c
 Having done this we can see that the data, the x co-ordinate forms three distinct clusters, likely to be continents, and that for the y-axis most fo the artwork is from the northern hemisphere as expected.
 
 Our final task was to normalise the artwork dates {write up here or separately?}
+
+
+##Website Version
+We are clustering by two numerical variables, the artwork age and the location, and three categorical variables, the classification given by the MET and our extracted keywords for materials and method.
+
+This may seem a straight-forward task, but there are three important aspects of our dataset:
+
+We don't know how many clusters to expect; the clusters are likely to vary greatly in size; and there will be points that don't naturally form a cluster. This rules out k-means clustering and leans towards a density based approach such as DBSCAN.
+
+But we are also dealing with BIG DATA, at over 400,000 records. Processes such as DBSCAN that depend on pairwise distance comparisons naturally scale quadratically.
+
+As an additional complication, our categorical variables have a very large number of categories; furthermore not all records have a single value in each category - there are records with no information for the category AND there are records which have multiple category values e.g. the artwork has been produced using more than one material.
+
+We overcame the categorical problem with a one-hot encoding approach:creating a binary parameter for each potential category value. Vectorizing the data in this manner allowed us to create distances that would be captured by the DBSCAN. Artworks that did not match with any category or medium keywords were dropped to avoid artifical clusters.   
+
+Temporal data was incorported with the object begin date, since it defines an artistic reaction to a historical event. The Gower distance function enabled us to normalise annual dates that would fit in well with DBSCAN euclidean distance function. 
+
+A similar problem comes into our notion of distance. For this we are using the centroids of the countries, processed using QGIS, and we can work directly with the latitude and longitude to calculate an accurate distance between points. In order to get round this we decided to convert the coordinates to a projection, which allows us to make use of the standard DBSCAN distance function. We used the Lambart Conformal Conic projection. Its advantages are that straight-lines in the projection equate to great-circles, the shortest path between two points, and it minimises the distortion of distance in the northern hemisphere, which is where the majority of the artwork is from.
