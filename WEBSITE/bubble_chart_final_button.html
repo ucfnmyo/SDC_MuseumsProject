@@ -78,6 +78,11 @@ function my_function (){
 
     //<!-- First we fetch the data from the API Call -->
 
+    //////////////////////////////////////////////////////////////////
+    // Problem: page only works the first time it's used
+    // Solution:  add some sort of CLEARALL command to the start of the function
+    
+
     // what are resp and body? 
 fetch(data).then((resp) => resp.text()).then((body) => {
 
