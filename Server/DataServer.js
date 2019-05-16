@@ -10,6 +10,10 @@
 // you're running a temporary server with `node` because that won't restart. 
 ///////////////////////
 
+// if the node process gets orphaned by a dropped network connection 
+// use ps -ef | grep node to find the pid of the process you need to stop
+// use kill <pid> to kill that process
+
 
 var moment = require('moment');
 var portNumber = 8872;
@@ -286,6 +290,50 @@ app.get('/summary/:key/:year', function (req, res) {
           }
   });   // end of summary endpoint
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//  API EndPoint to get data subset for one value of a code
+app.get('/cluster/:value', function (req, res) {
+
+  console.log("cluster endpoint")
+
+      // Allows data to be downloaded from the server with security concerns
+      res.header("Access-Control-Allow-Origin", "*");
+      res.header("Access-Control-Allow-Headers", "X-Requested-WithD");
+      // If all the variables are provided connect to the database
+
+      if(req.params.value != ""){
+
+        console.log("get parameters ok");
+        var value = mysql_real_escape_string(req.params.value);
+        console.log("cluster id: ", value);
+        value = parseInt(value);
+
+        var sql = "SELECT `Object ID`, `object_name`, `object_begin_date`, `Class_General`, `country`, `Cluster_ID` FROM Final_Data WHERE Cluster_ID = \'"+value+"\'";
+
+        // console.log("query: ", sql)
+
+        // Run the SQL Query
+        connection.query(sql, function(err, rows, fields) {
+          if (err) console.log("Err:" + err);
+          if(rows != undefined){
+            // If we have data that comes back send it to the user.
+            res.send(rows);
+          }else{
+            console.log("empty query");
+            res.send("empty query");
+          }
+        }); // end sql query
+
+      }else{
+        // if code or value is blank
+        console.log("missing URL variables");
+        res.send("missing URL variables");
+
+      }
+});
+
+
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //  API EndPoint to get data subset for one value of a code
@@ -348,15 +396,15 @@ app.get('/specific/:country/:cat/:early/:late', function (req, res) {
     var early = mysql_real_escape_string(req.params.early);
     var late = mysql_real_escape_string(req.params.late);
 
-    console.log("early pre parse: ", early);
-    console.log("late pre parse: ", late);
+    // console.log("early pre parse: ", early);
+    // console.log("late pre parse: ", late);
 
 
 
-    console.log("country: ", country);
-    console.log("category: ", cat);
-    console.log("early: ", early);
-    console.log("late: ", late);
+    // console.log("country: ", country);
+    // console.log("category: ", cat);
+    // console.log("early: ", early);
+    // console.log("late: ", late);
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
     if( early != "no" || late != "no"){
@@ -364,8 +412,8 @@ app.get('/specific/:country/:cat/:early/:late', function (req, res) {
       late = parseInt(late);
     };
 
-    console.log("early: ", early);
-    console.log("late: ", late);
+    // console.log("early: ", early);
+    // console.log("late: ", late);
 
 
 // conditional sql string here
@@ -441,6 +489,79 @@ app.get('/specific/:country/:cat/:early/:late', function (req, res) {
     res.send("missing URL variables");
   }   // end check if params are blanks
 });    // end function
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//  API EndPoint to get data subset for timeline of acquisitions by year for bubble chart
+app.get('/timeline/group', function (req, res) {
+
+    console.log("first group endpoint")
+
+      // Allows data to be downloaded from the server with security concerns
+      res.header("Access-Control-Allow-Origin", "*");
+      res.header("Access-Control-Allow-Headers", "X-Requested-WithD");
+      // If all the variables are provided connect to the database
+
+    var sql = "SELECT country, count FROM donation_data WHERE country ='United States' OR country = 'United Kingdom' OR country = 'Japan' OR country = 'Egypt' OR country = 'Zaire' OR country = 'Australia'";
+   //var sql = "SELECT country FROM donation_data LIMIT 10"  
+
+       // Run the SQL Query
+    connection.query(sql, function(err, rows, fields) {
+      if (err) console.log("Err:" + err);
+      if(rows != undefined){
+        // If we have data that comes back send it to the user.
+        res.send(rows);
+      }else{
+        // console.log("empty query");
+        res.send("empty query");
+      }
+    }); // end sql query     
+
+/////////////////////////////////////////////////////////////////
+
+});
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//  API EndPoint to get data subset for timeline of acquisitions by year for bubble chart
+app.get('/timeline/secondgroup', function (req, res) {
+
+    console.log("secondgroup endpoint")
+
+      // Allows data to be downloaded from the server with security concerns
+      res.header("Access-Control-Allow-Origin", "*");
+      res.header("Access-Control-Allow-Headers", "X-Requested-WithD");
+      // If all the variables are provided connect to the database
+
+    var sql = "SELECT country, count FROM donation_data WHERE country ='France' OR country = 'Mexico' OR country = 'Iran' OR country = 'China' OR country = 'Brazil' OR country = 'Italy' OR country = 'India'";
+    //console.log("query: ", sql);
+    //var sql = "SELECT country FROM donation_data LIMIT 10"  
+
+       // Run the SQL Query
+    connection.query(sql, function(err, rows, fields) {
+      if (err) console.log("Err:" + err);
+      if(rows != undefined){
+        // If we have data that comes back send it to the user.
+        res.send(rows);
+      }else{
+        // console.log("empty query");
+        res.send("empty query");
+      }
+    }); // end sql query     
+
+/////////////////////////////////////////////////////////////////
+
+});
+
+
+
+
+
+
+
+
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //  API EndPoint to get data subset for timeline of acquisitions by year for bubble chart
