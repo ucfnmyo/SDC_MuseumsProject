@@ -5,10 +5,15 @@ Created on Wed May 15 10:12:12 2019
 
 @author: terry
 """
+import numpy as np
 import pandas as pd
 from sklearn.cluster import DBSCAN
 from sklearn import metrics
 
+def transform(dataname):
+    for i in dataname.index:
+        dataname.at[i, 'age'] = np.log(2120.0-dataname.at[i, 'age'])
+        
 def normalise(dataname):
     meanX=dataname["coordX"].mean()
     stdX=dataname["coordX"].std()
@@ -17,6 +22,7 @@ def normalise(dataname):
     meanAge=dataname["age"].mean()
     stdAge=dataname["age"].std()
 
+    dataname.loc[:, 'age']=dataname.loc[:, 'age'].astype(float)
     for i in dataname.index:
         dataname.at[i, 'coordX'] = (dataname.at[i, 'coordX']-meanX)/stdX
         dataname.at[i, 'coordY'] = (dataname.at[i, 'coordY']-meanY)/stdY
@@ -33,10 +39,10 @@ def scale(dataname,ageScale,distanceScale):
 
 def dbscanFit(data, eps, minSamples):
     #DBSCAN for non Year Data
-    subset=data[(~data["class"].isnull()) &(~data.medium.isnull())]
-    cols_to_drop=["Unnamed: 0","Object ID","country","class","medium"]
+    subset=data[((data["class"]!="unknown_other") & (data.medium!="unknown_other"))]
+    cols_to_drop=["Object ID","country","class","medium"]
     clustervector=subset.drop(columns=cols_to_drop)
-    dbscan = DBSCAN(eps = eps,  min_samples = minSamples,p=1,n_jobs=-1)
+    dbscan = DBSCAN(eps = eps,  min_samples = minSamples,n_jobs=-1)
     dbscan.fit(clustervector)
     dbscan_labels = dbscan.labels_
     silh = metrics.silhouette_score(clustervector, dbscan_labels)
@@ -46,14 +52,13 @@ def dbscanFit(data, eps, minSamples):
     clusters.loc[:,"Cluster ID"] = dbscan_labels
     print(clusters['Cluster ID'].value_counts())
     
-    return clusters,silh
+    return clusters, silh, data.shape[0], eps, minSamples
 
 
 def dbscanSTFit(data, eps, minSamples):
     #DBSCAN for non Year Data
     clustervector=data[["age","coordX","coordY"]]
-
-    dbscan = DBSCAN(eps = eps,  min_samples = minSamples,p=1,n_jobs=-1)
+    dbscan = DBSCAN(eps = eps,  min_samples = minSamples,n_jobs=-1)
     dbscan.fit(clustervector)
     dbscan_labels = dbscan.labels_
     silh = metrics.silhouette_score(clustervector, dbscan_labels)
@@ -63,29 +68,81 @@ def dbscanSTFit(data, eps, minSamples):
     clusters.loc[:,"Cluster ID"] = dbscan_labels
     print(clusters['Cluster ID'].value_counts())
     
-    return clusters,silh
-
-ClusterData=pd.read_csv("ClusterData1.csv",delimiter = ',')
-normalise(ClusterData)
-ScaledData=scale(ClusterData,ageScale=2,distanceScale=2)
-
-1/4*2**4
-results=[]
-for i in range(5):
-    ScaledData==scale(ClusterData,ageScale=1,distanceScale=1/4*2**i)
-    for j in range(10):
-        results.append(dbscanFit(ScaledData.sample(100000),eps=1/32*2**j,minSamples=1000))
-        
-
-result=dbscanFit(ScaledData.sample(10000),eps=2,minSamples=100)
+    return clusters, silh, data.shape[0], eps, minSamples
 
 
-ScaledData.loc[370834,:]
+def saveCluster(cluster):    
+    fullClusterList=pd.DataFrame(clusterdata.loc[:,"Object ID"])
+    fullClusterList.loc[:,"Cluster ID"]=[-1]*fullClusterList.shape[0]
+    fullClusterList.loc[fullClusterList["Object ID"].isin(cluster["Object ID"]),"Cluster ID"]=cluster["Cluster ID"]
+    fullClusterList.to_csv("result"+str(i)+".csv")
+    
 
+clusterdata=pd.read_csv("ClusterData2.csv",delimiter = ',')
+clusterdata=clusterdata.drop("Unnamed: 0",axis=1)
+clusterdata.loc[clusterdata.age >2020,"age"]=-clusterdata.loc[clusterdata.age >2020,"age"]
+clusterdata.loc[:,"age"]=clusterdata.loc[:,"age"].astype(float)
+transform(clusterdata)
+clusterdata.age.describe()
+clusterdata.age.hist(bins=30)
+normalise(clusterdata)
+
+clusterdata.dtypes
+
+clusterdata.isnull().sum().sum()
+clusterdata.isna().sum().sum()
+clusterdata.iloc[:,7:].sum(axis=1).value_counts()
+pd.options.display.max_columns=84
+clusterdata.age.describe()
+clusterdata.age.hist(bins=50)
+clusterdata.coordX.hist(bins=50)
+clusterdata.coordY.hist(bins=50)
+
+ScaledData=scale(clusterdata,ageScale=2,distanceScale=2)
+ScaledData.age.hist(bins=50)
+ScaledData.coordX.hist(bins=50)
+ScaledData.coordY.hist(bins=50)
+
+result=dbscanFit(ScaledData.sample(40000),eps=1.25,minSamples=1000)
+ScaledData.age.hist()
+
+result=[]
+i=0
+
+result.append(dbscanFit(ScaledData,eps=0.75,minSamples=1000))
+saveCluster(result[i][0])
+i+=1
+result.append(dbscanFit(ScaledData,eps=0.75,minSamples=2000))
+saveCluster(result[i][0])
+i+=1
+result.append(dbscanFit(ScaledData,eps=1,minSamples=2000))
+saveCluster(result[i][0])
+i+=1
+result.append(dbscanFit(ScaledData,eps=1.25,minSamples=2000))
+saveCluster(result[i][0])
+i+=1
+result.append(dbscanSTFit(ScaledData,eps=0.25,minSamples=1000))
+saveCluster(result[i][0])
+i+=1
+result.append(dbscanSTFit(ScaledData,eps=0.5,minSamples=1000))
+saveCluster(result[i][0])
+i+=1
+result.append(dbscanSTFit(ScaledData,eps=0.5,minSamples=2000))
+saveCluster(result[i][0])
+i+=1
+result.append(dbscanSTFit(ScaledData,eps=0.75,minSamples=2000))
+saveCluster(result[i][0])
+i+=1
+
+result.to_json("results.json")
+
+
+#
 #
 #import time
 #start=time.perf_counter()
-#dbscanFit(ScaledData.sample(100000),eps=2,minSamples=100)
+#result.append(dbscanSTFit(ScaledData,eps=1,minSamples=2000))
 #end=time.perf_counter()
 #print(end-start)
+
 
