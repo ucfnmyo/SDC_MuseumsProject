@@ -11,7 +11,6 @@
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 	<style>
-
 	.info {
 	    padding: 6px 8px;
 	    font: 14px/16px Arial, Helvetica, sans-serif;
@@ -24,7 +23,6 @@
 	    margin: 0 0 5px;
 	    color: #777;
 	}
-
 	.legend {
 	    line-height: 18px;
 	    color: #555;
@@ -36,31 +34,32 @@
 	    margin-right: 8px;
 	    opacity: 0.7;
 	}
-
 	.w3-bar,button {font-family: "Montserrat", sans-serif}
 	</style>
 </head>
 <body>
 	<div id='wrapper'>
+		<!-- Navbar (sit on top) -->
 		<div class="w3-top">
-			<div class="w3-bar w3-lime w3-card w3-left-align w3-large">
-				<a class="w3-bar-item w3-button w3-hide-medium w3-hide-large w3-right w3-padding-large w3-hover-white w3-large w3-lime" href="javascript:void(0);" onclick="myFunction()" title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a>
-				<a href="#" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Map</a>
-				<a href="#" class="w3-bar-item w3-button w3-padding-large w3-white">About</a>
-				<a href="#" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Analysis</a>
-				<a href="#" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Contact</a>
-			</div>
+		  <div class="w3-bar w3-white w3-card" id="myNavbar">
 
-			<!-- Navbar on small screens -->
-			<div id="navDemo" class="w3-bar-block w3-white w3-hide w3-hide-large w3-hide-medium w3-large">
-				<a href="#" class="w3-bar-item w3-button w3-padding-large">Link 1</a>
-				<a href="#" class="w3-bar-item w3-button w3-padding-large">Link 2</a>
-				<a href="#" class="w3-bar-item w3-button w3-padding-large">Link 3</a>
-				<a href="#" class="w3-bar-item w3-button w3-padding-large">Link 4</a>
-			</div>
-			<div id="titleHeader">
-				<h2 class="title-header">Met Museum Artwork Visualiser</h2>
-		</div>
+		    <a href="#home" class="w3-bar-item w3-button w3-red w3-wide">MET Artwork Visualiser</a>
+
+		    <!-- Right-sided navbar links -->
+		    <div class="w3-right w3-hide-small">
+
+		      <a href="WebPageFinal.html#about" class="w3-bar-item w3-button">ABOUT</a>
+		      <a href="WebPageFinal.html#preprocessing" class="w3-bar-item w3-button"><i class="fa fa-microchip"></i>PREPROCESSING</a>
+		      <a href="WebPageFinal.html#method" class="w3-bar-item w3-button"><i class="fa fa-sitemap"></i>METHODOLOGY</a>
+		      <a href="index.html" class="w3-bar-item w3-button"><i class="fa fa-map"></i> MAP</a>
+					<!-- /home/ucfnhke/public_html/SDC_MuseumsProject/WEBSITE -->
+		      <a href="#contact" class="w3-bar-item w3-button"><i class="fa fa-envelope"></i>CONTACT</a>
+		    </div>
+		    <!-- Hide right-floated links on small screens and replace them with a menu icon -->
+		    <a href="javascript:void(0)" class="w3-bar-item w3-button w3-right w3-hide-large w3-hide-medium" onclick="w3_open()">
+		      <i class="fa fa-bars"></i>
+		    </a>
+		  </div>
 		</div>
 		<div id='main'>
 			<div id='map-canvas' ></div>
@@ -91,36 +90,24 @@
 
 <!--This section will create an interactive visualisation using Leaflet.js for a map and dc.js for charts -->
 <script type="text/javascript">
-var fullData; //the entire dataset, defined so it can be loaded in background
 var yearChart, //charts defined globally to allow resetting through text in divs
 		classificationChart;
 addMap(); //loads map, retrieves country polygons, and calls drawCharts
-
-var url = "http://dev.spatialdatacapture.org:8872/data"
-
-d3.json(url,function (data){  //API CALL ON FULL DATASET
-	fullData = data;
-	console.log("full data loaded");
-	$("input[name=dataset]").attr('disabled', false);
-});
-
 function addMap(){
 	var map = new L.map('map-canvas').setView([0, 0], 2);
 	var layer = new L.StamenTileLayer("toner-background", {attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://www.openstreetmap.org/copyright">ODbL</a>.',});
 	map.addLayer(layer);
-
 	var selecter = L.control({position: 'bottomleft'});
 	selecter.onAdd = function(map){
 		this.div = L.DomUtil.create('div', 'info selecter')
 		selecter.update();
 		return this.div;
 	};
-
 	selecter.update = function () {
-		var clusters =['cluster1','cluster2']
+		var clusters =['cluster 0','cluster 1','cluster 2','cluster 3','cluster 4']
 		clusterhtml=''
 		for (var i = 0; i < clusters.length; i++) {
-			clusterhtml+= '<option value='+clusters[i]+'>'+clusters[i]+'</option>'
+			clusterhtml+= '<option value='+i+'>'+clusters[i]+'</option>'
 		};
 		this.div.innerHTML='<h4>Clusters:</h4>'+
 		'<form>'+
@@ -131,45 +118,47 @@ function addMap(){
 		'</select>'+
 		'</form>'
 		;
-
 	};
 	selecter.addTo(map);
 	$("input[name=dataset]").attr('disabled', true);
-
+	var fullData=''; //the entire dataset, defined so it can be loaded in background
 	function loadData(){
+		var url = "http://dev.spatialdatacapture.org:8872/data"
+		var clusterurl = "http://dev.spatialdatacapture.org:8872/cluster/"
 		var newData=''
 		if ($("input[name=dataset]:checked").val()==="full") {
 			newData="full"
 			drawCharts(fullData); //putting it up here for now, but structure depends on API calls
 			$('#map-canvas').unblock();
 		} else {
-			newData=$("select[name=cluster] option:checked").val()
-			d3.json(url,function(json){
-			drawCharts(json);  //tihs will be the API call to run the drawCharts function with the newData set. currently grabs base data just for something to be loaded.
+			newData=$("select[name=cluster] option:checked").val();
+			d3.json(clusterurl+newData.toString(),function(json){
+			drawCharts(json);
 			$('#map-canvas').unblock();
+			});
+		};
+		if (fullData===''){
+			d3.json(url,function (data){  //API CALL ON FULL DATASET TO LOAD IN BACKGROUND
+				fullData = data;
+				console.log("full data loaded");
+				$("input[name=dataset]").attr('disabled', false);
 			});
 		};
 		console.log("the selected dataset is " + newData)
 	};
-
 	var legend = L.control({position: 'bottomright'});
-
 	legend.onAdd = function (map) {
 		this._legenddiv = L.DomUtil.create('div', 'info legend');
 		this.update();
 		return this._legenddiv;
 	};
-
 	var info = L.control();
-	
 	var showRecord; //function created here, but defined in data section
-
 	info.onAdd = function (map) {
 		this._div = L.DomUtil.create('div', 'info'); // create a div with a class "info"
 		this.update();
 		return this._div;
 	}
-
 	$.getJSON("maps/WorldCountriesMap_json.geojson", function (data) {
 		countries = L.geoJson(data, {
 			style: countryDefaultStyle,
@@ -181,11 +170,8 @@ function addMap(){
 			$('#map-canvas').block({ message: '<h1> Loading Data</h1>' });
 			loadData()
 		});
-
 		loadData()
-
 	});
-
 	function countryDefaultStyle(feature) {   //loads a default style, to be replaced when the data has loaded
 		return {
 			// fillColor: color(artworksCountryCount(feature)),    //loads as blank and then updated
@@ -196,7 +182,6 @@ function addMap(){
 			fillOpacity: 0.6
 		}
 	}
-
 	function countryInteractions(feature, layer) {
 		layer.on({
 			mouseover: highlightFeature,
@@ -204,7 +189,6 @@ function addMap(){
 			click: clickFeature//zoomToFeature     	//zoom part of cities functionality
 		});
 	}
-	
 	function clickFeature(e){
 		showRecord(e)
 	}
@@ -234,24 +218,20 @@ function addMap(){
 	// 	});
 	// }
 	//
-	
 	function highlightFeature(e) {
 		var layer = e.target;
 		layer.setStyle({color: "white",weight: 4});
 		layer.bringToFront();
 		info.update(layer.feature);
 	}
-
 	function resetHighlight(e) {
 		// if (mapZoom) {
 		// 	cities.resetStyle(e.target);
 		// } else {
 			countries.resetStyle(e.target);
 		// }
-
 		info.update();
 	}
-
 	// function zoomToFeature(e) {
 	// 	var layer = e.target;
 	// 	countryDimension.filter(function (d) {return d === layer.feature.properties.GMI_CNTRY ;});
@@ -262,7 +242,6 @@ function addMap(){
 	// 	cities.addTo(map);  //how do i chose a subsection of cities
 	// 	updateMap();
 	// }
-
 	// zoomOut= function(){
 	// 	countryDimension.filterAll();
 	// 	mapZoom=false;
@@ -271,46 +250,34 @@ function addMap(){
 	// 	map.setView([0, 0], 2);
 	// 	updateMap();
 	// }
-
 	function drawCharts(response) {
 		var artworks = crossfilter(response), //crossfilter object
 				all = artworks.groupAll();
-
 		var yearRounding = 25;       //object year data is rounded to the number of years as given here.
 				yearDimension = artworks.dimension(function(d) {return d['object_begin_date']- d['object_begin_date'] % yearRounding;}),
 				yearGroup = yearDimension.group();
+				lowerbound = yearDimension.bottom(1)[0]["object_begin_date"];
+				upperbound = yearDimension.top(1)[0]["object_begin_date"];
 		yearChart = dc.barChart('#year-chart'); //charts defined globally to allow resetting through text in divs
-
-
-		var classificationDimension = artworks.dimension(function(d) {return d.Class_General;}),
+		var classificationDimension = artworks.dimension(function(d) {return d.class;}),
 				classificationGroup = classificationDimension.group();
-		classificationChart = dc.pieChart('#classification-chart'); //charts defined globally to allow resetting through text in divs
-
+		classificationChart = dc.barChart('#classification-chart'); //charts defined globally to allow resetting through text in divs
 		var countryDimension = artworks.dimension(function(d) {return d.country;}),
 				countryGroup = countryDimension.group();
-
-
 		// var cityDimension = artworks.dimension(function(d) {return d.CityMatch;}),
 		// 		cityGroup = cityDimension.group();
-
 		var		color = d3.scaleThreshold() //a scaling function for the map colouring
 				.range(["#f7fbff","#deebf7","#c6dbef","#9ecae1","#6baed6","#4292c6","#2171b5","#08519c","#08306b"]);
-
 		var mapZoom = false; //toggles whether country or city data displayed
-
 		addCharts(); //creates crossfilter charts
 		finaliseMap(); //adds the map elements that relied on data loading - the legend, info control, and colouring
 		updateMap();
-
-
 		yearChart.on('filtered', function(chart) {
 			updateMap()
 		});
-
 		classificationChart.on('filtered', function(chart) {
 			updateMap()
 		});
-	
 		function updateMap() {  //redraws map when filters change
 			// if (mapZoom) {
 			// 	colorDomain(cityGroup.all());
@@ -332,7 +299,6 @@ function addMap(){
 			legend.update();
 			info.update();
 		}
-
 		function artworksCount(d) {
 			// if (mapZoom) {
 			// 	return artworksCityCount(d);
@@ -340,7 +306,6 @@ function addMap(){
 				return artworksCountryCount(d);
 			// }
 		}
-
 		// function artworksCityCount(d){
 		// 	var v = cityGroup.all().filter(function(item) { return item.key === d.properties.NAME; })  //city_Id
 		// 	if (v.length==0)
@@ -348,7 +313,6 @@ function addMap(){
 		// 	else
 		// 	{return (v[0].value)}
 		// }
-
 		function artworksCountryCount(d){
 			var v = countryGroup.all().filter(function(item) { return item.key === d.properties.NAME; })  //city name
 			if (v.length==0)
@@ -356,7 +320,6 @@ function addMap(){
 			else
 			{return (v[0].value)}
 		}
-
 		function colorDomain(array){ //this function is passed an array of values and creates a logarithmic scale for the non-zero elements.
 			var values = array.map(e => e["value"]).filter(function(a){return a >0;});
 			values.sort(function(a, b){return a-b});
@@ -369,36 +332,41 @@ function addMap(){
 				//var unrounded = values[quantileSize * (i+1) - 1];    //alternative to split into equal quantiles
 				var unrounded = Math.exp((Math.log(max)/breaks * (i+1)));
 				var nextBreak = Number(unrounded.toPrecision(unrounded>100? 2:1));
-
 				domain.push(nextBreak);
 			}
-
 			color.domain(domain);
 		}
-
-
-
 		function addCharts(){
 			yearChart /* dc.barChart('#year-chart', 'chartGroup') */
 			// .width()
 			// .height()
-			.margins({top: 10, right: 50, bottom: 30, left: 40})
+			.margins({top: 10, right: 10, bottom: 30, left: 50})
 			.dimension(yearDimension)
 			.group(yearGroup)
 			.elasticY(true)
+		//	.elasticX(true)
 			.round(dc.round.floor)
 			.alwaysUseRounding(true)
-			.x(d3.scaleLinear().domain([-0, 2000]))
+			.x(d3.scaleLinear())
 			.renderHorizontalGridLines(true)
-			.yAxisLabel("Artworks")
-			.xAxisLabel("Year")
+			// .yAxisLabel("Number")
+			// .xAxisLabel("Year")
 			.barPadding(0)
 	//		.turnOnControls(true)
-
+			yearChart.xAxisMax = function() { return Math.min( 2025,upperbound); };
+			yearChart.xAxisMin = function() { return Math.max(-2000,lowerbound); };
+			console.log()
 			classificationChart
-			.radius(80)
+			//.radius(80)
+			.margins({top: 10, right: 20, bottom: 30, left: 60})
 			.dimension(classificationDimension)
 			.group(classificationGroup)
+			.elasticY(true)
+			.x(d3.scaleBand())
+			.xUnits(dc.units.ordinal)
+			// .yAxisLabel("Artworks")
+			// .xAxisLabel("Classification")
+			.barPadding(0.1)
 		//	.turnOnControls(true)
 			// ClassificationRowChart /* dc.Chart('#classification-chart', 'chartGroup') */
 			//        // .width(180)
@@ -415,10 +383,8 @@ function addMap(){
 			//        // })
 			//         .elasticX(true)
 			//         .xAxis().ticks(4);
-
 			dc.renderAll();
 		}
-
 		function finaliseMap() {
 			colorDomain(countryGroup.all());
 			legend.update = function () {
@@ -433,18 +399,14 @@ function addMap(){
 					grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : (i==0 ? '<br>':'+'));
 				}
 			};
-
 			legend.addTo(map);
-
 			// method that we will use to update the control based on feature properties passed
 			info.update = function (d) {
 				this._div.innerHTML = '<h4>Artworks</h4>' + '<b>' + all.value() +'</b><br/>'+(d ?
 				'<b>' + d.properties.NAME + '</b><br/>' + artworksCount(d) + ' artworks'
 				: 'Hover over a country');
 			};
-
 			info.addTo(map);
-
 			function countryStyle(feature) {   //choropleth styling
 				return {
 					fillColor: color(artworksCountryCount(feature)),
@@ -455,9 +417,7 @@ function addMap(){
 					fillOpacity: 0.6
 				}
 			}
-
 			L.Util.setOptions(countries,{style:countryStyle})
-			
 			showRecord=function (e){
 				var layer = e.target;
 				countryDimension.filter(function (d) {return d === layer.feature.properties.NAME ;});
@@ -479,23 +439,18 @@ function addMap(){
 				}
 				countryDimension.filterAll();
 				console.log(shuffle(records))
-				
-			}	
+			}
 		}
-
-
 	}
 }
-
-function myFunction() {
-  var x = document.getElementById("navDemo");
-  if (x.className.indexOf("w3-show") == -1) {
-    x.className += " w3-show";
-  } else {
-    x.className = x.className.replace(" w3-show", "");
-  }
-}
-
+// function myFunction() {
+//   var x = document.getElementById("navDemo");
+//   if (x.className.indexOf("w3-show") == -1) {
+//     x.className += " w3-show";
+//   } else {
+//     x.className = x.className.replace(" w3-show", "");
+//   }
+// }
 </script>
 
 </body>
