@@ -344,18 +344,18 @@ function addMap(){
 			.dimension(yearDimension)
 			.group(yearGroup)
 			.elasticY(true)
-		//	.elasticX(true)
+			// .elasticX(true)
 			.round(dc.round.floor)
 			.alwaysUseRounding(true)
-			.x(d3.scaleLinear())
+			.x(d3.scaleLinear().domain([0,2020]))
 			.renderHorizontalGridLines(true)
 			// .yAxisLabel("Number")
 			// .xAxisLabel("Year")
 			.barPadding(0)
 	//		.turnOnControls(true)
-			yearChart.xAxisMax = function() { return Math.min( 2025,upperbound); };
-			yearChart.xAxisMin = function() { return Math.max(-2000,lowerbound); };
-			console.log()
+			// yearChart.xAxisMax = function() { return Math.min( 2025,upperbound); };
+			// yearChart.xAxisMin = function() { return Math.max(-2000,lowerbound); };
+			// console.log()
 			classificationChart
 			//.radius(80)
 			.margins({top: 10, right: 20, bottom: 30, left: 60})
