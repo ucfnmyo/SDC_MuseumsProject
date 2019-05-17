@@ -1,5 +1,4 @@
 
-
 html, body, #wrapper{
     height: 100%;
     width: 100%;
@@ -7,13 +6,13 @@ html, body, #wrapper{
 }
 
 #w3-top{
-  height: 50px;
+
 }
 
 #main {
   position: absolute;
-  height: calc(100% - 50px);
-  top: 50px;
+  height: calc(100% - 38px);
+  top: 38px;
   width: 100%;
   margin: 0px;
 }
@@ -51,8 +50,10 @@ html, body, #wrapper{
 }
 
 #charts{
+  position: absolute;
   height: 30%;
   width: 100%;
+  bottom:1px;
 }
 #year-chart{
   text-align: center;
@@ -85,22 +86,22 @@ html, body, #wrapper{
     z-index: 9999;
 }
 
-.overlay {
+/* .overlay {
     display: none;
     position: fixed;
     /* full screen */
-    width: 100vw;
-    height: 100vh;
+    /* width: 100vw; */
+    /* height: 100vh; */
     /* transparent black */
-    background: rgba(0, 0, 0, 0.7);
+    /* background: rgba(0, 0, 0, 0.7); */
     /* middle layer, i.e. appears below the sidebar */
-    z-index: 998;
-    opacity: 0;
+    /* z-index: 998; */
+    /* opacity: 0; */
     /* animate the transition */
-    transition: all 0.5s ease-in-out;
-}
+    /* transition: all 0.5s ease-in-out; */ */
+/* } */
 /* display .overlay when it has the .active class */
-.overlay.active {
+/* .overlay.active {
     display: block;
     opacity: 1;
 }
@@ -110,98 +111,29 @@ html, body, #wrapper{
     height: 35px;
     position: absolute;
     /* top right corner of the sidebar */
-    top: 10px;
-    right: 10px;
-}
+    /* top: 10px; */
+    /* right: 10px; */
+/* } */
 
-/*******************************
-* MODAL AS LEFT/RIGHT SIDEBAR
-* Add "left" or "right" in modal parent div, after class="modal".
-* Get free snippets on bootpen.com
-*******************************/
-	.modal.left .modal-dialog,
-	.modal.right .modal-dialog {
-		position: fixed;
-		margin: auto;
-		width: 320px;
-		height: 100%;
-		-webkit-transform: translate3d(0%, 0, 0);
-		    -ms-transform: translate3d(0%, 0, 0);
-		     -o-transform: translate3d(0%, 0, 0);
-		        transform: translate3d(0%, 0, 0);
-	}
 
-	.modal.left .modal-content,
-	.modal.right .modal-content {
-		height: 100%;
-		overflow-y: auto;
-	}
+/* .demo { */
+	/* padding-top: 60px; */
+	/* padding-bottom: 110px; */
+/* } */
 
-	.modal.left .modal-body,
-	.modal.right .modal-body {
-		padding: 15px 15px 80px;
-	}
-
-/*Left*/
-	.modal.left.fade .modal-dialog{
-		left: -320px;
-		-webkit-transition: opacity 0.3s linear, left 0.3s ease-out;
-		   -moz-transition: opacity 0.3s linear, left 0.3s ease-out;
-		     -o-transition: opacity 0.3s linear, left 0.3s ease-out;
-		        transition: opacity 0.3s linear, left 0.3s ease-out;
-	}
-
-	.modal.left.fade.in .modal-dialog{
-		left: 0;
-	}
-
-/*Right*/
-	.modal.right.fade .modal-dialog {
-		right: -320px;
-		-webkit-transition: opacity 0.3s linear, right 0.3s ease-out;
-		   -moz-transition: opacity 0.3s linear, right 0.3s ease-out;
-		     -o-transition: opacity 0.3s linear, right 0.3s ease-out;
-		        transition: opacity 0.3s linear, right 0.3s ease-out;
-	}
-
-	.modal.right.fade.in .modal-dialog {
-		right: 0;
-	}
-
-/* ----- MODAL STYLE ----- */
-	.modal-content {
-		border-radius: 0;
-		border: none;
-	}
-
-	.modal-header {
-		border-bottom-color: #EEEEEE;
-		background-color: #FAFAFA;
-	}
-
-/* ----- v CAN BE DELETED v ----- */
-body {
-	background-color: #78909C;
-}
-
-.demo {
-	padding-top: 60px;
-	padding-bottom: 110px;
-}
-
-.btn-demo {
+/* .btn-demo {
 	margin: 15px;
 	padding: 10px 15px;
 	border-radius: 0;
 	font-size: 16px;
 	background-color: #FFFFFF;
-}
+} */
 
-.btn-demo:focus {
+/* .btn-demo:focus {
 	outline: 0;
-}
+} */
 
-.demo-footer {
+/* .demo-footer {
 	position: fixed;
 	bottom: 0;
 	width: 100%;
@@ -216,3 +148,15 @@ body {
 	font-size: 16px;
 	color: #fff;
 }
+
+.sidebar_l{
+  position: absolute;
+  width: 20%;
+  left: 50px;
+  top: 20px;
+  height:50%;
+}
+
+.h6{
+  color: white;
+} */
