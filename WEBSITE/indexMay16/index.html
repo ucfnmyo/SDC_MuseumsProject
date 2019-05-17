@@ -392,7 +392,7 @@ function addMap(){
 				yearDimension = artworks.dimension(function(d) {return d['object_begin_date']- d['object_begin_date'] % yearRounding;}),
 				yearGroup = yearDimension.group();
 		yearChart = dc.barChart('#year-chart'); //charts defined globally to allow resetting through text in divs
-		var classificationDimension = artworks.dimension(function(d) {return d.Class_General;}),
+		var classificationDimension = artworks.dimension(function(d) {return d.class;}),
 				classificationGroup = classificationDimension.group();
 		classificationChart = dc.pieChart('#classification-chart'); //charts defined globally to allow resetting through text in divs
 		var countryDimension = artworks.dimension(function(d) {return d.country;}),
