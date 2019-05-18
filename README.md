@@ -4,6 +4,7 @@ Interactive web visualization of museum data.
 ## website to-dos
 1. Replace pie chart with row chart once the categorisation has been cleaned up (currently too many categories to display properly)
 2.Improve styling of chart titles and axes. Create wider bars in the barchart (think this will require redefining the xaxis scale function)
+3. Change cluster API call to return artwork image link
 
 Only if we have time
 1. rewrite to use a dc geochoropleth map as a svg layer in leaflet - tricky but would speed things up massively.
