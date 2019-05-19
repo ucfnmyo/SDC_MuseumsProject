@@ -424,17 +424,17 @@ app.get('/specific/:country/:cat/:early/:late', function (req, res) {
           var sql = "no"
         }else{ // neither year is no
            // only year values
-           var sql = "SELECT * FROM Final_Data WHERE acq_year >= \'"+early+"\' AND acq_year <= \'"+late+"\' ";
+           var sql = "SELECT * FROM Final_Data WHERE `acq_year` >= \'"+early+"\' AND `acq_year` <= \'"+late+"\' ";
         } // end year no else
 
       }else{ // if cat has a value
 
         if( early == "no" || late == "no"){
           // country is no cat has a value years are no
-          var sql = "SELECT * FROM Final_Data WHERE Class_General = \'"+cat+"\'";
+          var sql = "SELECT * FROM Final_Data WHERE `Class_General` = \'"+cat+"\'";
         }else{ // neither year is no
           // country is no cat has a value years have values
-          var sql = "SELECT * FROM Final_Data WHERE Class_General = \'"+cat+"\' AND acq_year >= \'"+early+"\' AND acq_year <= \'"+late+"\' ";
+          var sql = "SELECT * FROM Final_Data WHERE `Class_General` = \'"+cat+"\' AND `acq_year` >= \'"+early+"\' AND `acq_year` <= \'"+late+"\' ";
         } //end year no else
 
       } // end cat no else
@@ -443,20 +443,20 @@ app.get('/specific/:country/:cat/:early/:late', function (req, res) {
 
         if( early == "no" || late == "no"){
           // country  only
-          var sql = "SELECT * FROM Final_Data WHERE country =  \'"+country+"\'";
+          var sql = "SELECT * FROM Final_Data WHERE `country` =  \'"+country+"\'";
         }else{ // neither year is no
           // country has a value cat is no years have values
-          var sql = "SELECT * FROM Final_Data WHERE country = \'"+country+"\' AND acq_year >= \'"+early+"\' AND acq_year <= \'"+late+"\' ";
+          var sql = "SELECT * FROM Final_Data WHERE `country` = \'"+country+"\' AND `acq_year` >= \'"+early+"\' AND `acq_year` <= \'"+late+"\' ";
         } // end year no else
 
       }else{ // if cat is not no
 
         if( early == "no" || late == "no"){
           // country is no cat has a value years are no
-          var sql = "SELECT * FROM Final_Data WHERE Class_General = \'"+cat+"\' AND country = \'"+country+"\'";
+          var sql = "SELECT * FROM Final_Data WHERE `Class_General` = \'"+cat+"\' AND `country` = \'"+country+"\'";
         }else{ // neither year is no
           // country has a value  cat has a value  years have values
-          var sql = "SELECT * FROM Final_Data WHERE country = \'"+country+"\' AND Class_General = \'"+cat+"\' AND acq_year >= \'"+early+"\' AND acq_year <= \'"+late+"\' ";
+          var sql = "SELECT * FROM Final_Data WHERE `country` = \'"+country+"\' AND `Class_General` = \'"+cat+"\' AND `acq_year` >= \'"+early+"\' AND `acq_year` <= \'"+late+"\' ";
         } // end year no else
 
       } // end cat no else
