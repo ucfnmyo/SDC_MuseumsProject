@@ -1,19 +1,22 @@
 # SDC_MuseumsProject
 Interactive web visualization of museum data.
 
-## website to-dos
-1. Replace pie chart with row chart once the categorisation has been cleaned up (currently too many categories to display properly)
-2.Improve styling of chart titles and axes. Create wider bars in the barchart (think this will require redefining the xaxis scale function)
-3. Change cluster API call to return artwork image link
-
-Only if we have time
-1. rewrite to use a dc geochoropleth map as a svg layer in leaflet - tricky but would speed things up massively.
-2. Add records table to list selected records
-3. Add listener on records table to select clusters and bring through images of artwork
-4. Create a ZoomIn function which locates artwork by cities.
-
-
-
+## map to-dos in vague order of priority
+- Update getCluster button to call the loadData function
+- update Clusters info panel to provide a space for cluster name and description. have drop down automatically update when getCluster button called. amalgamate fulldata radio button into the dropdown
+- add the table header which gives the current date and country filters used
+- amalgamate the catch function for no record returns
+- create a countries filter reset button
+- format the table
+- format the graph and medium/classification selectors.
+- change the table to display medium text not keyword
+- grey out getimage button if there is no associated image. 
+- change styling to differentiate between countries with zero artwork and those which have artworks but are currently filtered out.
+- commas on legend
+- make the filter reset buttons disappear on cluster reload
+- format the country stat text
+- make the country stats discount unknown/other as main class. add Medium
+- change the bar graph bar thickness.probably requires redefining the xaxis scale function.
 
 
 ## local website
