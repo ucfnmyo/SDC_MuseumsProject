@@ -27,10 +27,18 @@ html, body, #wrapper{
 }
 
 #map-canvas{
-    height: 70%;
-    width: 100%;
+    height: 100%;
+    width: 60%;
+    float: left;
 }
 
+#selectors {
+    height: 100%;
+    width: 40%;
+    float: right;
+}
+
+}
 .title-header{
     margin: 0px;
 }
@@ -49,26 +57,28 @@ html, body, #wrapper{
     z-index: 900;
 }
 
-#charts{
-  position: absolute;
-  height: 30%;
-  width: 100%;
-  bottom:1px;
-}
 #year-chart{
   text-align: center;
-  height: 100%;
-  width: 50%;
-  bottom:00px;
-  float: left;
+  height: 200px;
+  width: 100%;
+  padding-top: 10px;
+  padding-right: 10px;
+  padding-bottom: 10px;
+  padding-left: 10px;
 }
 
 #classification-chart{
-  text-align: center;
-  height: 100%;
-  width: 50%;
-  bottom:00px;
-  float: right;
+  height: 30px;
+  width: 100%;
+}
+
+#medium-chart{
+  height: 30px;
+  width: 100%;
+}
+#table-chart{
+  height: calc(100%-260px);
+  width: 100%;
 }
 
 .wrapper {
