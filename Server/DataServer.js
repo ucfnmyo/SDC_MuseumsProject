@@ -340,7 +340,7 @@ app.get('/cluster/:value', function (req, res) {
 //  API EndPoint to get data for one of Mo's clusters
 app.get('/cluster2/:value', function (req, res) {
 
-  console.log("cluster endpoint")
+  console.log("cluster 2 endpoint")
 
       // Allows data to be downloaded from the server with security concerns
       res.header("Access-Control-Allow-Origin", "*");
@@ -384,7 +384,7 @@ app.get('/cluster2/:value', function (req, res) {
 //  API EndPoint to get data for a cluster from CArlos table
 app.get('/cluster3/:value', function (req, res) {
 
-  console.log("cluster endpoint")
+  console.log("cluster 3 endpoint")
 
       // Allows data to be downloaded from the server with security concerns
       res.header("Access-Control-Allow-Origin", "*");
