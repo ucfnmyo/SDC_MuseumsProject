@@ -56,7 +56,8 @@ app.get('/data', function (req, res) {
       res.header("Access-Control-Allow-Headers", "X-Requested-WithD");
       // If all the variables are provided connect to the database
 
-      var sql = "SELECT `Object ID`, `object_begin_date`, `class`, `country`, `object_name` FROM Final_Data";
+      var sql = "SELECT `Object ID`, `object_begin_date`, `class`, `country`, `object_name`, `Cluster_ID`, `medium` FROM Final_Data";
+      //  object ID, country, begin data, object name, cluster id, class, medium
 
       connection.query(sql, function(err, rows, fields) {
             if (err) console.log("Err:" + err);
@@ -308,7 +309,9 @@ app.get('/cluster/:value', function (req, res) {
         console.log("cluster id: ", value);
         value = parseInt(value);
 
-        var sql = "SELECT `Object ID`, `object_name`, `object_begin_date`, `class`, `country`, `Cluster_ID` FROM Final_Data WHERE Cluster_ID = \'"+value+"\'";
+        var sql = "SELECT `Object ID`, `object_name`, `object_begin_date`, `class`, `country`, `medium`, `Cluster_ID` FROM Final_Data WHERE Cluster_ID = \'"+value+"\'";
+        // `Object ID`, `object_begin_date`, `class`, `country`, `object_name`, `Cluster_ID`
+
 
         // console.log("query: ", sql)
 
