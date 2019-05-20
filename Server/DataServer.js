@@ -56,7 +56,7 @@ app.get('/data', function (req, res) {
       res.header("Access-Control-Allow-Headers", "X-Requested-WithD");
       // If all the variables are provided connect to the database
 
-      var sql = "SELECT `Object ID`, `object_begin_date`, `class`, `country` FROM Final_Data";
+      var sql = "SELECT `Object ID`, `object_begin_date`, `class`, `country`, `object_name` FROM Final_Data";
 
       connection.query(sql, function(err, rows, fields) {
             if (err) console.log("Err:" + err);
