@@ -153,7 +153,7 @@
 var yearChart, //charts defined globally to allow resetting through text in divs
 classificationChart,
 mediumChart;
-var filterCluster; //defined globally to allow selection by div but uses dc.js scoped functions  
+var filterCluster; //defined globally to allow selection by div but uses dc.js scoped functions
 function getImg() {
 	var x = document.getElementById("artImg");
 	if (x.style.display === "none") {
@@ -194,9 +194,9 @@ function artInfo(objectID){
 
 
 	});
-	
+
 	document.getElementById('clusterButton').innerHTML = "<button onclick='filterCluster("+objectID+")'>GetCluster</button>";
-			
+
 
 }
 
@@ -215,14 +215,14 @@ function addMap(){
 		this.update();
 		return this._div;
 	};
-	
+
 	selecter.update = function () {
 		this._div.innerHTML ='<h4>Explore the MET museum</h4><div id ="cluster-chart"></div><div id = "cluster-text"></div>'
 	};
-	
+
 	selecter.addTo(map);
 
-	
+
 	function loadData(){
 		$('#map-canvas').block({ message: '<h1> Loading Data</h1>' });
 		var url = "http://dev.spatialdatacapture.org:8872/data"
@@ -234,7 +234,7 @@ function addMap(){
 			$('#map-canvas').unblock();
 		});
 	};
-	
+
 	var legend = L.control({position: 'bottomleft'});
 	legend.onAdd = function (map) {
 		this._legenddiv = L.DomUtil.create('div', 'info legend');
@@ -367,7 +367,7 @@ function addMap(){
 		var clusterDimension = artworks.dimension(function(d) {return d["Cluster_ID"];}),
 			clusterGroup = clusterDimension.group(),
 			clusterChart = dc.selectMenu('#cluster-chart');
-		
+
 		//tableChart = dc.tableview('#table-chart');//charts defined globally to allow resetting through text in divs
 
 		// var cityDimension = artworks.dimension(function(d) {return d.CityMatch;}),
