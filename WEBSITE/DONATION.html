@@ -151,12 +151,6 @@ body, html {
 
 	</style>
 
-
-
-<body>
-
-
-
 <!-- Resources -->
 <script src="https://www.amcharts.com/lib/4/core.js"></script>
 <script src="https://www.amcharts.com/lib/4/charts.js"></script>
@@ -168,54 +162,50 @@ body, html {
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.4.0.min.js"></script>
 
-
-
-
-
-
-
 </head>
 
 <body>
 <!-- Create div -->
 
-   
 	<div class = 'wrapper' id='wrapper'>
 	
 		<!-- Navbar (sit on top) -->
 		<div class="w3-top">
 		  <div class="w3-bar w3-white w3-card" id="myNavbar">
-		    <a href="new_index.html" class="w3-bar-item w3-button w3-red w3-wide">MET Artwork Visualiser</a>
+		    <a href="index.html" class="w3-bar-item w3-button w3-red w3-wide">MET Artwork Visualiser</a>
 		    <!-- Right-sided navbar links -->
 			
-		    <div class="w3-right w3-hide-small">
-		      <a href="WebPageFinal.html#about" class="w3-bar-item w3-button">ABOUT</a>
-				<div class = "dropdown">
-					<button class="dropbtn">Descriptive Statistics
-						<i class="fa fa-caret.down"></i>
-					</button>
-				<div class="dropdown-content">
-					<a href="BUBBLE_FINAL.html#BUBBLE">Bubble Chart</a>
-					 <a href="DONATION.html#DONATION">Volume of donation</a>
-					 <a href="MetPieChart.html#chart">Artwork classification</a>
-				   </div>
-				   </div>
-				<div class = "dropdown">
-					<button class="dropbtn">Results
-						<i class="fa fa-caret.down"></i>
-					</button>
-				<div class="dropdown-content">
-					<a href="WORKING_SANKEY.html#chart">Sankey diagram</a>
-					 <a href="NEWCHART_GOOD_TRY.html#container">Spatio-temporal clustering</a>
-				   </div>
-				   </div>		      <a href="index.html" class="w3-bar-item w3-button"><i class="fa fa-map"></i> MAP</a>
-					<!-- /home/ucfnhke/public_html/SDC_MuseumsProject/WEBSITE -->
-		      <a href="#contact" class="w3-bar-item w3-button"><i class="fa fa-envelope"></i>CONTACT</a>
-		    </div>
+  		  <div class="w3-right w3-hide-small">
+  		      <a href="about.html" class="w3-bar-item w3-button">ABOUT</a>
+  				<div class = "dropdown">
+  					<button class="dropbtn">Descriptive Stats
+  						<i class="fa fa-caret.down"></i>
+  					</button>
+  				<div class="dropdown-content">
+  					<a href="BUBBLE_FINAL.html#BUBBLE">Bubble Chart</a>
+  					 <a href="DONATION.html#DONATION">Volume of donation</a>
+  					 <a href="MetPieChart.html#chart">Artwork classification</a>
+  				   </div>
+  				   </div>
+  				<div class = "dropdown">
+  					<button class="dropbtn">Results
+  						<i class="fa fa-caret.down"></i>
+  					</button>
+  				<div class="dropdown-content">
+  					<a href="WORKING_SANKEY.html#chart">Sankey diagram</a>
+  					 <a href="NEWCHART_GOOD_TRY.html#container">Spatio-temporal clustering</a>
+  				   </div>
+  				   </div>		      
+          <a href="map.html" class="w3-bar-item w3-button"><i class="fa"></i> MAP</a>
+  					<!-- /home/ucfnhke/public_html/SDC_MuseumsProject/WEBSITE -->
+  		     <!--  <a href="#contact" class="w3-bar-item w3-button"><i class="fa fa-envelope"></i>CONTACT</a> -->x
+  		  </div>
+		  </div>
 		</div>
-		</div>
-		</div>
+	</div>
+
 	<div id ="picture" class="w3-display-left w3-text-white" style="padding:48px"></div>
+
 <h2>Select the continent you want to see</h2>
 <div id= "DONATION" style="min-width: 310px; max-width: 600px; height: 600px; margin: 0 auto">
 <button id="full_button">Full Dataset</button>
@@ -421,6 +411,7 @@ var all_years = ['1870','1871','1872','1873','1874','1875','1876', '1877', '1878
   
   	})
 data=[]}
+
 </script>  
-</body>
+
 </html>
