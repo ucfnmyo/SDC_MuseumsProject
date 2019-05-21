@@ -442,7 +442,7 @@ app.get('/cluster4/:value', function (req, res) {
         console.log("cluster id: ", value);
         value = parseInt(value);
 
-        var sql = "SELECT * FROM Final_Data WHERE clusterID = \'"+value+"\'";
+        var sql = "SELECT * FROM Final_Data WHERE clusterIDs = \'"+value+"\'";
 
         // console.log("query: ", sql)
 
