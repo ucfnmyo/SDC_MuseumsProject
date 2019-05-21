@@ -521,6 +521,7 @@ app.get('/clusterchart/:value', function (req, res) {
             res.send("empty query");
           }
         }); // end sql query
+      }
 
       }else{
         // if code or value is blank
@@ -528,8 +529,6 @@ app.get('/clusterchart/:value', function (req, res) {
         res.send("missing URL variables");
 
       }
-
-    }
 });
 
 
