@@ -502,13 +502,6 @@ app.get('/clusterchart/:value', function (req, res) {
           }
         }); // end sql query
 
-      }else{
-        // if code or value is blank
-        console.log("missing URL variables");
-        res.send("missing URL variables");
-
-      }
-
         }else{
 
         value = parseInt(value);
@@ -536,9 +529,7 @@ app.get('/clusterchart/:value', function (req, res) {
 
       }
 
-        }
-
-
+    }
 });
 
 
