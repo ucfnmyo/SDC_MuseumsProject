@@ -39,7 +39,7 @@ body, html {
   padding: 16px;
 }
 
-		#container {
+#container {
 	min-width: 320px;
 	max-width: 800px;
 	margin: 0 auto;
@@ -50,21 +50,75 @@ body, html {
 
 
 }
+#overlay {
+  display: none;
+  width: 100%;
+  height: 100%;
+  top: 2;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0,0,0,0.8);
+  z-index: 2;
+  cursor: pointer;
+  padding: 10px;
+
+}
+
+#text{
+  position: absolute;
+  top: 60%;
+  left: 40%;
+  font-size: 18px;
+  color: white;
+  padding: 20px;
+  transform: translate(-50%,-50%);
+  -ms-transform: translate(-50%,-50%);
+}
 </style>
 </head>
 <body>
 
 <!-- Header with full-height image -->
 <header class="bgimg-1 w3-display-container w3-grayscale-min" id="home">
-  <div id ="picture" class="w3-display-left w3-text-white" style="padding:48px">
-  <div style = 'background-color: gray; width: 100%'>
+  <div id ="picture" class="w3-display-left w3-text-white" style="">
+  <div style = 'background-color: gray; left:0; width: 1700px; background-color: rgba(0, 0, 0, 0.6);'>
+<div style="padding:40px">
     <span class="w3-jumbo w3-hide-small">MET Artwork Explorer</span><br>
     <span class="w3-xxlarge w3-hide-large w3-hide-medium">MET Artwork Explorer </span><br>
-    <span class="w3-large">Explore over 400,000 artwork objects from the Metropoliton Museum of Art</span>
-    <p><a href="map.html" class="w3-button w3-white w3-padding-large w3-large w3-margin-top w3-opacity w3-hover-opacity-on">Explore</a></p>
+    <span style= 'font-size: 20px;'>Explore over 400,000 artwork objects from the Metropoliton Museum of Art (MET)</span>
+    <div id= 'buttons'>
+      <a href="map.html" class="w3-button w3-white w3-padding-large w3-large w3-margin-top w3-opacity w3-hover-opacity-on">Explore</a>
+      <button style = 'margin-left: 10px;' onclick="on()" class="w3-button w3-white w3-padding-large w3-large w3-margin-top w3-opacity w3-hover-opacity-on">How To Use</button>
+    </div>
+    <div id="overlay" onclick="off()">
+    <div pid="text">
+      <h3> The MET Art Visualiser is an interactive tool that allows the user to navigate over 400,000 works of art from the MET Art collection on a map. Various informative tools are presented to the user to enable endless exploration of over 200 types of artwork </h3>
+      <h3> How use the dashboard:<h3>
+        <ol style = 'font-size: 20px;'>
+        <li> From the bart chart, select the time range you wish to explore, simply click and drag on the chart to select your parameters.</li>
+        <li> The 'Select Category' dropdown menu enables you to filter through over 200 categories of artwork </li>
+        <li> If you are interested in examining artworks of a certain medium (materials and techniques used in the artwork), select your desired filters from the 'Select Medium' dropdown menu</li>
+        <li> After selecting your filters, the map will update according to the number of artworks in each country, select the country you're interested in and a table summarizing the artworks wil appear in the dashboard </li>
+        <li> In the artwork display table, select the specific artwork you are interested in by clicking its name</li>
+        </ol>
+
+
+      </div>
+    </div>
   </div>
-  </div>
+</div>
+</div>
 </header>
 
 </body>
+<script>
+function on() {
+  document.getElementById("overlay").style.display = "block";
+}
+
+function off() {
+  document.getElementById("overlay").style.display = "none";
+}
+</script>
 </html>

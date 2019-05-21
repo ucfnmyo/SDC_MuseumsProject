@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html>
-<head>
 <title>MET Museum Explorer</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -8,120 +7,203 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <link rel="stylesheet" href="./css/Webstyle.css">
-</head>
+<link rel="stylesheet" href="../lib/w3.css">
+<!-- Read in Highcharts libraries -->
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/streamgraph.js"></script>
+<script src="https://code.highcharts.com/modules/series-label.js"></script>
+<script src="https://code.highcharts.com/modules/annotations.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
 
 
+<style>
+body,h1,h2,h3,h4,h5,h6,p {font-family: "Raleway", sans-serif}
+
+p, ol {
+  font-size: 20px;
+}
+body, html {
+  height: 100%;
+  line-height: 1.8;
+}
+
+/* Full height image header */
+.bgimg-1 {
+
+  background-position: center;
+  background-size: cover;
+  background-image: url("metBack.jpg");
+  min-height: 100%;
+}
+
+.w3-bar .w3-button {
+  padding: 16px;
+}
+
+.w3-dropdown-hover{
+	color: red;
+}
+
+
+
+/* Style tab links */
+.tablink {
+  background-color: white;
+  color: black;
+  float: left;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 14px 16px;
+  font-size: 17px;
+  width: 25%;
+}
+
+.tablink:hover {
+  background-color: #777;
+}
+
+/* Style the tab content (and add height:100% for full page content) */
+.tabcontent {
+  color: black;
+  display: none;
+  padding: 100px 20px;
+  height: 100%;
+}
+
+#Home {background-color: white;}
+#News {background-color: white;}
+#Contact {background-color: white;}
+#About {background-color: white;}
+
+</style>
 <body>
 
+<!-- Navbar (sit on top) -->
+<div class="w3-top">
+  <div class="w3-bar w3-white w3-card" id="myNavbar">
+    <a href="index.html" class="w3-bar-item w3-button w3-red w3-wide">MET Artwork Visualiser</a>
+    <!-- Right-sided navbar links -->
+				<div class="w3-right w3-hide-small">
+					<!-- ABOUT DROP DOWN -->
+					<div class="w3-dropdown-hover">
+					 <a href = 'about.html'><button   style = 'height: 55px;' class="w3-btn w3-white"><i class="fa fa-book"></i>  PROJECT</button></a>
+						</div>
 
-<!-- ADD NAVBAR HERE -->
+						<div class="w3-dropdown-hover w3-red">
+						<a href ='map.html'> <button style = 'height: 55px;' class="w3-btn w3-white"><i class="fa fa-map"></i>  MAP</button></a>
+						</div>
+						<!-- VISUALISATIONS DROP DOWN -->
+						<div class="w3-dropdown-hover">
+						 <button style = 'width: 200px; height: 55px;'class="w3-btn w3-white"><i class="fa fa-bar-chart"></i>  VISUALISATIONS</button>
+						  <div style = 'width: 200px;' class="w3-dropdown-content w3-bar-block w3-border">
+						    <a href="bubble.html" class="w3-bar-item w3-button">Artwork by Country</a>
+						    <a href="DONATION.html" class="w3-bar-item w3-button">Artwork Donations</a>
+						    <a href="beginDateBC.html" class="w3-bar-item w3-button">Historical Trends (BC)</a>
+								<a href="beginDateAD.html" class="w3-bar-item w3-button">Historical Trends (AD)</a>
+						  </div>
+						</div>
+						</div>
+		</div>
+  </div>
 
+<div style = 'margin-top: 59px;' id = 'wrapper'>
+<button class="tablink" onclick="openPage('Home', this, 'khaki')"id="defaultOpen"><h5>About</h5></button>
+<button class="tablink" onclick="openPage('News', this, 'lightgreen')" ><h5>Preprocessing</h5></button>
+<button class="tablink" onclick="openPage('Contact', this, 'lightblue')"><h5>Text Analysis</h5></button>
+<button class="tablink" onclick="openPage('About', this, 'orange')"><h5>Medium Trend Anaylsis</h5></button>
 
-<!-- About Section -->
-<div class="w3-container" style="padding:128px 16px" id="about">
-  <h3 class="w3-center">About</h3>
-  <div class="w3-row-padding w3-center" style="margin-top:64px">
-      <p class="w3-large">Metropoliton Museum of Art</p>
-        <p>The Metropolitan Museum of Art (MET) of New York City is the third most visited art museum in the world, having 6,953,927 annual visitors, as well as being the largest art museum in the United States. The MET’s Open Access program allows users to view the collection digitally. In addition, anyone can download the collection dataset and manipulate it without any copyright restrictions. The public domain is automatically updated as the MET digitizes artworks.</p>
-      <p class="w3-large">The Dataset</p>
-        <p>The museum’s dataset presents over 490,000 art objects, distributed through over 5,000 years of art around the world.</p>
-      <p class="w3-large">Project aims</p>
-        <p>A tool for exploring trends in art objects in the MET collection. The spatially visualizes the MET collection [add more on analysis goal].</p>
-
-
+<div id="Home" class="tabcontent">
+  <div class="w3-container" id="about">
+    <div class="w3-row-padding w3-center" style="margin-top:30px">
+        <h3 >Metropolitan Museum of Art</h3>
+          <p>The Metropolitan Museum of Art (MET) of New York City is the third most visited art museum in the world, having 6,953,927 annual visitors, as well as being the largest art museum in the United States. The MET’s Open Access program allows users to view the collection digitally. In addition, anyone can download the collection dataset and manipulate it without any copyright restrictions. The public domain is automatically updated as the MET digitizes artworks.</p>
+        <h3 >The Dataset</h3>
+          <p>The museum’s dataset presents over 490,000 art objects, distributed through over 5,000 years of art around the world.</p>
+        <h3 >Project aims</h3>
+          <p>A tool for exploring trends in art objects in the MET collection. The spatially visualizes the MET collection [add more on analysis goal].</p>
+    </div>
   </div>
 </div>
 
-<!-- Preprocessing Stats Section -->
-<div class="w3-container" style="padding:128px 16px" id="preprocessing">
-  <h3 class="w3-center">Preprocessing</h3>
-  <div class="w3-row-padding w3-center" style="margin-top:64px">
-      <p class="w3-large">Cleaning</p>
+<div id="News" class="tabcontent">
+  <!-- Preprocessing Stats Section -->
+  <div class="w3-container" id="preprocessing">
+    <div class="w3-row-padding w3-center" style="margin-top:30px">
+        <h3>Data Cleaning</h3>
+          <p>
+            The first challenge was to have as many artworks associated to the country it was made in. Before cleaning the data, the MET dataset ‘country’ column contained inconsistent values (only ~76,000 objects had a country filled in the field) and the rest were null. In order to spatially visualize the collection, the ‘country’ column values must match with a country geojson values. The first step was to remove any string characters and any key fields that were not associated to the name of a country. For the remaining artworks with null values, we filled this in using the country associated to the artist’s nationality, artist’s display bio, or the culture (<a href="https://github.com/ryanabest/ms1-2018/blob/master/quant/MetObjectsExploration.py">ryanabest</a>). This resulted in dropping slightly more than 10% of the total objects to spatially visualize ~430,000 art objects. The next challenge was to associate each art object to the method and materials used to make the object. This involved refining the ‘classification’ column, which contained a term describing the artwork type (i.e. sculpture, painting) from 1,144 classifications into a generalized list of 205 classifications. To send the data in the correct format to MySQL, blank values were replaced with NaNs from numpy, which corresponds as null in MySQL.
+          </p>
+        <h3>Transformation</h3>
+          <p>With a technique known as one-hot encoding we vectorized materials, methods and classifications to tranform the dataset into a machine-readable format, enabling advanced data analytics.</p>
+        <h3>Back End</h3>
+          <p>
+              The cleaned data is stored in several tables in a MYSQL database, accessible through a node.js API. The key endpoints deliver a summary or a subset of the data according to parameters passed with a GET request. For several of the visualizations, custom endpoints were built to deliver exactly the data necessary, reducing load times and the complexity required of the code receiving the data. Documentation for the general API endpoints can be found <a target="_blank" href="http:dev.spatialdatacapture.org:8872/">here</a>.
+          </p>
+
+</div>
+</div>
+</div>
+<div id="Contact" class="tabcontent">
+  <div class="w3-container" id="method">
+    <div class="w3-row-padding w3-center" style="margin-top:30px">
+      <h3> Medium Data </h3>
+        <p> Natural language processing (NLP) was implemented to obtain material and technique keywords from artwork medium data.
+          <br> Keyword extraction vectorized the data according to the material or technique employed in the artwork.
+          </p>
+
+        <h3> Artwork Classification </h3>
         <p>
-          The first challenge was to have as many artworks associated to the country it was made in. Before cleaning the data, the MET dataset ‘country’ column contained inconsistent values (only ~76,000 objects had a country filled in the field) and the rest were null. In order to spatially visualize the collection, the ‘country’ column values must match with a country geojson values. The first step was to remove any string characters and any key fields that were not associated to the name of a country. For the remaining artworks with null values, we filled this in using the country associated to the artist’s nationality, artist’s display bio, or the culture (<a href="https://github.com/ryanabest/ms1-2018/blob/master/quant/MetObjectsExploration.py">ryanabest</a>). This resulted in dropping slightly more than 10% of the total objects to spatially visualize ~430,000 art objects. The next challenge was to associate each art object to the method and materials used to make the object. This involved refining the ‘classification’ column, which contained a term describing the artwork type (i.e. sculpture, painting) from 1,144 classifications into a generalized list of 205 classifications. To send the data in the correct format to MySQL, blank values were replaced with NaNs from numpy, which corresponds as null in MySQL.
-        </p>
-      <p class="w3-large">Transformation</p>
-        <p>Vectorized that data boiii</p>
-      <p class="w3-large">API</p>
-        <p> 
-            The cleaned data is stored in several tables in a MYSQL database, accessible through a node.js API. The key endpoints deliver a summary or a subset of the data according to parameters passed with a GET request. For several of the visualizations, custom endpoints were built to deliver exactly the data necessary, reducing load times and the complexity required of the code receiving the data. Documentation for the general API endpoints can be found <a target="_blank" href="http://dev.spatialdatacapture.org:8872/">here</a>. 
-        </p>
 
 
-<!-- Methodology Section -->
-<div class="w3-container" style="padding:128px 16px" id="method">
-  <h3 class="w3-center">Text Extraction Analysis</h3>
-  <div class="w3-row-padding w3-center" style="margin-top:64px">
-      <p class="w3-large">Text Analysis</p>
-      <p>
-        Medium data provided information on materials and techniques used to used to produce the artpiece. The challenge was to extract meaningful information from string sentences that contained irrelvant words (e.g.'Paper with composition covers').
-        Natural Langauge Processing (NLP), specifically  Point of Speech (POS) tagging, provided enabled an automated differentiation between materials (nouns) and techniques (verbs). These acted as a set of keywords that we can match with artwork records, checking wheather it contains a certain material or technique of art.
-
-
-        </p>
-
-        <p>With 1114 artwork classifications in the uncleaned dataset, we needed to significantly refine artwork categories for feasible subsetting of the data. Again, POS taggin was applied to extract general classification keywords, resulting in just over 200 categorizations of artwork generated.
-
+    </div>
   </div>
 </div>
 
-<div class="w3-container" style="padding:128px 16px" id="method">
-  <h3 class="w3-center">Spatio-temporal Analysis</h3>
-  <div class="w3-row-padding w3-center" style="margin-top:64px">
-      <p class="w3-large">Clustering</p>
-      <p>We are clustering by two numerical variables, the artwork age and the location, and three categorical variables, the classification given by the MET and our extracted keywords for materials and method.
+<div id="About" class="tabcontent">
+  <div class="w3-container" id="method">
+    <h3 class="w3-center">Clustering Analysis</h3>
+    <div class="w3-row-padding w3-center" style="margin-top:30px">
+        <p>We are clustering by two numerical variables, the artwork age and the location, and three categorical variables, the classification given by the MET and our extracted keywords for materials and method.
 
-          This may seem a straight-forward task, but there are three important aspects of our dataset:
+            This may seem a straight-forward task, but there are three important aspects of our dataset:
 
-          We don't know how many clusters to expect; the clusters are likely to vary greatly in size; and there will be points that don't naturally form a cluster. This rules out k-means clustering and leans towards a density based approach such as DBSCAN.
+          <ol>
+            <li> We don't know how many clusters to expect; the clusters are likely to vary greatly in size; and there will be points that don't naturally form a cluster. This rules out k-means clustering and leans towards a density based approach such as DBSCAN.</li>
 
-          But we are also dealing with BIG DATA, at over 400,000 records. Processes such as DBSCAN that depend on pairwise distance comparisons naturally scale quadratically.
+            <li>  But we are also dealing with BIG DATA, at over 400,000 records. Processes such as DBSCAN that depend on pairwise distance comparisons naturally scale quadratically.</li>
 
-          As an additional complication, our categorical variables have a very large number of categories; furthermore not all records have a single value in each category - there are records with no information for the category AND there are records which have multiple category values e.g. the artwork has been produced using more than one material.
+          <li>  As an additional complication, our categorical variables have a very large number of categories; furthermore not all records have a single value in each category - there are records with no information for the category AND there are records which have multiple category values e.g. the artwork has been produced using more than one material. </li>
+        </ol>
+          <h3 class="w3-center">Spatio-Temporal Analysis</h3>
+          <p>  Temporal data was incorported with the object begin date, since it defines an artistic reaction to a historical event. The Gower distance function enabled us to normalise annual dates that would fit in well with DBSCAN euclidean distance function.
 
-          We overcame the categorical problem with a one-hot encoding approach:creating a binary parameter for each potential category value. Vectorizing the data in this manner allowed us to create distances that would be captured by the DBSCAN. Artworks that did not match with any category or medium keywords were dropped to avoid artifical clusters.
-
-          Temporal data was incorported with the object begin date, since it defines an artistic reaction to a historical event. The Gower distance function enabled us to normalise annual dates that would fit in well with DBSCAN euclidean distance function.
-
-          A similar problem comes into our notion of distance. For this we are using the centroids of the countries, processed using QGIS, and we can work directly with the latitude and longitude to calculate an accurate distance between points. In order to get round this we decided to convert the coordinates to a projection, which allows us to make use of the standard DBSCAN distance function. We used the Lambart Conformal Conic projection. Its advantages are that straight-lines in the projection equate to great-circles, the shortest path between two points, and it minimises the distortion of distance in the northern hemisphere, which is where the majority of the artwork is from.
-        </p>
-
-
+            A similar problem comes into our notion of distance. For this we are using the centroids of the countries, processed using QGIS, and we can work directly with the latitude and longitude to calculate an accurate distance between points. In order to get round this we decided to convert the coordinates to a projection, which allows us to make use of the standard DBSCAN distance function. We used the Lambart Conformal Conic projection. Its advantages are that straight-lines in the projection equate to great-circles, the shortest path between two points, and it minimises the distortion of distance in the northern hemisphere, which is where the majority of the artwork is from.
+          </p>
+    </div>
   </div>
 </div>
-
-
-<div class="w3-container" style="padding:128px 16px" id="method">
-  <h3 class="w3-center">Artwork Trend Analysis</h3>
-  <div class="w3-row-padding w3-center" style="margin-top:64px">
-      <p class="w3-large">Text Analysis</p>
-      <p>
-        Natural language processing (NLP) was implemented to obtain material and technique keywords from artwork medium data.
-        <br> Keyword extraction vectorized the data according to the material or technique employed in the artwork.
-        </p>
-
-        <p class="w3-large">Materials and Techniques Analysis</p>
-        <p>Artworks with similar materials and techniques were clustered using a DBSCAN algorithm.</p>
-
-
-
-      <p class="w3-large">Results</p>
-      <p>
-        With this approach, we were able to correlate artworks from differing geographical areas and time periods based on the similarity between materials or techniques used in their creation. Interesting trends on the prominance of certain materials or techniques in international artworks could then be uncovered, providing an understanding of how art progressed over time and space.
-        Below, we will present some examples of interesting findings from our analysis.
-
-
-        <br><b>Materials</b> - A total of 385 clusters were formed, with 5,190 artworks not attributed to a cluster.
-          <br>
-          <br> The DBSCAN algorithm identified 43 artworks that similarly featured wood and shells. Lets investigate this group further.
-          <br> Below represents the proportion of categories in this cluster, Chordophones and Sculptures contituted most of the artwork.
-      </p>
-
-
-  </div>
-</div>
-
+<!-- About Section -->
 
 
 </body>
+<script>
+function openPage(pageName,elmnt,color) {
+  var i, tabcontent, tablinks;
+  tabcontent = document.getElementsByClassName("tabcontent");
+  for (i = 0; i < tabcontent.length; i++) {
+    tabcontent[i].style.display = "none";
+  }
+  tablinks = document.getElementsByClassName("tablink");
+  for (i = 0; i < tablinks.length; i++) {
+    tablinks[i].style.backgroundColor = "";
+  }
+  document.getElementById(pageName).style.display = "block";
+  elmnt.style.backgroundColor = color;
+}
+
+// Get the element with id="defaultOpen" and click on it
+document.getElementById("defaultOpen").click();
+</script>
 </html>
