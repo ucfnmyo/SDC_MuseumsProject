@@ -292,7 +292,7 @@ app.get('/summary/:key/:year', function (req, res) {
   });   // end of summary endpoint
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//  API EndPoint to get data subset for one value of a code
+//  API EndPoint to get data subset for one of terry's clusters
 app.get('/cluster/:value', function (req, res) {
 
   console.log("cluster endpoint")
@@ -337,7 +337,7 @@ app.get('/cluster/:value', function (req, res) {
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//  API EndPoint to get data for one of Mo's clusters
+//  API EndPoint to get data for one of Mo's clusters or carlos's charts
 app.get('/cluster2/:value', function (req, res) {
 
   console.log("cluster 2 endpoint")
@@ -381,7 +381,7 @@ app.get('/cluster2/:value', function (req, res) {
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//  API EndPoint to get data for a cluster from CArlos table
+//  API EndPoint to get data for a cluster from Carlos table
 app.get('/cluster3/:value', function (req, res) {
 
   console.log("cluster 3 endpoint")
