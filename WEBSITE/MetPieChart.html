@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<head>
+
+	<link rel='stylesheet' id='font-css'  href='./css/style.css' type='text/css' media='all' />
+	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css"
+    integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
+    crossorigin=""/>
+	<link href='https://unpkg.com/dc@3.0.10/dc.css' rel='stylesheet' type='text/css'>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">	
+<style>
+#chart {
+min-width: 310px;
+max-width: 800px;
+height: 600px;
+margin: 0 auto
+}
+body,h1,h2,h3,h4,h5,h6 {font-family: "Raleway", sans-serif}
+
+body, html {
+  height: 100vh;
+	width: 100vw;
+  line-height: 1.8;
+  width: 100%
+}
+
+/* Full height image header */
+.bgimg-1 {
+  background-position: center;
+  background-size: cover;
+  background-image: url("https://i.imgur.com/dbrqmPq.jpg");
+  min-height: 100%;
+  opacity: 0.9;
+}
+
+.w3-bar .w3-button {
+  padding: 16px;
+}
+		
+		#container {
+	min-width: 320px;
+	max-width: 800px;
+	margin: 0 auto;
+	#chartdiv {
+	width: 100%;
+	height: 500px;
+	}
+
+}
+
+.w3-bar .w3-button {
+  padding: 16px;
+}
+		
+.BUBBLE {
+	min-width: 320px;
+	max-width: 800px;
+	margin: 0 auto;
+	margin-top: 500px;
+	#chartdiv {
+	width: 80%;
+	height: 400px;
+	background-image: url("https://i.imgur.com/dbrqmPq.jpg");
+	}
+
+}
+	button {
+  background-color: #3498DB;
+  color: white;
+  padding: 16px;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+
+}
+	.info {
+	    padding: 6px 8px;
+	    font: 14px/16px Arial, Helvetica, sans-serif;
+	    background: white;
+	    background: rgba(255,255,255,0.8);
+	    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+	    border-radius: 5px;
+	}
+/* Navbar container */
+.navbar {
+  overflow: hidden;
+  background-color: #333;
+  font-family: Arial;
+}
+
+/* Links inside the navbar */
+.navbar a {
+  float: left;
+  font-size: 16px;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+/* The dropdown container */
+.dropdown {
+  float: left;
+  overflow: hidden;
+}
+
+/* Dropdown button */
+.dropdown .dropbtn {
+  font-size: 16px; 
+  border: none;
+  outline: none;
+  color: black;
+  padding: 14px 16px;
+  background-color: inherit;
+  font-family: inherit; /* Important for vertical align on mobile phones */
+  margin: 0; /* Important for vertical align on mobile phones */
+}
+
+/* Add a red background color to navbar links on hover */
+.navbar a:hover, .dropdown:hover .dropbtn {
+  background-color: red;
+}
+
+/* Dropdown content (hidden by default) */
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+/* Links inside the dropdown */
+.dropdown-content a {
+  float: none;
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  text-align: left;
+}
+
+/* Add a grey background color to dropdown links on hover */
+.dropdown-content a:hover {
+  background-color: #ddd;
+}
+
+/* Show the dropdown menu on hover */
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+</style>
+</head>
+<body>
+<!-- The Javascript from external websites gets Loaded Here -->
+<script type='text/javascript' src='http://code.jquery.com/jquery-1.10.2.min.js?ver=1.10.2'></script>
+<script type="text/javascript" src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js" integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcxCPavG10IcrVGSmPh6Qw5lwrg==" crossorigin=""></script>
+<script type="text/javascript" src="http://maps.stamen.com/js/tile.stamen.js?v1.3.0"></script>
+<script type="text/javascript" src="https://d3js.org/d3.v4.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/crossfilter/1.3.12/crossfilter.min.js"></script>
+<script type="text/javascript" src="https://unpkg.com/dc@3.0.10/dc.js"></script>
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/sunburst.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+
+
+<!-- Create div -->
+
+   
+	<div class = 'wrapper' id='wrapper'>
+	
+		<!-- Navbar (sit on top) -->
+		<div class="w3-top">
+		  <div class="w3-bar w3-white w3-card" id="myNavbar">
+		    <a href="new_index.html" class="w3-bar-item w3-button w3-red w3-wide">MET Artwork Visualiser</a>
+		    <!-- Right-sided navbar links -->
+			
+		    <div class="w3-right w3-hide-small">
+		      <a href="WebPageFinal.html#about" class="w3-bar-item w3-button">ABOUT</a>
+				<div class = "dropdown">
+					<button class="dropbtn">Descriptive Statistics
+						<i class="fa fa-caret.down"></i>
+					</button>
+				<div class="dropdown-content">
+					<a href="BUBBLE_FINAL.html#BUBBLE">Bubble Chart</a>
+					 <a href="DONATION.html#DONATION">Volume of donation</a>
+					 <a href="MetPieChart.html#chart">Artwork classification</a>
+				   </div>
+				   </div>
+				<div class = "dropdown">
+					<button class="dropbtn">Results
+						<i class="fa fa-caret.down"></i>
+					</button>
+				<div class="dropdown-content">
+					<a href="WORKING_SANKEY.html#chart">Sankey diagram</a>
+					 <a href="NEWCHART_GOOD_TRY.html#container">Spatio-temporal clustering</a>
+				   </div>
+				   </div>		      <a href="index.html" class="w3-bar-item w3-button"><i class="fa fa-map"></i> MAP</a>
+					<!-- /home/ucfnhke/public_html/SDC_MuseumsProject/WEBSITE -->
+		      <a href="#contact" class="w3-bar-item w3-button"><i class="fa fa-envelope"></i>CONTACT</a>
+		    </div>
+		</div>
+		</div>
+		</div>
+
+
+<div id="chart"></div>
+<script type="text/javascript" style="min-width: 310px;max-width: 800px;height: 600px;">
+
+var data = [{
+    id: '1.1',
+    parent: '0.0',
+    name: 'Classification'
+}, {
+    id: '1.2',
+    parent: '0.0',
+    name: 'Material'
+}, {
+    id: '1.3',
+    parent: '0.0',
+    name: 'Method'
+},
+/* Classification */
+{id: '2.000', parent: '1.1', name: 'Prints', value: 103631},
+{id: '2.001', parent: '1.1', name: 'Photographs', value: 35188},
+{id: '2.002', parent: '1.1', name: 'Drawings', value: 29579},
+{id: '2.003', parent: '1.1', name: 'Textiles', value: 29442},
+{id: '2.004', parent: '1.1', name: 'Ceramics', value: 24441},
+{id: '2.005', parent: '1.1', name: 'Vases', value: 20538},
+{id: '2.006', parent: '1.1', name: 'Books', value: 14784},
+{id: '2.007', parent: '1.1', name: 'Paintings', value: 11342},
+{id: '2.008', parent: '1.1', name: 'Metalwork', value: 10553},
+{id: '2.009', parent: '1.1', name: 'Glass', value: 19703},
+{id: '2.010', parent: '1.1', name: 'Sculpture', value: 6170},
+{id: '2.011', parent: '1.1', name: 'Negatives', value: 6162},
+{id: '2.012', parent: '1.1', name: 'Wood', value: 32436},
+{id: '2.013', parent: '1.1', name: 'Sword', value: 4093},
+{id: '2.014', parent: '1.1', name: 'Stone', value: 11586},
+{id: '2.015', parent: '1.1', name: 'Silver', value: 31566},
+{id: '2.016', parent: '1.1', name: 'Ornament', value: 4211},
+{id: '2.017', parent: '1.1', name: 'Medals', value: 2174},
+{id: '2.018', parent: '1.1', name: 'Woodwork', value: 2167},
+{id: '2.019', parent: '1.1', name: 'Jewelry', value: 2016},
+{id: '2.020', parent: '1.1', name: 'Ornaments', value: 1966},
+{id: '2.021', parent: '1.1', name: 'Miscellaneous', value: 1927},
+{id: '2.022', parent: '1.1', name: 'Furniture', value: 1837},
+{id: '2.023', parent: '1.1', name: 'Aerophone', value: 1767},
+{id: '2.024', parent: '1.1', name: 'Metal', value: 13020},
+{id: '2.025', parent: '1.1', name: 'Gems', value: 1535},
+{id: '2.026', parent: '1.1', name: 'Terracottas', value: 1534},
+{id: '2.027', parent: '1.1', name: 'Jade', value: 1493},
+{id: '2.028', parent: '1.1', name: 'Codices', value: 1337},
+{id: '2.029', parent: '1.1', name: 'Bronzes', value: 1276},
+{id: '2.030', parent: '1.1', name: 'Armor', value: 1219},
+{id: '2.031', parent: '1.1', name: 'Chordophone', value: 1214},
+{id: '2.032', parent: '1.1', name: 'Albums', value: 1124},
+{id: '2.033', parent: '1.1', name: 'Idiophone', value: 1021},
+{id: '2.034', parent: '1.1', name: 'Coins', value: 1007},
+{id: '2.035', parent: '1.1', name: 'Netsuke', value: 160},
+{id: '2.036', parent: '1.1', name: 'Enamels', value: 899},
+{id: '2.037', parent: '1.1', name: 'Swords', value: 857},
+{id: '2.038', parent: '1.1', name: 'Archery', value: 782},
+{id: '2.039', parent: '1.1', name: 'Weapons', value: 757},
+{id: '2.040', parent: '1.1', name: 'Firearms', value: 749},
+{id: '2.041', parent: '1.1', name: 'Lacquer', value: 2537},
+{id: '2.042', parent: '1.1', name: 'Illustrated Books', value: 736},
+{id: '2.043', parent: '1.1', name: 'Ivories', value: 711},
+{id: '2.044', parent: '1.1', name: 'Bone', value: 1709},
+{id: '2.045', parent: '1.1', name: 'Horology', value: 642},
+{id: '2.046', parent: '1.1', name: 'Snuff', value: 645},
+{id: '2.047', parent: '1.1', name: 'Glass-Stained', value: 628},
+{id: '2.048', parent: '1.1', name: 'Daggers', value: 586},
+{id: '2.049', parent: '1.1', name: 'Costumes', value: 582},
+{id: '2.050', parent: '1.1', name: 'Stencils', value: 569},
+{id: '2.051', parent: '1.1', name: 'Fans', value: 532},
+{id: '2.052', parent: '1.1', name: 'Helmets', value: 516},
+{id: '2.053', parent: '1.1', name: 'Paper', value: 31471},
+{id: '2.054', parent: '1.1', name: 'Equestrian', value: 482},
+{id: '2.055', parent: '1.1', name: 'Frames', value: 480},
+{id: '2.056', parent: '1.1', name: 'Natural Substances', value: 445},
+{id: '2.057', parent: '1.1', name: 'Membranophone', value: 423},
+{id: '2.058', parent: '1.1', name: 'Manuscripts', value: 419},
+{id: '2.059', parent: '1.1', name: 'Portfolios', value: 408},
+{id: '2.060', parent: '1.1', name: 'Clay', value: 2040},
+{id: '2.061', parent: '1.1', name: 'Implements', value: 385},
+{id: '2.062', parent: '1.1', name: 'Bark', value: 198},
+{id: '2.063', parent: '1.1', name: 'Periodicals', value: 366},
+{id: '2.064', parent: '1.1', name: 'Calligraphy', value: 355},
+{id: '2.065', parent: '1.1', name: 'Crèche', value: 335},
+{id: '2.066', parent: '1.1', name: 'Ephemera', value: 306},
+{id: '2.067', parent: '1.1', name: 'Pottery', value: 4254},
+{id: '2.068', parent: '1.1', name: 'Seals', value: 287},
+{id: '2.069', parent: '1.1', name: 'Basketry', value: 283},
+{id: '2.070', parent: '1.1', name: 'Media', value: 273},
+{id: '2.071', parent: '1.1', name: 'Beads', value: 266},
+{id: '2.072', parent: '1.1', name: 'Hardstone', value: 266},
+{id: '2.073', parent: '1.1', name: 'Chess', value: 260},
+{id: '2.074', parent: '1.1', name: 'Miniatures', value: 244},
+{id: '2.075', parent: '1.1', name: 'Vessels', value: 226},
+{id: '2.076', parent: '1.1', name: 'Blocks', value: 294},
+{id: '2.077', parent: '1.1', name: 'Manuscript', value: 631},
+{id: '2.078', parent: '1.1', name: 'Transparencies', value: 209},
+{id: '2.079', parent: '1.1', name: 'Rubbing', value: 206},
+{id: '2.080', parent: '1.1', name: 'Papyrus', value: 372},
+{id: '2.081', parent: '1.1', name: 'Screens', value: 188},
+{id: '2.082', parent: '1.1', name: 'Cloisonné', value: 250},
+{id: '2.083', parent: '1.1', name: 'Cesnola', value: 181},
+{id: '2.084', parent: '1.1', name: 'Womenswear', value: 172},
+{id: '2.085', parent: '1.1', name: 'Shell', value: 1566},
+{id: '2.086', parent: '1.1', name: 'Reproductions', value: 169},
+{id: '2.087', parent: '1.1', name: 'Architecture', value: 159},
+{id: '2.088', parent: '1.1', name: 'Accessory', value: 155},
+{id: '2.089', parent: '1.1', name: 'Ojime', value: 154},
+{id: '2.090', parent: '1.1', name: 'Containers', value: 147},
+{id: '2.091', parent: '1.1', name: 'Posters', value: 147},
+{id: '2.092', parent: '1.1', name: 'Shields', value: 135},
+{id: '2.093', parent: '1.1', name: 'Plates', value: 127},
+{id: '2.094', parent: '1.1', name: 'Bamboo', value: 759},
+{id: '2.095', parent: '1.1', name: 'Wallpaper', value: 123},
+{id: '2.096', parent: '1.1', name: 'Hide', value: 333},
+{id: '2.097', parent: '1.1', name: 'Mail', value: 120},
+{id: '2.098', parent: '1.1', name: 'Mirrors', value: 114},
+{id: '2.099', parent: '1.1', name: 'Glass-Painted', value: 105},
+{id: '2.100', parent: '1.1', name: 'Menswear', value: 271},
+{id: '2.101', parent: '1.1', name: 'Ink', value: 33051},
+{id: '2.102', parent: '1.1', name: 'Knives', value: 91},
+{id: '2.103', parent: '1.1', name: 'Main Dress', value: 84},
+{id: '2.104', parent: '1.1', name: 'Leatherwork', value: 75},
+{id: '2.105', parent: '1.1', name: 'Bindings', value: 75},
+{id: '2.106', parent: '1.1', name: 'Woodblocks', value: 74},
+{id: '2.107', parent: '1.1', name: 'Collages', value: 74},
+{id: '2.108', parent: '1.1', name: 'Instruments', value: 70},
+{id: '2.109', parent: '1.1', name: 'Barkcloth', value: 66},
+{id: '2.110', parent: '1.1', name: 'Banners', value: 63},
+{id: '2.111', parent: '1.1', name: 'Feathers', value: 61},
+{id: '2.112', parent: '1.1', name: 'Lighting', value: 58},
+{id: '2.113', parent: '1.1', name: 'Leather_', value: 5963},
+{id: '2.114', parent: '1.1', name: 'Helmet', value: 568},
+{id: '2.115', parent: '1.1', name: 'Gaming Pieces', value: 52},
+{id: '2.116', parent: '1.1', name: 'Cricket', value: 51},
+{id: '2.117', parent: '1.1', name: 'Installations', value: 50},
+{id: '2.118', parent: '1.1', name: 'Lapidary Work', value: 50},
+{id: '2.119', parent: '1.1', name: 'Outerwear', value: 44},
+{id: '2.120', parent: '1.1', name: 'Gourd', value: 218},
+{id: '2.121', parent: '1.1', name: 'Amber', value: 282},
+{id: '2.122', parent: '1.1', name: 'Archives', value: 33},
+{id: '2.123', parent: '1.1', name: 'Faience', value: 6677},
+{id: '2.124', parent: '1.1', name: 'Horn', value: 629},
+{id: '2.125', parent: '1.1', name: 'Plaquettes', value: 27},
+{id: '2.126', parent: '1.1', name: 'Pastels', value: 27},
+{id: '2.127', parent: '1.1', name: 'Plastic', value: 1264},
+{id: '2.128', parent: '1.1', name: 'Miscellany', value: 24},
+{id: '2.129', parent: '1.1', name: 'Masks', value: 23},
+{id: '2.130', parent: '1.1', name: 'Fencing Equipment', value: 23},
+{id: '2.131', parent: '1.1', name: 'Postcards', value: 22},
+{id: '2.132', parent: '1.1', name: 'Forgeries', value: 19},
+{id: '2.133', parent: '1.1', name: 'Childrenswear', value: 19},
+{id: '2.134', parent: '1.1', name: 'Surcoat', value: 18},
+{id: '2.135', parent: '1.1', name: 'Inkstone', value: 17},
+{id: '2.136', parent: '1.1', name: 'Costume', value: 598},
+{id: '2.137', parent: '1.1', name: 'Snuffboxes', value: 16},
+{id: '2.138', parent: '1.1', name: 'Machines', value: 15},
+{id: '2.139', parent: '1.1', name: 'Tobacco', value: 14},
+{id: '2.140', parent: '1.1', name: 'Smoking', value: 14},
+{id: '2.141', parent: '1.1', name: 'Architectural models', value: 13},
+{id: '2.142', parent: '1.1', name: 'Alabaster', value: 1142},
+{id: '2.143', parent: '1.1', name: 'Sketchbooks', value: 11},
+{id: '2.144', parent: '1.1', name: 'Parchment', value: 561},
+/***********/
+
+/* Materials */
+{id: '3.000', parent: '1.2', name: 'Ink', value: 114},
+{id: '3.001', parent: '1.2', name: 'Paper', value: 630},
+{id: '3.002', parent: '1.2', name: 'Silk', value: 30718},
+{id: '3.003', parent: '1.2', name: 'Silver', value: 2417},
+{id: '3.004', parent: '1.2', name: 'Print', value: 38693},
+{id: '3.005', parent: '1.2', name: 'Terracotta', value: 22948},
+{id: '3.006', parent: '1.2', name: 'Glass', value: 8979},
+{id: '3.007', parent: '1.2', name: 'Wood', value: 5480},
+{id: '3.008', parent: '1.2', name: 'Gold', value: 15926},
+{id: '3.009', parent: '1.2', name: 'Graphite', value: 11695},
+{id: '3.010', parent: '1.2', name: 'Brown', value: 9210},
+{id: '3.011', parent: '1.2', name: 'Cotton', value: 10854},
+{id: '3.012', parent: '1.2', name: 'Bronze', value: 10444},
+{id: '3.013', parent: '1.2', name: 'Porcelain', value: 10317},
+{id: '3.014', parent: '1.2', name: 'Metal', value: 12126},
+{id: '3.015', parent: '1.2', name: 'Gelatin', value: 9898},
+{id: '3.016', parent: '1.2', name: 'Wool', value: 8842},
+{id: '3.017', parent: '1.2', name: 'Linen', value: 7498},
+{id: '3.018', parent: '1.2', name: 'Copper', value: 8770},
+{id: '3.019', parent: '1.2', name: 'Chalk', value: 5828},
+{id: '3.020', parent: '1.2', name: 'Paint', value: 12819},
+{id: '3.021', parent: '1.2', name: 'Earthenware', value: 6951},
+{id: '3.022', parent: '1.2', name: 'Faience', value: 30},
+{id: '3.023', parent: '1.2', name: 'Oil', value: 6443},
+{id: '3.024', parent: '1.2', name: 'Leather', value: 129},
+{id: '3.025', parent: '1.2', name: 'Film', value: 6040},
+{id: '3.026', parent: '1.2', name: 'Teel', value: 5814},
+{id: '3.027', parent: '1.2', name: 'Polychrome', value: 5920},
+{id: '3.028', parent: '1.2', name: 'Alloy', value: 4623},
+{id: '3.029', parent: '1.2', name: 'Thread', value: 5350},
+{id: '3.030', parent: '1.2', name: 'Gilt', value: 5521},
+{id: '3.031', parent: '1.2', name: 'Ivory', value: 4745},
+{id: '3.032', parent: '1.2', name: 'Limestone', value: 4463},
+{id: '3.033', parent: '1.2', name: 'Pottery', value: 306},
+{id: '3.034', parent: '1.2', name: 'Iron', value: 4395},
+{id: '3.035', parent: '1.2', name: 'Weave', value: 3162},
+{id: '3.036', parent: '1.2', name: 'Lace', value: 3603},
+{id: '3.037', parent: '1.2', name: 'Brass', value: 3662},
+{id: '3.038', parent: '1.2', name: 'Stone', value: 3426},
+{id: '3.039', parent: '1.2', name: 'Hard-Paste', value: 2849},
+{id: '3.040', parent: '1.2', name: 'Metallic', value: 2739},
+{id: '3.041', parent: '1.2', name: 'Enamel', value: 4480},
+{id: '3.042', parent: '1.2', name: 'Steatite', value: 2427},
+{id: '3.043', parent: '1.2', name: 'Lacquer', value: 736},
+{id: '3.044', parent: '1.2', name: 'Bobbin', value: 2278},
+{id: '3.045', parent: '1.2', name: 'Marble', value: 2057},
+{id: '3.046', parent: '1.2', name: 'Clay', value: 408},
+{id: '3.047', parent: '1.2', name: 'Pigment', value: 2216},
+{id: '3.048', parent: '1.2', name: 'Stucco', value: 1913},
+{id: '3.049', parent: '1.2', name: 'Shakudō', value: 1800},
+{id: '3.050', parent: '1.2', name: 'Soft-Paste', value: 1749},
+{id: '3.051', parent: '1.2', name: 'Bone', value: 649},
+{id: '3.052', parent: '1.2', name: 'Gum', value: 1626},
+{id: '3.053', parent: '1.2', name: 'Leaf', value: 1475},
+{id: '3.054', parent: '1.2', name: 'Stoneware', value: 1461},
+{id: '3.055', parent: '1.2', name: 'Fiber', value: 1524},
+{id: '3.056', parent: '1.2', name: 'Stonepaste', value: 1337},
+{id: '3.057', parent: '1.2', name: 'Shibuichi', value: 1329},
+{id: '3.058', parent: '1.2', name: 'Plastic', value: 27},
+{id: '3.059', parent: '1.2', name: 'Lead', value: 2020},
+{id: '3.060', parent: '1.2', name: 'Jade', value: 1358},
+{id: '3.061', parent: '1.2', name: 'Charcoal', value: 1154},
+{id: '3.062', parent: '1.2', name: 'Alabaster', value: 12},
+{id: '3.063', parent: '1.2', name: 'Needle', value: 1153},
+{id: '3.064', parent: '1.2', name: 'Oak', value: 1117},
+{id: '3.065', parent: '1.2', name: 'Hollstein', value: 1124},
+{id: '3.066', parent: '1.2', name: 'Carnelian', value: 1109},
+{id: '3.067', parent: '1.2', name: 'Walnut', value: 1033},
+{id: '3.068', parent: '1.2', name: 'Platinum', value: 1307},
+{id: '3.069', parent: '1.2', name: 'Préaud', value: 1063},
+{id: '3.070', parent: '1.2', name: 'Shell', value: 171},
+{id: '3.071', parent: '1.2', name: 'Mahogany', value: 947},
+{id: '3.072', parent: '1.2', name: 'Hair', value: 1264},
+{id: '3.073', parent: '1.2', name: 'Mother-of-pearl', value: 958},
+{id: '3.074', parent: '1.2', name: 'Travertine', value: 917},
+{id: '3.075', parent: '1.2', name: 'Pine', value: 976},
+{id: '3.076', parent: '1.2', name: 'Mud', value: 829},
+{id: '3.077', parent: '1.2', name: 'Pewter', value: 824},
+{id: '3.078', parent: '1.2', name: 'Chine', value: 1084},
+{id: '3.079', parent: '1.2', name: 'Bamboo', value: 124},
+{id: '3.080', parent: '1.2', name: 'Tape', value: 2391},
+{id: '3.081', parent: '1.2', name: 'Palm', value: 784},
+{id: '3.082', parent: '1.2', name: 'Camelid', value: 747},
+{id: '3.083', parent: '1.2', name: 'Flint', value: 732},
+{id: '3.084', parent: '1.2', name: 'Collé', value: 732},
+{id: '3.085', parent: '1.2', name: 'Line', value: 9640},
+{id: '3.086', parent: '1.2', name: 'Straw', value: 707},
+{id: '3.087', parent: '1.2', name: 'Surimono', value: 690},
+{id: '3.088', parent: '1.2', name: 'Fur', value: 689},
+{id: '3.089', parent: '1.2', name: 'Velvet', value: 669},
+{id: '3.090', parent: '1.2', name: 'Plaster', value: 658},
+{id: '3.091', parent: '1.2', name: 'Pochoir', value: 617},
+{id: '3.092', parent: '1.2', name: 'Photogravure', value: 699},
+{id: '3.093', parent: '1.2', name: 'Crystal', value: 633},
+{id: '3.094', parent: '1.2', name: 'Rayon', value: 1819},
+{id: '3.095', parent: '1.2', name: 'Maple', value: 568},
+{id: '3.096', parent: '1.2', name: 'Skin', value: 871},
+{id: '3.097', parent: '1.2', name: 'Agate', value: 595},
+{id: '3.098', parent: '1.2', name: 'Pastel', value: 573},
+{id: '3.099', parent: '1.2', name: 'Cardboard', value: 566},
+{id: '3.100', parent: '1.2', name: 'Parchment', value: 11},
+{id: '3.101', parent: '1.2', name: 'Satin', value: 709},
+{id: '3.102', parent: '1.2', name: 'Wire', value: 520},
+{id: '3.103', parent: '1.2', name: 'Tint', value: 5247},
+{id: '3.104', parent: '1.2', name: 'Horn', value: 28},
+{id: '3.105', parent: '1.2', name: 'Weft', value: 544},
+{id: '3.106', parent: '1.2', name: 'Acrylic', value: 521},
+{id: '3.107', parent: '1.2', name: 'Ebony', value: 499},
+{id: '3.108', parent: '1.2', name: 'Wax', value: 661},
+{id: '3.109', parent: '1.2', name: 'Poplar', value: 462},
+{id: '3.110', parent: '1.2', name: 'Cloth', value: 556},
+{id: '3.111', parent: '1.2', name: 'Maiolica', value: 447},
+{id: '3.112', parent: '1.2', name: 'Paste', value: 7385},
+{id: '3.113', parent: '1.2', name: 'Nylon', value: 438},
+{id: '3.114', parent: '1.2', name: 'Newsprint', value: 441},
+{id: '3.115', parent: '1.2', name: 'Sago', value: 433},
+{id: '3.116', parent: '1.2', name: 'Jasper', value: 568},
+{id: '3.117', parent: '1.2', name: 'Patina', value: 466},
+{id: '3.118', parent: '1.2', name: 'Nashiji', value: 336},
+{id: '3.119', parent: '1.2', name: 'Rock', value: 430},
+{id: '3.120', parent: '1.2', name: 'Zinc', value: 423},
+{id: '3.121', parent: '1.2', name: 'Dye', value: 985},
+{id: '3.122', parent: '1.2', name: 'Papyrus', value: 202},
+{id: '3.123', parent: '1.2', name: 'Chalcedony', value: 371},
+{id: '3.124', parent: '1.2', name: 'Gesso', value: 385},
+{id: '3.125', parent: '1.2', name: 'Arita', value: 346},
+{id: '3.126', parent: '1.2', name: 'Ash', value: 8302},
+{id: '3.127', parent: '1.2', name: 'Jadeite', value: 330},
+{id: '3.128', parent: '1.2', name: 'Vellum', value: 332},
+{id: '3.129', parent: '1.2', name: 'Hizen', value: 331},
+{id: '3.130', parent: '1.2', name: 'Amethyst', value: 337},
+{id: '3.131', parent: '1.2', name: 'Rosewood', value: 299},
+{id: '3.132', parent: '1.2', name: 'Lapis', value: 318},
+{id: '3.133', parent: '1.2', name: 'Foil', value: 308},
+{id: '3.134', parent: '1.2', name: 'Cord', value: 387},
+{id: '3.135', parent: '1.2', name: 'Champlevé', value: 291},
+{id: '3.136', parent: '1.2', name: 'Tortoiseshell', value: 281},
+{id: '3.137', parent: '1.2', name: 'Lazuli', value: 300},
+{id: '3.138', parent: '1.2', name: 'Sandstone', value: 273},
+{id: '3.139', parent: '1.2', name: 'Hide', value: 120},
+{id: '3.140', parent: '1.2', name: 'Boxwood', value: 262},
+{id: '3.141', parent: '1.2', name: 'Spathe', value: 261},
+{id: '3.142', parent: '1.2', name: 'Cobalt', value: 272},
+{id: '3.143', parent: '1.2', name: 'Pearl', value: 1508},
+{id: '3.144', parent: '1.2', name: 'Amber', value: 34},
+{id: '3.145', parent: '1.2', name: 'Raffia', value: 251},
+{id: '3.146', parent: '1.2', name: 'Silkscreen', value: 255},
+{id: '3.147', parent: '1.2', name: 'Cloisonné', value: 184},
+{id: '3.148', parent: '1.2', name: 'Aluminum', value: 240},
+{id: '3.149', parent: '1.2', name: 'Polyester', value: 236},
+{id: '3.150', parent: '1.2', name: 'Hematite', value: 233},
+{id: '3.151', parent: '1.2', name: 'Burin', value: 230},
+{id: '3.152', parent: '1.2', name: 'Veneer', value: 403},
+{id: '3.153', parent: '1.2', name: 'Rubber', value: 229},
+{id: '3.154', parent: '1.2', name: 'Cane', value: 234},
+{id: '3.155', parent: '1.2', name: 'China', value: 222},
+{id: '3.156', parent: '1.2', name: 'Photo', value: 13894},
+{id: '3.157', parent: '1.2', name: 'Carbon', value: 222},
+{id: '3.158', parent: '1.2', name: 'Felt', value: 215},
+{id: '3.159', parent: '1.2', name: 'Gourd', value: 42},
+{id: '3.160', parent: '1.2', name: 'Mortar', value: 210},
+{id: '3.161', parent: '1.2', name: 'Cyanotype', value: 212},
+{id: '3.162', parent: '1.2', name: 'Linoleum', value: 202},
+{id: '3.163', parent: '1.2', name: 'Tin', value: 21841},
+{id: '3.164', parent: '1.2', name: 'Imari', value: 201},
+{id: '3.165', parent: '1.2', name: 'String', value: 257},
+{id: '3.166', parent: '1.2', name: 'Cherry', value: 193},
+{id: '3.167', parent: '1.2', name: 'Vesme', value: 185},
+{id: '3.168', parent: '1.2', name: 'Resin', value: 180},
+{id: '3.169', parent: '1.2', name: 'Masonite', value: 181},
+{id: '3.170', parent: '1.2', name: 'Quartz', value: 348},
+{id: '3.171', parent: '1.2', name: 'Satsuma', value: 179},
+{id: '3.172', parent: '1.2', name: 'Basalt', value: 177},
+{id: '3.173', parent: '1.2', name: 'Horsehair', value: 170},
+{id: '3.174', parent: '1.2', name: 'Quartzite', value: 167},
+{id: '3.175', parent: '1.2', name: 'Feather', value: 1060},
+{id: '3.176', parent: '1.2', name: 'Reed', value: 183},
+{id: '3.177', parent: '1.2', name: 'Spruce', value: 162},
+{id: '3.178', parent: '1.2', name: 'Diamond', value: 432},
+{id: '3.179', parent: '1.2', name: 'Bleach', value: 166},
+{id: '3.180', parent: '1.2', name: 'Onyx', value: 256},
+{id: '3.181', parent: '1.2', name: 'Alençon', value: 166},
+{id: '3.182', parent: '1.2', name: 'Orange', value: 252},
+{id: '3.183', parent: '1.2', name: 'Seto', value: 158},
+{id: '3.184', parent: '1.2', name: 'Fabric', value: 335},
+{id: '3.185', parent: '1.2', name: 'Ojime', value: 152},
+{id: '3.186', parent: '1.2', name: 'Beech', value: 227},
+{id: '3.187', parent: '1.2', name: 'Celadon', value: 140},
+{id: '3.188', parent: '1.2', name: 'Tulip', value: 236},
+{id: '3.189', parent: '1.2', name: 'Jet', value: 498},
+{id: '3.190', parent: '1.2', name: 'Hemp', value: 135},
+{id: '3.191', parent: '1.2', name: 'Bichromate', value: 134},
+{id: '3.192', parent: '1.2', name: 'Garnet', value: 180},
+{id: '3.193', parent: '1.2', name: 'Tissue', value: 129},
+{id: '3.194', parent: '1.2', name: 'Satinwood', value: 126},
+{id: '3.195', parent: '1.2', name: 'Movement', value: 124},
+{id: '3.196', parent: '1.2', name: 'Twill', value: 138},
+{id: '3.197', parent: '1.2', name: 'Tulipwood', value: 98},
+{id: '3.198', parent: '1.2', name: 'Mirror', value: 135},
+{id: '3.199', parent: '1.2', name: 'Lime', value: 4637},
+{id: '3.200', parent: '1.2', name: 'Cassowary', value: 92},
+{id: '3.201', parent: '1.2', name: 'Teak', value: 115},
+{id: '3.202', parent: '1.2', name: 'Sentoku', value: 98},
+{id: '3.203', parent: '1.2', name: 'Birch', value: 125},
+{id: '3.204', parent: '1.2', name: 'Beryl', value: 98},
+{id: '3.205', parent: '1.2', name: 'Plywood', value: 96},
+{id: '3.206', parent: '1.2', name: 'Nickel', value: 240},
+{id: '3.207', parent: '1.2', name: 'Bark', value: 446},
+{id: '3.208', parent: '1.2', name: 'Granite', value: 94},
+{id: '3.209', parent: '1.2', name: 'Walrus', value: 92},
+{id: '3.210', parent: '1.2', name: 'Camwood', value: 89},
+{id: '3.211', parent: '1.2', name: 'Coconut', value: 80},
+{id: '3.212', parent: '1.2', name: 'Electrum', value: 86},
+{id: '3.213', parent: '1.2', name: 'Raku', value: 99},
+{id: '3.214', parent: '1.2', name: 'Apple', value: 123},
+{id: '3.215', parent: '1.2', name: 'Cranberry', value: 85},
+{id: '3.216', parent: '1.2', name: 'Timber', value: 84},
+{id: '3.217', parent: '1.2', name: 'Brocade', value: 459},
+{id: '3.218', parent: '1.2', name: 'Gypsum', value: 83},
+{id: '3.219', parent: '1.2', name: 'Filigree', value: 91},
+{id: '3.220', parent: '1.2', name: 'Palladium', value: 284},
+{id: '3.221', parent: '1.2', name: 'Beechwood', value: 81},
+{id: '3.222', parent: '1.2', name: 'Calabi', value: 82},
+{id: '3.223', parent: '1.2', name: 'Acetate', value: 103},
+{id: '3.224', parent: '1.2', name: 'Ruling', value: 81},
+{id: '3.225', parent: '1.2', name: 'Resist', value: 260},
+{id: '3.226', parent: '1.2', name: 'Feldspar', value: 80},
+{id: '3.227', parent: '1.2', name: 'Limewood', value: 77},
+{id: '3.228', parent: '1.2', name: 'Buratto', value: 77},
+{id: '3.229', parent: '1.2', name: 'Gauze', value: 78},
+{id: '3.230', parent: '1.2', name: 'Sycamore', value: 67},
+{id: '3.231', parent: '1.2', name: 'Rhinestone', value: 372},
+/***********/
+
+/* Method */
+
+{id: '4.00', parent: '1.3', name: 'Etchings', value: 39906},
+{id: '4.01', parent: '1.3', name: 'Engrave', value: 28574},
+{id: '4.02', parent: '1.3', name: 'Paint', value: 12819},
+{id: '4.03', parent: '1.3', name: 'Print', value: 38693},
+{id: '4.04', parent: '1.3', name: 'Carved', value: 3308},
+{id: '4.05', parent: '1.3', name: 'Glaze', value: 12295},
+{id: '4.06', parent: '1.3', name: 'Colored', value: 6325},
+{id: '4.07', parent: '1.3', name: 'Salted', value: 1959},
+{id: '4.08', parent: '1.3', name: 'Gilded', value: 1524},
+{id: '4.09', parent: '1.3', name: 'Incised', value: 1461},
+{id: '4.10', parent: '1.3', name: 'Embroidered', value: 1235},
+{id: '4.11', parent: '1.3', name: 'Framing', value: 1108},
+{id: '4.12', parent: '1.3', name: 'Woodcut', value: 7108},
+{id: '4.13', parent: '1.3', name: 'Pressed', value: 1060},
+{id: '4.14', parent: '1.3', name: 'Decorated', value: 889},
+{id: '4.15', parent: '1.3', name: 'Tracing', value: 827},
+{id: '4.16', parent: '1.3', name: 'Lithography', value: 2633},
+{id: '4.17', parent: '1.3', name: 'Molded', value: 787},
+{id: '4.18', parent: '1.3', name: 'Perforated', value: 530},
+{id: '4.19', parent: '1.3', name: 'Drawings', value: 29579},
+{id: '4.20', parent: '1.3', name: 'Hammered', value: 515},
+{id: '4.21', parent: '1.3', name: 'Coloring', value: 704},
+{id: '4.22', parent: '1.3', name: 'Folding', value: 485},
+{id: '4.23', parent: '1.3', name: 'Underdrawing', value: 422},
+{id: '4.24', parent: '1.3', name: 'Enameled', value: 426},
+{id: '4.25', parent: '1.3', name: 'Gilding', value: 402},
+{id: '4.26', parent: '1.3', name: 'Brocaded', value: 375},
+{id: '4.27', parent: '1.3', name: 'Stained', value: 388},
+{id: '4.28', parent: '1.3', name: 'Lacquered', value: 368},
+{id: '4.29', parent: '1.3', name: 'Polychromed', value: 357},
+{id: '4.30', parent: '1.3', name: 'Crackled', value: 345},
+{id: '4.31', parent: '1.3', name: 'Pasted', value: 343},
+{id: '4.32', parent: '1.3', name: 'Silvered', value: 294},
+{id: '4.33', parent: '1.3', name: 'Indurated', value: 261},
+{id: '4.34', parent: '1.3', name: 'Published', value: 193},
+{id: '4.35', parent: '1.3', name: 'Mottled', value: 192},
+{id: '4.36', parent: '1.3', name: 'Burnished', value: 174},
+{id: '4.37', parent: '1.3', name: 'Veneered', value: 168},
+{id: '4.38', parent: '1.3', name: 'Tinted', value: 175},
+{id: '4.39', parent: '1.3', name: 'Ebonized', value: 114},
+{id: '4.40', parent: '1.3', name: 'Illustrated', value: 123},
+{id: '4.41', parent: '1.3', name: 'Embossed', value: 118},
+{id: '4.42', parent: '1.3', name: 'Stumping', value: 99},
+{id: '4.43', parent: '1.3', name: 'Plated', value: 272},
+{id: '4.44', parent: '1.3', name: 'Lustered', value: 89},
+{id: '4.45', parent: '1.3', name: 'Scraping', value: 86},
+{id: '4.46', parent: '1.3', name: 'Framed', value: 84},
+{id: '4.47', parent: '1.3', name: 'Punched', value: 81},
+{id: '4.48', parent: '1.3', name: 'Burnishing', value: 73},
+{id: '4.49', parent: '1.3', name: 'Patinated', value: 61},
+{id: '4.50', parent: '1.3', name: 'Patterning', value: 65},
+{id: '4.51', parent: '1.3', name: 'Couching', value: 54},
+{id: '4.52', parent: '1.3', name: 'Oxidized', value: 58},
+{id: '4.53', parent: '1.3', name: 'Modeled', value: 55},
+{id: '4.54', parent: '1.3', name: 'Blued', value: 54},
+{id: '4.55', parent: '1.3', name: 'Tinned', value: 53},
+{id: '4.56', parent: '1.3', name: 'Knott', value: 338}];
+//#008B8B, #b87333, #e25822
+Highcharts.setOptions({
+    colors: ['#b87333', '#e1aa05', '#277256']
+});
+
+Highcharts.chart('chart', {
+
+    chart: {
+        height: '48%'
+    },
+
+    title: {
+        text: 'Drilldown Artworks of the MET'
+    },
+    series: [{
+        type: "sunburst",
+        data: data,
+        allowDrillToNode: true,
+        cursor: 'pointer',
+        dataLabels: {
+            format: '{point.name}',
+            filter: {
+                property: 'innerArcLength',
+                operator: '>',
+                value: 16
+            }
+        },
+        levels: [{
+            level: 1,
+						colorByPoint: true,
+            levelIsConstant: false,
+            dataLabels: {
+                filter: {
+                    property: 'outerArcLength',
+                    operator: '>',
+                    value: 64
+                }
+            }
+        }, {
+            level: 2,
+            colorByPoint: false,
+            levelIsConstant: false,
+						//colors: ['#2ecfd8'],
+						colorVariation: {
+                colors: ['#2ecfd8'],
+                key: 'brightness',
+                to: 0.3
+            }
+        },
+        {
+            level: 3,
+						//colors: ['#0d233a'],
+            colorVariation: {
+                colors: ['#2ecfd8'],
+                key: 'brightness',
+                to: -0.5
+            }
+        }]
+
+    }],
+    tooltip: {
+        headerFormat: "",
+        pointFormat: '# of artworks <b>{point.name}</b> are <b>{point.value}</b>'
+    }
+});
+</script>
+
+</body>
+</html>

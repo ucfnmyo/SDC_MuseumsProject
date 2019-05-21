@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+
+<head>
+	<title>Artwork Explorer</title>
+	<!-- <link rel='stylesheet' id='font-css'  href='http://fonts.googleapis.com/css?family=Roboto:400,300,100' type='text/css' media='all' /> -->
+	<link rel='stylesheet' id='font-css'  href='./css/style.css' type='text/css' media='all' />
+	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css"
+    integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
+    crossorigin=""/>
+	<link href='https://unpkg.com/dc@3.0.10/dc.css' rel='stylesheet' type='text/css'>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">	
+	<style>
+	#container {
+    min-width: 300px;
+    max-width: 800px;
+    height: 400px;
+    margin: 1em auto;
+}
+
+#csv {
+	display: none;
+}
+	</style>
+</head>
+<body>
+
+<!-- Resources -->
+<script src="https://www.amcharts.com/lib/4/core.js"></script>
+<script src="https://www.amcharts.com/lib/4/charts.js"></script>
+<script src="https://www.amcharts.com/lib/4/themes/kelly.js"></script>  
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/highcharts-more.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src = "https://cdn.jsdelivr.net/npm/lodash@4.17.11/lodash.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://code.highcharts.com/modules/sankey.js"></script>
+
+<div id="container"></div>
+
+
+<!-- Create div -->
+
+
+
+<script type="text/javascript">
+
+//var data = "CLUSTERED_DATA2.json"
+var arrayList = []
+
+fetch("Cluster_Sankey.json").then((resp) => resp.text()).then((body) => {
+var data = JSON.parse(body);
+
+data.forEach(function(arr){
+	if (arr.count >1650){
+	arrayList.push([arr.label_cluster,arr.label_country,arr.count])}
+	})
+console.log("data",data)
+console.log("ARRAY",arrayList)
+
+
+
+
+
+Highcharts.chart('container', {
+
+    title: {
+        text: 'Highcharts Sankey Diagram'
+    },
+    series: [{
+        keys: ['from', 'to', 'weight'],
+        data: arrayList,
+        type: 'sankey',
+        name: 'Sankey demo series'
+    }]
+
+});
+
+});
+</script>  
+
+</body>
+</html>
