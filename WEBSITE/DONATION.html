@@ -1,20 +1,23 @@
 <!DOCTYPE html>
 <html>
-<head>
-	<title>Artwork Explorer</title>
-	<!-- <link rel='stylesheet' id='font-css'  href='http://fonts.googleapis.com/css?family=Roboto:400,300,100' type='text/css' media='all' /> -->
-	<link rel='stylesheet' id='font-css'  href='./css/style.css' type='text/css' media='all' />
-	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css"
-    integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
-    crossorigin=""/>
-	<link href='https://unpkg.com/dc@3.0.10/dc.css' rel='stylesheet' type='text/css'>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
-	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">	
-	<style>
+<title>MET Museum Explorer</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="./css/Webstyle.css">
+<link rel="stylesheet" href="../lib/w3.css">
+<!-- Read in Highcharts libraries -->
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/streamgraph.js"></script>
+<script src="https://code.highcharts.com/modules/series-label.js"></script>
+<script src="https://code.highcharts.com/modules/annotations.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+
+
+<style>
 body,h1,h2,h3,h4,h5,h6 {font-family: "Raleway", sans-serif}
 
 body, html {
@@ -24,205 +27,69 @@ body, html {
 
 /* Full height image header */
 .bgimg-1 {
+
   background-position: center;
   background-size: cover;
-  background-image: url("https://i.imgur.com/dbrqmPq.jpg");
+  background-image: url("metBack.jpg");
   min-height: 100%;
-  opacity: 0.9;
 }
 
 .w3-bar .w3-button {
   padding: 16px;
 }
-		
-		#container {
-	min-width: 320px;
-	max-width: 800px;
-	margin: 0 auto;
-	#chartdiv {
-	width: 100%;
-	height: 500px;
-	}
 
+.w3-dropdown-hover{
+	color: red;
 }
-
-.w3-bar .w3-button {
-  padding: 16px;
-}
-		
-.DONATION {
-	min-width: 320px;
-	max-width: 800px;
-	margin: 0 auto;
-	margin-top: 500px;
-	#chartdiv {
-	width: 80%;
-	height: 400px;
-	background-image: url("https://i.imgur.com/dbrqmPq.jpg");
-	}
-
-}
-	button {
-  background-color: #3498DB;
-  color: white;
-  padding: 16px;
-  font-size: 16px;
-  border: none;
-  cursor: pointer;
-
-}
-	.info {
-	    padding: 6px 8px;
-	    font: 14px/16px Arial, Helvetica, sans-serif;
-	    background: white;
-	    background: rgba(255,255,255,0.8);
-	    box-shadow: 0 0 15px rgba(0,0,0,0.2);
-	    border-radius: 5px;
-	}
-/* Navbar container */
-.navbar {
-  overflow: hidden;
-  background-color: #333;
-  font-family: Arial;
-}
-
-/* Links inside the navbar */
-.navbar a {
-  float: left;
-  font-size: 16px;
-  color: white;
-  text-align: center;
-  padding: 14px 16px;
-  text-decoration: none;
-}
-
-/* The dropdown container */
-.dropdown {
-  float: left;
-  overflow: hidden;
-}
-
-/* Dropdown button */
-.dropdown .dropbtn {
-  font-size: 16px; 
-  border: none;
-  outline: none;
-  color: black;
-  padding: 14px 16px;
-  background-color: inherit;
-  font-family: inherit; /* Important for vertical align on mobile phones */
-  margin: 0; /* Important for vertical align on mobile phones */
-}
-
-/* Add a red background color to navbar links on hover */
-.navbar a:hover, .dropdown:hover .dropbtn {
-  background-color: red;
-}
-
-/* Dropdown content (hidden by default) */
-.dropdown-content {
-  display: none;
-  position: absolute;
-  background-color: #f9f9f9;
-  min-width: 160px;
-  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-  z-index: 1;
-}
-
-/* Links inside the dropdown */
-.dropdown-content a {
-  float: none;
-  color: black;
-  padding: 12px 16px;
-  text-decoration: none;
-  display: block;
-  text-align: left;
-}
-
-/* Add a grey background color to dropdown links on hover */
-.dropdown-content a:hover {
-  background-color: #ddd;
-}
-
-/* Show the dropdown menu on hover */
-.dropdown:hover .dropdown-content {
-  display: block;
-}
-
-	</style>
-
-
-
+</style>
 <body>
 
+<!-- Navbar (sit on top) -->
+<div class="w3-top">
+  <div class="w3-bar w3-white w3-card" id="myNavbar">
+    <a href="index.html" class="w3-bar-item w3-button w3-red w3-wide">MET Artwork Visualiser</a>
+    <!-- Right-sided navbar links -->
+				<div class="w3-right w3-hide-small">
+					<!-- ABOUT DROP DOWN -->
+					<div class="w3-dropdown-hover">
+					 <a href = 'about.html'><button   style = 'width: 100px; height: 55px;' class="w3-btn w3-white"><i class="fa fa-book"></i>  ABOUT</button></a>
+						</div>
 
+						<div class="w3-dropdown-hover w3-red">
+						<a href ='map.html'> <button style = 'width: 100px; height: 55px;' class="w3-btn w3-white"><i class="fa fa-map"></i>  MAP</button></a>
+						</div>
+						<!-- VISUALISATIONS DROP DOWN -->
+						<div class="w3-dropdown-hover">
+						 <button style = 'width: 200px; height: 55px;'class="w3-btn w3-white"><i class="fa fa-bar-chart"></i>  VISUALISATIONS</button>
+						  <div style = 'width: 200px;' class="w3-dropdown-content w3-bar-block w3-border">
+						    <a href="BUBBLE.html" class="w3-bar-item w3-button">Artwork by Country</a>
+						    <a href="DONATION.html" class="w3-bar-item w3-button">Artwork Donations</a>
+						    <a href="beginDateBC.html" class="w3-bar-item w3-button">Historical Trends (BC)</a>
+								<a href="beginDateAD.html" class="w3-bar-item w3-button">Historical Trends (AD)</a>
+						  </div>
+						</div>
+						</div>
 
-<!-- Resources -->
-<script src="https://www.amcharts.com/lib/4/core.js"></script>
-<script src="https://www.amcharts.com/lib/4/charts.js"></script>
-<script src="https://www.amcharts.com/lib/4/themes/kelly.js"></script>  
-<script src="https://code.highcharts.com/highcharts.js"></script>
-<script src="https://code.highcharts.com/highcharts-more.js"></script>
-<script src="https://code.highcharts.com/modules/exporting.js"></script>
-<script src = "https://cdn.jsdelivr.net/npm/lodash@4.17.11/lodash.min.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.4.0.min.js"></script>
-
-
-
-
-
-
-
-</head>
-
-<body>
-<!-- Create div -->
-
-   
-	<div class = 'wrapper' id='wrapper'>
-	
-		<!-- Navbar (sit on top) -->
-		<div class="w3-top">
-		  <div class="w3-bar w3-white w3-card" id="myNavbar">
-		    <a href="new_index.html" class="w3-bar-item w3-button w3-red w3-wide">MET Artwork Visualiser</a>
-		    <!-- Right-sided navbar links -->
-			
-		    <div class="w3-right w3-hide-small">
-		      <a href="WebPageFinal.html#about" class="w3-bar-item w3-button">ABOUT</a>
-				<div class = "dropdown">
-					<button class="dropbtn">Descriptive Statistics
-						<i class="fa fa-caret.down"></i>
-					</button>
-				<div class="dropdown-content">
-					<a href="BUBBLE_FINAL.html#BUBBLE">Bubble Chart</a>
-					 <a href="DONATION.html#DONATION">Volume of donation</a>
-					 <a href="MetPieChart.html#chart">Artwork classification</a>
-				   </div>
-				   </div>
-				<div class = "dropdown">
-					<button class="dropbtn">Results
-						<i class="fa fa-caret.down"></i>
-					</button>
-				<div class="dropdown-content">
-					<a href="WORKING_SANKEY.html#chart">Sankey diagram</a>
-					 <a href="NEWCHART_GOOD_TRY.html#container">Spatio-temporal clustering</a>
-				   </div>
-				   </div>		      <a href="index.html" class="w3-bar-item w3-button"><i class="fa fa-map"></i> MAP</a>
-					<!-- /home/ucfnhke/public_html/SDC_MuseumsProject/WEBSITE -->
-		      <a href="#contact" class="w3-bar-item w3-button"><i class="fa fa-envelope"></i>CONTACT</a>
-		    </div>
 		</div>
-		</div>
-		</div>
+
+    </div>
+    <!-- Hide right-floated links on small screens and replace them with a menu icon -->
+
+    <a href="javascript:void(0)" class="w3-bar-item w3-button w3-right w3-hide-large w3-hide-medium" onclick="w3_open()">
+      <i class="fa fa-bars"></i>
+    </a>
+  </div>
+</div>
+
 	<div id ="picture" class="w3-display-left w3-text-white" style="padding:48px"></div>
+
 <h2>Select the continent you want to see</h2>
-<div id= "DONATION" style="min-width: 310px; max-width: 600px; height: 600px; margin: 0 auto">
+<div id= "DONATION" style="width: 100%; height: 100%; margin: 10px;">
 <button id="full_button">Full Dataset</button>
 <button id="reduced_button">Example subset 1</button>
 <button id="reduced_button2">Example subset 2</button>
 <div id="donation_chart"></div>
-
+</div>
 
 
 <script src="https://code.highcharts.com/highcharts.js"></script>
@@ -249,7 +116,7 @@ document.getElementById("full_button").addEventListener("click", function() {
 
 document.getElementById("reduced_button").addEventListener("click", function() {
   data.push(reduced_data); my_function();})
-  
+
   document.getElementById("reduced_button2").addEventListener("click", function() {
   data.push(reduced_data2); my_function();})
 
@@ -392,7 +259,7 @@ var all_years = ['1870','1871','1872','1873','1874','1875','1876', '1877', '1878
           endOnTick: false,
           endOnTick: false
       },
-	  
+
 
       legend: {
           enabled: true
@@ -418,9 +285,10 @@ var all_years = ['1870','1871','1872','1873','1874','1875','1876', '1877', '1878
       }
 
   });
-  
+
   	})
 data=[]}
-</script>  
-</body>
+
+</script>
+
 </html>
