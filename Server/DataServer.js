@@ -337,7 +337,7 @@ app.get('/cluster/:value', function (req, res) {
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//  API EndPoint to get data for one of Mo's clusters or carlos's charts
+//  API EndPoint to get data for one of Mo's clusters for carlos's charts
 app.get('/cluster2/:value', function (req, res) {
 
   console.log("cluster 2 endpoint")
@@ -421,6 +421,52 @@ app.get('/cluster3/:value', function (req, res) {
 
       }
 });
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//  API EndPoint to get mo his clusters from Final Data for his map version
+app.get('/cluster4/:value', function (req, res) {
+
+  console.log("cluster 4 endpoint")
+
+      // Allows data to be downloaded from the server with security concerns
+      res.header("Access-Control-Allow-Origin", "*");
+      res.header("Access-Control-Allow-Headers", "X-Requested-WithD");
+      // If all the variables are provided connect to the database
+
+      if(req.params.value != ""){
+
+        console.log("get parameters ok");
+        var value = mysql_real_escape_string(req.params.value);
+        console.log("cluster id: ", value);
+        value = parseInt(value);
+
+        var sql = "SELECT * FROM Final_Data WHERE clusterID = \'"+value+"\'";
+
+        // console.log("query: ", sql)
+
+        // Run the SQL Query
+        connection.query(sql, function(err, rows, fields) {
+          if (err) console.log("Err:" + err);
+          if(rows != undefined){
+            // If we have data that comes back send it to the user.
+            res.send(rows);
+          }else{
+            console.log("empty query");
+            res.send("empty query");
+          }
+        }); // end sql query
+
+      }else{
+        // if code or value is blank
+        console.log("missing URL variables");
+        res.send("missing URL variables");
+
+      }
+});
+
+
 
 
 
@@ -642,13 +688,6 @@ app.get('/timeline/secondgroup', function (req, res) {
 /////////////////////////////////////////////////////////////////
 
 });
-
-
-
-
-
-
-
 
 
 
