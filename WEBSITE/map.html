@@ -153,7 +153,11 @@
 var yearChart, //charts defined globally to allow resetting through text in divs
 classificationChart,
 mediumChart;
-var filterCluster; //defined globally to allow selection by div but uses dc.js scoped functions
+
+ // Hugh had to resolve a version conflict here 
+var filterCluster; //defined globally to allow selection by div but uses dc.js scoped functions  
+var clusterText; //defined globally, to be sorted later...
+
 function getImg() {
 	var x = document.getElementById("artImg");
 	if (x.style.display === "none") {
@@ -162,6 +166,31 @@ function getImg() {
 		x.style.display = "none";
 	}
 }
+
+$.getJSON("clusters/casestudy.json", function (data) {
+	clusterText=data
+	console.log(clusterText)
+});
+
+clusterName = function(clusterID) {
+	for (var i=0; i < clusterText.length; i++) {
+		if (clusterText[i].id === clusterID) {
+			console.log('cluster found: '+clusterID)
+			return clusterText[i].name;
+		}
+	}
+	return ""
+};
+
+clusterDesc = function(clusterID) {
+	for (var i=0; i < clusterText.length; i++) {
+		if (clusterText[i].id === clusterID) {
+			console.log('cluster found: '+clusterID)
+			return clusterText[i].description;
+		}
+	}
+	return ""
+};
 
 function artInfo(objectID){
 
@@ -217,7 +246,7 @@ function addMap(){
 	};
 
 	selecter.update = function () {
-		this._div.innerHTML ='<h4>Explore the MET museum</h4><div id ="cluster-chart"></div><div id = "cluster-text"></div>'
+		this._div.innerHTML ='<h4>Explore the MET museum</h4><div id = "cluster-text"></div><div id ="cluster-chart"></div>'
 	};
 
 	selecter.addTo(map);
@@ -364,7 +393,7 @@ function addMap(){
 				countryGroup = countryDimension.group(),
 				countryFilters =[], //array to track which countrys are being used to filter.
 				countryFiltersGroup; //function to provide the countryGroup filtered by the current filters
-		var clusterDimension = artworks.dimension(function(d) {return d["Cluster_ID"];}),
+		var clusterDimension = artworks.dimension(function(d) {return d["clusterIDs"];}),
 			clusterGroup = clusterDimension.group(),
 			clusterChart = dc.selectMenu('#cluster-chart');
 
@@ -391,8 +420,8 @@ function addMap(){
 		returnCluster = function (objectID) {
 			for (var i=0; i < response.length; i++) {
 				if (response[i]["Object ID"] === objectID) {
-					console.log('return cluster is going to return: '+objectID+' , '+response[i]["Cluster_ID"])
-					return response[i]["Cluster_ID"];
+					console.log('return cluster is going to return: '+objectID+' , '+response[i]["clusterIDs"])
+					return response[i]["clusterIDs"];
 				}
 			}
 		};
@@ -523,6 +552,9 @@ function addMap(){
 			clusterChart
 			.dimension(clusterDimension)
 			.group(clusterGroup)
+			.title(function (d){return 'Cluster: ' + d.key +' '+clusterName(d.key);})
+			.filterDisplayed(function (d) {return (d.key>-1 && d.value>0);})
+			.promptText('All artworks')
 			dc.renderAll();
 
 
@@ -628,23 +660,24 @@ function addMap(){
 			L.Util.setOptions(countries,{style:countryStyle})
 
 			showRecord=function (){
-				var records =yearDimension.top(Infinity);
-				var length = Math.min(50, records.length)
-				function shuffle(array) {
-					var results = new Array(length)
-					var i = array.length
-					while(0!=length) {
-						var j = Math.floor(Math.random() * (i));
-						i--;
-						length--;
-						var temp = array[i];
-						array[i] = array[j];
-						array[j] = temp;
-						results[length]=array[i]
-					}
-					return results
-				}
-				var data = shuffle(records);
+				<!-- var records =yearDimension.top(Infinity); -->
+				<!-- var length = Math.min(50, records.length) -->
+				<!-- function shuffle(array) { -->
+					<!-- var results = new Array(length) -->
+					<!-- var i = array.length -->
+					<!-- while(0!=length) { -->
+						<!-- var j = Math.floor(Math.random() * (i)); -->
+						<!-- i--; -->
+						<!-- length--; -->
+						<!-- var temp = array[i]; -->
+						<!-- array[i] = array[j]; -->
+						<!-- array[j] = temp; -->
+						<!-- results[length]=array[i] -->
+					<!-- } -->
+					<!-- return results -->
+				<!-- } -->
+				<!-- var data = shuffle(records); -->
+				var data = yearDimension.bottom(1000)
 				var artList = []; //Artworks return from user button selections
 				function capitalizeFirstLetter(string) {
 					if (typeof string === 'string' || string instanceof String) {
