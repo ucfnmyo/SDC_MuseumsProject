@@ -2,8 +2,7 @@
 Interactive web visualization of museum data.
 
 ## map to-dos in vague order of priority
-- Update getCluster button to call the loadData function
-- update Clusters info panel to provide a space for cluster name and description. have drop down automatically update when getCluster button called. amalgamate fulldata radio button into the dropdown
+- update Clusters info panel to provide a space for cluster name and description. 
 - add the table header which gives the current date and country filters used
 - amalgamate the catch function for no record returns
 - create a countries filter reset button
