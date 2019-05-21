@@ -2,18 +2,11 @@
 Interactive web visualization of museum data.
 
 ## map to-dos in vague order of priority
-- Update getCluster button to call the loadData function
-- update Clusters info panel to provide a space for cluster name and description. have drop down automatically update when getCluster button called. amalgamate fulldata radio button into the dropdown
-- add the table header which gives the current date and country filters used
-- amalgamate the catch function for no record returns
+- update Clusters info panel to provide a space for cluster name and description. 
 - create a countries filter reset button
-- format the table
-- format the graph and medium/classification selectors.
-- change the table to display medium text not keyword
-- grey out getimage button if there is no associated image. 
 - change styling to differentiate between countries with zero artwork and those which have artworks but are currently filtered out.
-- commas on legend
-- make the filter reset buttons disappear on cluster reload
+- grey out getimage button if there is no associated image. 
+- add the table header which gives the current date and country filters used
 - format the country stat text
 - make the country stats discount unknown/other as main class. add Medium
 - change the bar graph bar thickness.probably requires redefining the xaxis scale function.

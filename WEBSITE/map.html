@@ -69,6 +69,9 @@
 		</div>
 		<div id='main'>
 			<div id='map-canvas' >
+				<div id = 'cluster-container' style ='display: block;'>
+
+				</div>
 				<div id = "artDetail" style = "position: absolute; right:0; bottom:0; width: 500px; height: 350px; z-index: -2;background-color: rgba(0, 0, 0, 0.6); display: none;">
 					<!--    -->
 					<div style = 'position: absolute; top: 0; width: 100%; height: 20%;'>
@@ -106,10 +109,12 @@
 				</div>
 			</div>
 			<div id='selectors'>
-				<div id='year-chart'>Year of Artwork (select to filter)
-					<a class='reset'
-					href='javascript:yearChart.filterAll();dc.redrawAll();'
-					style="display: none; float: right; margin-right: 50px;">reset</a>
+				<div id='year-chart-container'>
+					<div id='year-chart'>Year of Artwork (select to filter)
+						<a class='reset'
+						href='javascript:yearChart.filterAll();dc.redrawAll();'
+						style="display: none; float: right; margin-right: 50px;">reset</a>
+					</div>
 				</div>
 				<div id='classification-chart'>Classification
 					<!-- <a class='reset' -->
@@ -123,12 +128,14 @@
 					<!-- style="display: none; float: right; margin-right: 20px;">reset</a> -->
 					<!-- </span> -->
 				</div>
-				<div id='table-chart'>
-
+				<div id='table-header'></div>
+				<div id='table-container'>
+					<div id='table-chart'></div>
 				</div>
 
 			</div>
 		</div>
+
 	</div>
 
 <!-- The Javascript from external websites gets Loaded Here -->
@@ -146,7 +153,7 @@
 var yearChart, //charts defined globally to allow resetting through text in divs
 classificationChart,
 mediumChart;
-
+var filterCluster; //defined globally to allow selection by div but uses dc.js scoped functions  
 function getImg() {
 	var x = document.getElementById("artImg");
 	if (x.style.display === "none") {
@@ -186,16 +193,12 @@ function artInfo(objectID){
 
 
 
-		});
-		var endpoint = 'http://dev.spatialdatacapture.org:8872/subset/Object%20ID/'+ objectID
-		fetch(endpoint).then((resp) => resp.text()).then((body) => {
-			var data = JSON.parse(body);
-			var clusterID = data.cluster_ID;
-			var clusterLink = "<button onclick='getCluster("+clusterID+")'>GetCluster</button>";
-			document.getElementById('clusterButton').innerHTML = clusterLink
-			});
+	});
+	
+	document.getElementById('clusterButton').innerHTML = "<button onclick='filterCluster("+objectID+")'>GetCluster</button>";
+			
 
-	}
+}
 
 addMap(); //loads map, retrieves country polygons, and calls drawCharts
 function addMap(){
@@ -208,56 +211,30 @@ function addMap(){
 	map.addLayer(layer);
 	var selecter = L.control({position: 'topright'});
 	selecter.onAdd = function(map){
-		this.div = L.DomUtil.create('div', 'info selecter')
-		selecter.update();
-		return this.div;
+		this._div = L.DomUtil.create('div', 'info cluster'); // create a div with a class "info"
+		this.update();
+		return this._div;
 	};
+	
 	selecter.update = function () {
-		var clusters =['cluster 0','cluster 1','cluster 2','cluster 3','cluster 4']
-		clusterhtml=''
-		for (var i = 0; i < 43; i++) {
-			clusterhtml+= '<option value='+i+'>'+"cluster"+String(i)+'</option>'
-		};
-		this.div.innerHTML='<h4>Explore the MET museum</h4>'+
-		'<form>'+
-		'<input type="radio" name="dataset" value="full"> Full dataset<br>'+
-		'<input type="radio" name="dataset" value="cluster" checked> Cluster '+
-		'<select name="cluster">' +
-		clusterhtml+
-		'</select>'+
-		'</form>'
-		;
+		this._div.innerHTML ='<h4>Explore the MET museum</h4><div id ="cluster-chart"></div><div id = "cluster-text"></div>'
 	};
+	
 	selecter.addTo(map);
-	$("input[name=dataset]").attr('disabled', true);
-	var fullData=''; //the entire dataset, defined so it can be loaded in background
+
+	
 	function loadData(){
+		$('#map-canvas').block({ message: '<h1> Loading Data</h1>' });
 		var url = "http://dev.spatialdatacapture.org:8872/data"
-		var clusterurl = "http://dev.spatialdatacapture.org:8872/cluster/"
-		var newData=''
-		if ($("input[name=dataset]:checked").val()==="full") {
-			newData="full"
-			drawCharts(fullData); //putting it up here for now, but structure depends on API calls
-			$('#map-canvas').unblock();
-		} else {
-			newData=$("select[name=cluster] option:checked").val();
-			d3.json(clusterurl+newData.toString(),function(json){    ///change for server data. AND CHANGE Class_General to class
-			// d3.csv("/data/Final_Data.csv",function(json){
+		console.log("about to get data from server")
+		d3.json(url,function(json){    ///change for server data. AND CHANGE Class_General to class
+			console.log("server gave me data")
 			console.log(json);
 			drawCharts(json);
 			$('#map-canvas').unblock();
-			});
-		};
-		if (fullData===''){
-			d3.json(url,function (data){  //API CALL ON FULL DATASET TO LOAD IN BACKGROUND
-				fullData = data;
-				console.log("full data loaded");
-				console.log(fullData);
-				$("input[name=dataset]").attr('disabled', false);
-			});
-		};
-		console.log("the selected dataset is " + newData)
+		});
 	};
+	
 	var legend = L.control({position: 'bottomleft'});
 	legend.onAdd = function (map) {
 		this._legenddiv = L.DomUtil.create('div', 'info legend');
@@ -286,12 +263,7 @@ function addMap(){
 			onEachFeature: countryInteractions
 		});
 		countries.addTo(map);
-		$('#map-canvas').block({ message: '<h1> Loading Data</h1>' });
-		$("form :input").change(function(){
-			$('#map-canvas').block({ message: '<h1> Loading Data</h1>' });
-			loadData()
-		});
-		loadData()
+		loadData();
 	});
 	function countryDefaultStyle(feature) {   //loads a default style, to be replaced when the data has loaded
 		return {
@@ -392,6 +364,10 @@ function addMap(){
 				countryGroup = countryDimension.group(),
 				countryFilters =[], //array to track which countrys are being used to filter.
 				countryFiltersGroup; //function to provide the countryGroup filtered by the current filters
+		var clusterDimension = artworks.dimension(function(d) {return d["Cluster_ID"];}),
+			clusterGroup = clusterDimension.group(),
+			clusterChart = dc.selectMenu('#cluster-chart');
+		
 		//tableChart = dc.tableview('#table-chart');//charts defined globally to allow resetting through text in divs
 
 		// var cityDimension = artworks.dimension(function(d) {return d.CityMatch;}),
@@ -412,8 +388,36 @@ function addMap(){
 			updateMap()
 		});
 
+		returnCluster = function (objectID) {
+			for (var i=0; i < response.length; i++) {
+				if (response[i]["Object ID"] === objectID) {
+					console.log('return cluster is going to return: '+objectID+' , '+response[i]["Cluster_ID"])
+					return response[i]["Cluster_ID"];
+				}
+			}
+		};
 
-
+		filterCluster = function (objectID) {
+			clusterID = returnCluster(objectID);
+			yearChart.filterAll();
+			classificationChart.filterAll();
+			mediumChart.filterAll();
+			countryDimension.filterAll();
+			clusterChart.filterAll();
+			if (clusterID === -1) {
+				console.log("filter all")
+			} else{
+				console.log("applying filter of "+clusterID)
+				clusterChart.filter(clusterID)
+			}
+			dc.redrawAll();
+			updateMap();
+		};
+		var resizeTimer;
+		$(window).resize(function() {
+		clearTimeout(resizeTimer);
+		resizeTimer = setTimeout(dc.renderAll(), 100);
+		});
 		function updateMap() {  //redraws map when filters change
 
 			// if (mapZoom) {
@@ -491,7 +495,8 @@ function addMap(){
 
 		function addCharts(){
 			yearChart /* dc.barChart('#year-chart', 'chartGroup') */
-			.margins({top: 10, right: 10, bottom: 30, left: 50})
+			.margins({top: 0, right: 40, bottom: 40, left: 40})
+			.useViewBoxResizing(true)
 			.dimension(yearDimension)
 			.group(yearGroup)
 			.elasticY(true)
@@ -515,7 +520,9 @@ function addMap(){
 			.dimension(mediumDimension)
 			.group(mediumGroup)
 
-
+			clusterChart
+			.dimension(clusterDimension)
+			.group(clusterGroup)
 			dc.renderAll();
 
 
@@ -576,7 +583,7 @@ function addMap(){
 				for (var i = 0; i < grades.length; i++) {
 					this._legenddiv.innerHTML +=
 					'<i style="background:' + color(i==0 ? grades[i]-1 : grades[i] + 0.001) + '"></i> ' +
-					grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : (i==0 ? '<br>':'+'));
+					grades[i].toLocaleString() + (grades[i + 1] ? '&ndash;' + grades[i + 1].toLocaleString() + '<br>' : (i==0 ? '<br>':'+'));
 				}
 			};
 			legend.addTo(map);
@@ -621,101 +628,91 @@ function addMap(){
 			L.Util.setOptions(countries,{style:countryStyle})
 
 			showRecord=function (){
-			var records =yearDimension.top(Infinity);
-			var length = Math.min(20, records.length)
-			function shuffle(array) {
-				var results = new Array(length)
-				var i = array.length
-				while(0!=length) {
-					var j = Math.floor(Math.random() * (i));
-					i--;
-					length--;
-					var temp = array[i];
-					array[i] = array[j];
-					array[j] = temp;
-					results[length]=array[i]
+				var records =yearDimension.top(Infinity);
+				var length = Math.min(50, records.length)
+				function shuffle(array) {
+					var results = new Array(length)
+					var i = array.length
+					while(0!=length) {
+						var j = Math.floor(Math.random() * (i));
+						i--;
+						length--;
+						var temp = array[i];
+						array[i] = array[j];
+						array[j] = temp;
+						results[length]=array[i]
+					}
+					return results
 				}
-				return results
-			}
-			var data = shuffle(records);
-
-			var artList = []; //Artworks return from user button selections
-			function capitalizeFirstLetter(string) {
-				if (typeof string === 'string' || string instanceof String) {
-					return string.charAt(0).toUpperCase() + string.slice(1);
-				} else {
-					return string
+				var data = shuffle(records);
+				var artList = []; //Artworks return from user button selections
+				function capitalizeFirstLetter(string) {
+					if (typeof string === 'string' || string instanceof String) {
+						return string.charAt(0).toUpperCase() + string.slice(1);
+					} else {
+						if (string == null) {
+							return ""
+						} else {
+							return string
+						}
+					}
 				}
-			}
-			for (var i = 0; i < data.length; i++){
-				//Generate link for clusterID
-				var clusterID = data[i].Cluster_ID;
-				var clusterLbl = "ShowCLuster";
-				var clusterLink = "<button onclick='getCluster("+3+")'>GetCluster</button>"
-				//"Cluster" : clusterLink,
-				//getCluster retrieves the clusterID of GetCluster button and sends an API call
+				for (var i = 0; i < data.length; i++){
+					//Generate link for artwork image
+					var artNm = capitalizeFirstLetter(data[i].object_name);
+					var imgLbl = "<button onclick = 'artInfo(" + data[i]['Object ID'] + ")'>"+ data[i].object_name + "</button>";
+					//try and catch for any null values, push art object clusterID, imgLbl, object_begin_date
 
-				//Generate link for artwork image
-				var artNm = capitalizeFirstLetter(data[i].object_name);
-				var imgLbl = "<button onclick = 'artInfo(" + data[i]['Object ID'] + ")'>"+ data[i].object_name + "</button>";
-				//try and catch for any null values, push art object clusterID, imgLbl, object_begin_date
-
-				artList.push({"Name" : imgLbl, "Country" : capitalizeFirstLetter(data[i].country),  "Begin Date"  : data[i].object_begin_date, "Medium": capitalizeFirstLetter(data[i].medium), "Classification" : capitalizeFirstLetter(data[i]["class"])});
-			}
-			document.getElementById('table-chart').innerHTML = json2table(artList, 'table');
-
-			//This function transforms JSON objects to html table for side panel
-			function json2table(json, classes) {
-				try{
-					var cols = Object.keys(json[0]);
+					artList.push({"Name" : imgLbl, "Country" : capitalizeFirstLetter(data[i].country),  "Begin Date"  : data[i].object_begin_date, "Medium": capitalizeFirstLetter(data[i].onclear_medium), "Classification" : capitalizeFirstLetter(data[i]["class"])});
 				}
-				catch{
-					document.getElementById('Country').innerHTML = "No " + cl + " from " + c_name + " (" + stYr + " - " + endYr + ")";
+				document.getElementById('table-chart').innerHTML = json2table(artList, 'table');
+				//This function transforms JSON objects to html table for side panel
+				function json2table(json, classes) {
+					try{
+						var cols = Object.keys(json[0]);
+						document.getElementById('table-header').innerHTML = "<h4>Sample of matching records</h4>";
+					}
+					catch{
+						document.getElementById('table-header').innerHTML = "<h4>No records matched</h4>";
+						return '';
+					}
+					var headerRow = '';
+					var bodyRows = '';
+
+					classes = classes || '';
+
+
+
+
+					cols.map(function(col) {
+						headerRow += '<th>' + capitalizeFirstLetter(col) + '</th>';
+					});
+
+					json.map(function(row) {
+						bodyRows += '<tr style="text-align: left; padding-left: 2px; padding-right: 2px; padding-top: 1px; padding-bottom: 1px; border-bottom: 1px solid #ddd;">';
+
+						cols.map(function(colName) {
+							bodyRows += '<td>' + row[colName] + '</td>';
+						})
+
+						bodyRows += '</tr>';
+					});
+
+					return '<table class="' +
+								 classes +
+								 '" style="border-collapse: collapse;border: 1px solid black;"><thead style="text-align: left; padding-left: 2px; padding-right: 2px; padding-top: 1px; padding-bottom: 1px; border-bottom: 1px solid #ddd;"><tr>' +
+								 headerRow +
+								 '</tr></thead><tbody>' +
+								 bodyRows +
+								 '</tbody></table>';
 				}
-				var headerRow = '';
-				var bodyRows = '';
 
-				classes = classes || '';
-
-
-
-
-				cols.map(function(col) {
-					headerRow += '<th>' + capitalizeFirstLetter(col) + '</th>';
-				});
-
-				json.map(function(row) {
-					bodyRows += '<tr>';
-
-					cols.map(function(colName) {
-						bodyRows += '<td>' + row[colName] + '</td>';
-					})
-
-					bodyRows += '</tr>';
-				});
-
-				return '<table class="' +
-							 classes +
-							 '"><thead><tr>' +
-							 headerRow +
-							 '</tr></thead><tbody>' +
-							 bodyRows +
-							 '</tbody></table>';
 			}
-
-
-
-			//console.log(json2table(artList, 'table'));
-		}
 		}
 
 	}
 }
 
-function updateDisplay(json){
-	$("#picture").attr("src",json.primaryImageSmall);
-	console.log(json);
-}
 
 </script>
 
