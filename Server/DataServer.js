@@ -467,6 +467,81 @@ app.get('/cluster4/:value', function (req, res) {
 });
 
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//  API EndPoint to get Carlos the cluster chart table for a single cluster id. 
+app.get('/clusterchart/:value', function (req, res) {
+
+  console.log("cluster 4 endpoint")
+
+      // Allows data to be downloaded from the server with security concerns
+      res.header("Access-Control-Allow-Origin", "*");
+      res.header("Access-Control-Allow-Headers", "X-Requested-WithD");
+      // If all the variables are provided connect to the database
+
+      if(req.params.value != ""){
+
+        console.log("get parameters ok");
+        var value = mysql_real_escape_string(req.params.value);
+        console.log("cluster id: ", value);
+
+        if(value = "no"){
+
+        var sql = "SELECT * FROM Cluster_Chart";
+
+        // console.log("query: ", sql)
+
+        // Run the SQL Query
+        connection.query(sql, function(err, rows, fields) {
+          if (err) console.log("Err:" + err);
+          if(rows != undefined){
+            // If we have data that comes back send it to the user.
+            res.send(rows);
+          }else{
+            console.log("empty query");
+            res.send("empty query");
+          }
+        }); // end sql query
+
+      }else{
+        // if code or value is blank
+        console.log("missing URL variables");
+        res.send("missing URL variables");
+
+      }
+
+        }else{
+
+        value = parseInt(value);
+
+        var sql = "SELECT * FROM Cluster_Chart WHERE `ClusterID` = \'"+value+"\'";
+
+        // console.log("query: ", sql)
+
+        // Run the SQL Query
+        connection.query(sql, function(err, rows, fields) {
+          if (err) console.log("Err:" + err);
+          if(rows != undefined){
+            // If we have data that comes back send it to the user.
+            res.send(rows);
+          }else{
+            console.log("empty query");
+            res.send("empty query");
+          }
+        }); // end sql query
+
+      }else{
+        // if code or value is blank
+        console.log("missing URL variables");
+        res.send("missing URL variables");
+
+      }
+
+        }
+
+
+});
+
+
 
 
 
