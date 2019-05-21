@@ -471,7 +471,7 @@ app.get('/cluster4/:value', function (req, res) {
 //  API EndPoint to get Carlos the cluster chart table for a single cluster id. 
 app.get('/clusterchart/:value', function (req, res) {
 
-  console.log("cluster 4 endpoint")
+  console.log("clusterchart endpoint")
 
       // Allows data to be downloaded from the server with security concerns
       res.header("Access-Control-Allow-Origin", "*");
@@ -488,7 +488,7 @@ app.get('/clusterchart/:value', function (req, res) {
 
         var sql = "SELECT * FROM Cluster_Chart";
 
-        // console.log("query: ", sql)
+        console.log("query: ", sql)
 
         // Run the SQL Query
         connection.query(sql, function(err, rows, fields) {
@@ -508,7 +508,7 @@ app.get('/clusterchart/:value', function (req, res) {
 
         var sql = "SELECT * FROM Cluster_Chart WHERE `ClusterID` = \'"+value+"\'";
 
-        // console.log("query: ", sql)
+        console.log("query: ", sql)
 
         // Run the SQL Query
         connection.query(sql, function(err, rows, fields) {
