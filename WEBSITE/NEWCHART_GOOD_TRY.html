@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+
+<head>
+	<title>Artwork Explorer</title>
+	<!-- <link rel='stylesheet' id='font-css'  href='http://fonts.googleapis.com/css?family=Roboto:400,300,100' type='text/css' media='all' /> -->
+	<link rel='stylesheet' id='font-css'  href='./css/style.css' type='text/css' media='all' />
+	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css"
+    integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
+    crossorigin=""/>
+	<link href='https://unpkg.com/dc@3.0.10/dc.css' rel='stylesheet' type='text/css'>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">	
+	<style>
+	#container {
+    min-width: 300px;
+    max-width: 800px;
+    height: 400px;
+    margin: 1em auto;
+}
+
+#csv {
+	display: none;
+}
+	</style>
+</head>
+<body>
+
+<!-- Resources -->
+<script src="https://www.amcharts.com/lib/4/core.js"></script>
+<script src="https://www.amcharts.com/lib/4/charts.js"></script>
+<script src="https://www.amcharts.com/lib/4/themes/kelly.js"></script>  
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/highcharts-more.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src = "https://cdn.jsdelivr.net/npm/lodash@4.17.11/lodash.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://code.highcharts.com/modules/sankey.js"></script>
+<script src="https://code.highcharts.com/modules/dependency-wheel.js"></script>
+
+
+
+
+<div id="container"></div>
+
+
+<!-- Create div -->
+
+
+
+<script type="text/javascript">
+
+//var data = "CLUSTERED_DATA2.json"
+var arrayList = []
+var years =[]
+
+fetch("CLUSTER_HIGHCHART_REDUCED.json").then((resp) => resp.text()).then((body) => {
+var data_chart = JSON.parse(body);
+console.log("DATA",data_chart)
+
+
+
+var output = [], dict;
+var years =[]
+for (var i in data_chart) {
+    dict = {};
+    dict.name = data_chart[i].name;
+    dict.data = JSON.parse(data_chart[i].data);
+	years = JSON.parse(data_chart[i].years)
+    output.push(dict);
+}
+console.log("output",output)
+console.log("years",years)
+
+
+var output_final = [], dictionary;
+
+for (var i in output){
+	const arr = output[i].data.reduce(function(previousValue, currentValue, index, array) {
+  return previousValue + currentValue;})
+	if (arr >5000){
+	dictionary ={};
+	dictionary.name = output[i].name
+	dictionary.data = output[i].data
+	output_final.push(dictionary)
+	}
+}
+
+console.log(output_final)
+Highcharts.chart('container', {
+    chart: {
+        type: 'area',
+		zoomType: 'x',
+        panning: true,
+        panKey: 'meta'
+    },
+    title: {
+        text: 'Number of clustered artworks by country through time'
+    },
+    subtitle: {
+        <!-- text: 'XXXXXX' -->
+    },
+    xAxis: {
+        categories: [years],
+        tickmarkPlacement: 'on',
+        title: {
+            enabled: false
+        }
+    },
+    yAxis: {
+        title: {
+            text: 'Number of artworks'
+        },
+        labels: {
+            formatter: function () {
+                return this.value / 1000;
+            }
+        }
+    },
+    tooltip: {
+        split: true,
+        valueSuffix: ' artworks'
+    },
+    plotOptions: {
+        area: {
+            stacking: 'normal',
+            lineColor: '#666666',
+            lineWidth: 1,
+            marker: {
+                lineWidth: 1,
+                lineColor: '#666666'
+            }
+        }
+    },
+    series: output_final
+});
+});
+</script>  
+
+</body>
+</html>
