@@ -118,7 +118,9 @@ document.getElementById("reduced_button").addEventListener("click", function() {
   document.getElementById("reduced_button2").addEventListener("click", function() {
   data.push(reduced_data2); my_function();})
 
-  function my_function (){
+function my_function (){
+
+  console.log("Please be patient while the chart loads");
 
   fetch(data).then((resp) => resp.text()).then((body) => {
 
@@ -134,13 +136,13 @@ document.getElementById("reduced_button").addEventListener("click", function() {
 
 
   <!-- Parse the JSON and group by regions -->
-  var data = JSON.parse(body)
-  console.log("data:" , data)
+  var data = JSON.parse(body);
+  //console.log("data:" , data);
 
   var grouped_countries = data.groupBy('country');
 
 
-  console.log("grouped countries", grouped_countries)
+  //console.log("grouped countries", grouped_countries);
 
 
   var output = [], country;
