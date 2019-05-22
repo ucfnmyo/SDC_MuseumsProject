@@ -11,6 +11,7 @@
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 	<style>
+	body,h1,h2,h3,h4,h5,h6,p {font-family: "Raleway", sans-serif}
 	.info {
 	    padding: 6px 8px;
 	    font: 14px/16px Arial, Helvetica, sans-serif;
@@ -49,26 +50,32 @@
 		<!-- Navbar (sit on top) -->
 		<div class="w3-top">
 		  <div class="w3-bar w3-white w3-card" id="myNavbar">
-
-		    <a href="#home" class="w3-bar-item w3-button w3-red w3-wide">MET Artwork Visualiser</a>
-
+		    <a style = 'height: 55px;' href="index.html" class="w3-bar-item w3-button w3-red w3-wide">MET Artwork Visualiser</a>
 		    <!-- Right-sided navbar links -->
-		    <div class="w3-right w3-hide-small">
+						<div class="w3-right w3-hide-small">
+							<!-- ABOUT DROP DOWN -->
+							<div class="w3-dropdown-hover">
+							 <a href = 'about.html'><button   style = 'width: 100px; height: 55px;' class="w3-btn w3-white"><i class="fa fa-book"></i>  ABOUT</button></a>
+								</div>
 
-		      <a href="WebPageFinal.html#about" class="w3-bar-item w3-button">ABOUT</a>
-		      <a href="WebPageFinal.html#preprocessing" class="w3-bar-item w3-button"><i class="fa fa-microchip"></i>PREPROCESSING</a>
-		      <a href="WebPageFinal.html#method" class="w3-bar-item w3-button"><i class="fa fa-sitemap"></i>METHODOLOGY</a>
-		      <a href="index.html" class="w3-bar-item w3-button"><i class="fa fa-map"></i> MAP</a>
-					<!-- /home/ucfnhke/public_html/SDC_MuseumsProject/WEBSITE -->
-		      <a href="#contact" class="w3-bar-item w3-button"><i class="fa fa-envelope"></i>CONTACT</a>
+								<div class="w3-dropdown-hover w3-red">
+								<a href ='map.html'> <button style = 'width: 100px; height: 55px;' class="w3-btn w3-white"><i class="fa fa-map"></i>  MAP</button></a>
+								</div>
+								<!-- VISUALISATIONS DROP DOWN -->
+								<div class="w3-dropdown-hover">
+								 <button style = 'width: 200px; height: 55px;'class="w3-btn w3-white"><i class="fa fa-bar-chart"></i>  VISUALISATIONS</button>
+								  <div style = 'width: 200px;' class="w3-dropdown-content w3-bar-block w3-border">
+								    <a href="BUBBLE.html" class="w3-bar-item w3-button">Artwork by Country</a>
+								    <a href="DONATION.html" class="w3-bar-item w3-button">Artwork Donations</a>
+								    <a href="beginDateBC.html" class="w3-bar-item w3-button">Historical Trends (BC)</a>
+										<a href="beginDateAD.html" class="w3-bar-item w3-button">Historical Trends (AD)</a>
+								  </div>
+								</div>
+								</div>
+				</div>
 		    </div>
-		    <!-- Hide right-floated links on small screens and replace them with a menu icon -->
-		    <a href="javascript:void(0)" class="w3-bar-item w3-button w3-right w3-hide-large w3-hide-medium" onclick="w3_open()">
-		      <i class="fa fa-bars"></i>
-		    </a>
-		  </div>
-		</div>
-		<div id='main'>
+
+		<div style = 'margin-top: 17px;' id='main'>
 			<div id='map-canvas' >
 				<div id = 'cluster-container' style ='display: block;'>
 
@@ -84,7 +91,7 @@
 					<div style = 'position: absolute; height: 80%; margin-top: 10%;'>
 						<img style = 'position: absolute;  height: 100%; width: 100%; display: none;' id = 'artImg' src = ""> </img>
 
-						<table style = 'color: white; opacity: 2; border-spacing: 15px;'>
+						<table style = 'font-size: 18px; color: white; opacity: 2; border-spacing: 15px;'>
 							<tr>
 								<td>Title:   </td>
 								<td id = "Title"></td>
@@ -147,8 +154,11 @@
 <script type="text/javascript" src="https://d3js.org/d3.v4.min.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/crossfilter/1.3.12/crossfilter.min.js"></script>
 <script type="text/javascript" src="https://unpkg.com/dc@3.0.10/dc.js"></script>
+
+
 <!-- <script type="text/javascript" src="/js/jquery.blockUI.js"></script> -->
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.blockUI/2.70/jquery.blockUI.js"></script>
+
 
 <!--This section will create an interactive visualisation using Leaflet.js for a map and dc.js for charts -->
 <script type="text/javascript">
@@ -158,7 +168,9 @@ mediumChart;
 
  // Hugh had to resolve a version conflict here
 var filterCluster; //defined globally to allow selection by div but uses dc.js scoped functions
+
 var filterCountry; //function created here, but defined in data section
+
 var clusterText; //defined globally, to be sorted later...
 
 function getImg() {
@@ -226,7 +238,8 @@ function artInfo(objectID){
 		document.getElementById('ObjectDate').innerHTML = art.ObjectDates;
 		document.getElementById('Credit').innerHTML = art.credit_Line;
 		document.getElementById('Artist').innerHTML = art.Artist;
-		document.getElementById('artImg').src = artImg
+
+		document.getElementById('artImg').src = artImg;
 		console.log(artImg)
 		if (artImg=="") {
 			$("#imgButton").html('No Image');
@@ -237,7 +250,7 @@ function artInfo(objectID){
 
 	});
 
-	document.getElementById('clusterButton').innerHTML = "<button onclick='filterCluster("+objectID+")'>GetCluster</button>";
+	document.getElementById('clusterButton').innerHTML = "<button onclick='filterCluster("+objectID+")'>Similar Artworks</button>";
 
 
 }
@@ -309,9 +322,9 @@ function addMap(){
 	function countryDefaultStyle(feature) {   //loads a default style, to be replaced when the data has loaded
 		return {
 			// fillColor: color(artworksCountryCount(feature)),    //loads as blank and then updated
-			weight: 2,
+			weight: 0,
 			opacity: 1,
-			color: 'gray',
+			color: 'black',
 			dashArray: '',
 			fillOpacity: 0.6
 		}
@@ -772,8 +785,6 @@ function addMap(){
 					classes = classes || '';
 
 
-
-
 					cols.map(function(col) {
 						headerRow += '<th>' + capitalizeFirstLetter(col) + '</th>';
 					});
@@ -788,7 +799,7 @@ function addMap(){
 						bodyRows += '</tr>';
 					});
 
-					return '<table class="' +
+					return '<table style = "border: 0px; font-size: 15px;" class="' +
 								 classes +
 								 '" style="border-collapse: collapse;border: 1px solid black;"><thead style="text-align: left; padding-left: 2px; padding-right: 2px; padding-top: 1px; padding-bottom: 1px; border-bottom: 1px solid #ddd;"><tr>' +
 								 headerRow +
