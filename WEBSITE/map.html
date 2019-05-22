@@ -18,6 +18,7 @@
 	    background: rgba(255,255,255,0.8);
 	    box-shadow: 0 0 15px rgba(0,0,0,0.2);
 	    border-radius: 5px;
+			max-width: 600px;
 	}
 	.info h4 {
 	    margin: 0 0 5px;
@@ -81,7 +82,7 @@
 					</div>
 
 					<div style = 'position: absolute; height: 80%; margin-top: 10%;'>
-						<img style = 'position: absolute;  height: 100%; width: 100%;' id = 'artImg' src = ""> </img>
+						<img style = 'position: absolute;  height: 100%; width: 100%; display: none;' id = 'artImg' src = ""> </img>
 
 						<table style = 'color: white; opacity: 2; border-spacing: 15px;'>
 							<tr>
@@ -128,6 +129,7 @@
 					<!-- style="display: none; float: right; margin-right: 20px;">reset</a> -->
 					<!-- </span> -->
 				</div>
+				<div id='countries-chart'>Countries: </div>
 				<div id='table-header'></div>
 				<div id='table-container'>
 					<div id='table-chart'></div>
@@ -146,16 +148,18 @@
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/crossfilter/1.3.12/crossfilter.min.js"></script>
 <script type="text/javascript" src="https://unpkg.com/dc@3.0.10/dc.js"></script>
 <script type="text/javascript" src="/js/jquery.blockUI.js"></script>
-<script type="text/javascript" src="/js/dc-tableview.min.js"></script>
+
 
 <!--This section will create an interactive visualisation using Leaflet.js for a map and dc.js for charts -->
 <script type="text/javascript">
 var yearChart, //charts defined globally to allow resetting through text in divs
 classificationChart,
-mediumChart;
-
- // Hugh had to resolve a version conflict here 
-var filterCluster; //defined globally to allow selection by div but uses dc.js scoped functions  
+mediumChart,
+<!-- lowerbound, -->
+<!-- upperbound; -->
+ // Hugh had to resolve a version conflict here
+var filterCluster; //defined globally to allow selection by div but uses dc.js scoped functions
+var filterCountry; //function created here, but defined in data section
 var clusterText; //defined globally, to be sorted later...
 
 function getImg() {
@@ -169,13 +173,20 @@ function getImg() {
 
 $.getJSON("clusters/casestudy.json", function (data) {
 	clusterText=data
-	console.log(clusterText)
 });
+
+clusterInClusterText =function(clusterID){
+	for (var i=0; i < clusterText.length; i++) {
+		if (clusterText[i].id === clusterID) {
+			return true;
+		}
+	}
+	return false
+}
 
 clusterName = function(clusterID) {
 	for (var i=0; i < clusterText.length; i++) {
 		if (clusterText[i].id === clusterID) {
-			console.log('cluster found: '+clusterID)
 			return clusterText[i].name;
 		}
 	}
@@ -185,17 +196,15 @@ clusterName = function(clusterID) {
 clusterDesc = function(clusterID) {
 	for (var i=0; i < clusterText.length; i++) {
 		if (clusterText[i].id === clusterID) {
-			console.log('cluster found: '+clusterID)
 			return clusterText[i].description;
 		}
 	}
-	return ""
+	return "No description found."
 };
 
 function artInfo(objectID){
 
-	var objectID;
-	var metURL = 'https://collectionapi.metmuseum.org/public/collection/v1/objects/' + objectID;
+	var metURL = 'https://collectionapi.metmuseum.org/public/collection/v1/objects/' + String(objectID);
 	fetch(metURL).then((resp) => resp.text()).then((body) => { //Pull MET DATA and insert into table
 		var data = JSON.parse(body);
 		var artNm = data.title;
@@ -219,8 +228,13 @@ function artInfo(objectID){
 		document.getElementById('Credit').innerHTML = art.credit_Line;
 		document.getElementById('Artist').innerHTML = art.Artist;
 		document.getElementById('artImg').src = artImg
-
-
+		console.log(artImg)
+		if (artImg=="") {
+			$("#imgButton").html('No Image');
+			document.getElementById("artImg").style.display = "none";
+		} else{
+			$("#imgButton").html('Show Image');
+		}
 
 	});
 
@@ -256,9 +270,8 @@ function addMap(){
 		$('#map-canvas').block({ message: '<h1> Loading Data</h1>' });
 		var url = "http://dev.spatialdatacapture.org:8872/data"
 		console.log("about to get data from server")
-		d3.json(url,function(json){    ///change for server data. AND CHANGE Class_General to class
+		d3.json(url,function(json){
 			console.log("server gave me data")
-			console.log(json);
 			drawCharts(json);
 			$('#map-canvas').unblock();
 		});
@@ -280,7 +293,7 @@ function addMap(){
 	};
 	object_browser.addTo(map);
 	var showRecord; //function created here, but defined in data section
-	var filterCountry; //function created here, but defined in data section
+
 	info.onAdd = function (map) {
 		this._div = L.DomUtil.create('div', 'info'); // create a div with a class "info"
 		this.update();
@@ -380,8 +393,8 @@ function addMap(){
 		var yearRounding = 25;       //object year data is rounded to the number of years as given here.
 				yearDimension = artworks.dimension(function(d) {return d['object_begin_date']- d['object_begin_date'] % yearRounding;}),
 				yearGroup = yearDimension.group();
-				lowerbound = yearDimension.bottom(1)[0]["object_begin_date"];
-				upperbound = yearDimension.top(1)[0]["object_begin_date"];
+				<!-- lowerbound = yearDimension.bottom(1)[0]["object_begin_date"]; -->
+				<!-- upperbound = yearDimension.top(1)[0]["object_begin_date"]; -->
 		yearChart = dc.barChart('#year-chart'); //charts defined globally to allow resetting through text in divs
 		var classificationDimension = artworks.dimension(function(d) {return d.class;}),
 				classificationGroup = classificationDimension.group();
@@ -407,6 +420,8 @@ function addMap(){
 		addCharts(); //creates crossfilter charts
 		finaliseMap(); //adds the map elements that relied on data loading - the legend, info control, and colouring
 		updateMap();
+		updateClusterDesc();
+
 		yearChart.on('filtered', function(chart) {
 			updateMap()
 		});
@@ -417,6 +432,10 @@ function addMap(){
 			updateMap()
 		});
 
+		clusterChart.on('filtered', function(chart) {
+			updateClusterDesc()
+			updateMap()
+		});
 		returnCluster = function (objectID) {
 			for (var i=0; i < response.length; i++) {
 				if (response[i]["Object ID"] === objectID) {
@@ -432,15 +451,15 @@ function addMap(){
 			classificationChart.filterAll();
 			mediumChart.filterAll();
 			countryDimension.filterAll();
+			filterCountry();
 			clusterChart.filterAll();
 			if (clusterID === -1) {
 				console.log("filter all")
 			} else{
 				console.log("applying filter of "+clusterID)
-				clusterChart.filter(clusterID)
+			clusterChart.filter(clusterID)
+			dc.redrawAll()
 			}
-			dc.redrawAll();
-			updateMap();
 		};
 		var resizeTimer;
 		$(window).resize(function() {
@@ -462,7 +481,7 @@ function addMap(){
 				colorDomain(countryFiltersGroup());
 				countries.eachLayer(function(featureInstanceLayer) {
 					featureInstanceLayer.setStyle({
-						fillColor: color(artworksCountryCount(featureInstanceLayer.feature))
+						fillColor: (artworksCountryCount(featureInstanceLayer.feature)===0 && artworksUnfilteredCountryCount(featureInstanceLayer.feature)!=0) ? 'gray' : color(artworksCountryCount(featureInstanceLayer.feature)),
 					});
 				});
 			// };
@@ -473,6 +492,18 @@ function addMap(){
 
 
 		}
+
+		function updateClusterDesc(){
+				if (clusterChart.filters().length===0) {
+					var text = "Currently exploring the entire MET museum's online collection."
+				} else {
+					var clusterID = parseInt(clusterChart.filters()[0])
+					console.log(clusterID)
+					text = clusterDesc(clusterID)
+				}
+				$("#cluster-text").html('<p>'+text+'</p>')
+		}
+
 		function artworksCount(d) {
 			// if (mapZoom) {
 			// 	return artworksCityCount(d);
@@ -499,6 +530,16 @@ function addMap(){
 				return(0)
 			}
 		}
+
+		function artworksUnfilteredCountryCount(d){
+			var v = countryGroup.all().filter(function(item) { return item.key === d.properties.NAME; })  //city name
+			if (v.length==0) {
+				return (0)
+			} else{
+				return (v[0].value)
+			}
+		}
+
 		function colorDomain(array){ //this function is passed an array of values and creates a logarithmic scale for the non-zero elements.
 			var values = array.map(e => e["value"]).filter(function(a){return a >0;});
 			values.sort(function(a, b){return a-b});
@@ -529,17 +570,17 @@ function addMap(){
 			.dimension(yearDimension)
 			.group(yearGroup)
 			.elasticY(true)
-			// .elasticX(true)
+			<!-- .elasticX(true) -->
 			.round(dc.round.floor)
 			.alwaysUseRounding(true)
-			.x(d3.scaleLinear().domain([0,2020]))
+			.x(d3.scaleLinear().domain([-1000,2020]))
 			.renderHorizontalGridLines(true)
 			// .yAxisLabel("Number")
 			// .xAxisLabel("Year")
 			.barPadding(0)
 	//		.turnOnControls(true)
-			// yearChart.xAxisMax = function() { return Math.min( 2025,upperbound); };
-			// yearChart.xAxisMin = function() { return Math.max(-2000,lowerbound); };
+			<!-- yearChart.xAxisMax = function() { return Math.min( 2025,upperbound); }; -->
+			<!-- yearChart.xAxisMin = function() { return Math.max(-2000,lowerbound); }; -->
 			// console.log()
 			classificationChart
 			.dimension(classificationDimension)
@@ -554,6 +595,17 @@ function addMap(){
 			.group(clusterGroup)
 			.title(function (d){return 'Cluster: ' + d.key +' '+clusterName(d.key);})
 			.filterDisplayed(function (d) {return (d.key>-1 && d.value>0);})
+			.order(function (a,b) {
+				if (!clusterInClusterText(a.key) && !clusterInClusterText(b.key)) {
+					return a.value > b.value ? -1 : b.value > a.value ? 1 : 0
+				} else if (clusterInClusterText(a.key) && !clusterInClusterText(b.key)) {
+					return -1
+				} else if (!clusterInClusterText(a.key) && clusterInClusterText(b.key)) {
+					return 1
+				} else {
+					return a.value > b.value ? -1 : b.value > a.value ? 1 : 0
+				}
+			})
 			.promptText('All artworks')
 			dc.renderAll();
 
@@ -563,24 +615,38 @@ function addMap(){
 		function finaliseMap() {
 
 			filterCountry=function(e){
-				var currentCountry = e.target.feature.properties.NAME;
-				if (countryFilters.includes(currentCountry)){
-					var index = countryFilters.indexOf(currentCountry)
-					countryFilters.splice(index,1);
+				if (e) {
+					var currentCountry = e.target.feature.properties.NAME;
+					if (countryFilters.includes(currentCountry)){
+						var index = countryFilters.indexOf(currentCountry)
+						countryFilters.splice(index,1);
+					} else {
+						countryFilters.push(currentCountry);
+					}
 				} else {
-					countryFilters.push(currentCountry);
+					countryFilters=[];
 				}
+				console.log("about to filter");
+				console.log(countryFilters);
 
 				countryDimension.filter(function (d) {return countryFilters.length===0 || countryFilters.includes(d);});
+				updateCountriesChart();
 				updateMap();
 				dc.redrawAll();
+			};
+
+			updateCountriesChart=function(){
+				var countriesList = countryFilters.length===0 ? "showing all":countryFilters.join(", ");
+				var resetLink = countryFilters.length===0 ? "": "  <a href='javascript:countryFilters=[];filterCountry();'>reset</a>";
+				console.log(resetLink)
+				$("#countries-chart").html("Countries: "+countriesList+resetLink)
 			};
 
 			countryFiltersGroup=function (){
 				if (countryFilters.length===0) {
 					return countryGroup.all();
 				} else{
-					var filteredArray = countryGroup.all().filter(function(item) { return countryFilters.includes(item.key) ; })
+					var filteredArray = countryGroup.all().filter(function(item) { return countryFilters.includes(item.key) ; });
 					return filteredArray
 				}
 
@@ -600,8 +666,6 @@ function addMap(){
 				}
 				var std = Math.pow(stdNumerator/denominator,0.5)
 				return Math.round(mean-std).toLocaleString() +" - " + Math.round(mean+std).toLocaleString()
-				c
-				onsole.log(array)
 				//var mean = yearDimension.top(Infinity)
 			};
 
@@ -625,9 +689,9 @@ function addMap(){
 					var currentCountry = d.properties.NAME
 					countryDimension.filter(function (e) {return e === currentCountry && (countryFilters.length===0 || countryFilters.includes(e));});
 					var countryHTML = '<b>' + currentCountry + '</b><br/>' +
-					artworksCount(d).toLocaleString() + ' artworks<br/>' + (artworksCount(d) ?
-						yearRange()  + ' main years<br/>' + (classificationGroup.top(1) ?
-							classificationGroup.top(1)[0].key+ ' main class<br/>'
+					'Artworks:' +artworksCount(d).toLocaleString() + '<br/>' + (artworksCount(d) ?
+						'Years: '+ yearRange()  + '<br/>' + (classificationGroup.top(1) ?
+							'Main Class: '+classificationGroup.top(1)[0].key.charAt(0).toUpperCase() + classificationGroup.top(1)[0].key.slice(1)+ '<br/>'
 						:"")
 					:"");
 					countryDimension.filter(function (e) {return countryFilters.length===0 || countryFilters.includes(e);})
@@ -637,47 +701,40 @@ function addMap(){
 				this._div.innerHTML = '<h4>' + all.value().toLocaleString() +  ' Artworks'+'</h4>' + '<br/>'+ countryHTML
 			};
 			info.addTo(map);
-			object_browser.update = function () {
-	//			this._div.innerHTML =
-			};
+
 
 
 			function countryStyle(feature) {   //choropleth styling
 				return {
-					fillColor: color(artworksCountryCount(feature)),
+					fillColor: (artworksCountryCount(feature)===0 && artworksUnfilteredCountryCount(feature)!=0) ? 'gray': color(artworksCountryCount(feature)),
 					weight: 2,
 					opacity: 1,
 					color: 'gray',
 					dashArray: '',
 					fillOpacity: 0.6
-
 				}
-
-
-
-
 			}
 			L.Util.setOptions(countries,{style:countryStyle})
 
 			showRecord=function (){
-				<!-- var records =yearDimension.top(Infinity); -->
-				<!-- var length = Math.min(50, records.length) -->
-				<!-- function shuffle(array) { -->
-					<!-- var results = new Array(length) -->
-					<!-- var i = array.length -->
-					<!-- while(0!=length) { -->
-						<!-- var j = Math.floor(Math.random() * (i)); -->
-						<!-- i--; -->
-						<!-- length--; -->
-						<!-- var temp = array[i]; -->
-						<!-- array[i] = array[j]; -->
-						<!-- array[j] = temp; -->
-						<!-- results[length]=array[i] -->
-					<!-- } -->
-					<!-- return results -->
-				<!-- } -->
-				<!-- var data = shuffle(records); -->
-				var data = yearDimension.bottom(1000)
+				var records =yearDimension.top(Infinity);
+				var length = Math.min(100, records.length)
+				function shuffle(array) {
+					var results = new Array(length)
+					var i = array.length
+					while(0!=length) {
+						var j = Math.floor(Math.random() * (i));
+						i--;
+						length--;
+						var temp = array[i];
+						array[i] = array[j];
+						array[j] = temp;
+						results[length]=array[i]
+					}
+					return results
+				}
+				var data = shuffle(records);
+				data.sort((a,b)=>a.object_begin_date-b.object_begin_date)
 				var artList = []; //Artworks return from user button selections
 				function capitalizeFirstLetter(string) {
 					if (typeof string === 'string' || string instanceof String) {
@@ -693,7 +750,8 @@ function addMap(){
 				for (var i = 0; i < data.length; i++){
 					//Generate link for artwork image
 					var artNm = capitalizeFirstLetter(data[i].object_name);
-					var imgLbl = "<button onclick = 'artInfo(" + data[i]['Object ID'] + ")'>"+ data[i].object_name + "</button>";
+					var imgLbl =  "<a href='javascript:artInfo("+data[i]['Object ID']+");'>"+data[i].object_name+"</a>"
+					// "<button onclick = 'artInfo(" +  + ")'>"+ data[i].object_name + "</button>";
 					//try and catch for any null values, push art object clusterID, imgLbl, object_begin_date
 
 					artList.push({"Name" : imgLbl, "Country" : capitalizeFirstLetter(data[i].country),  "Begin Date"  : data[i].object_begin_date, "Medium": capitalizeFirstLetter(data[i].onclear_medium), "Classification" : capitalizeFirstLetter(data[i]["class"])});
@@ -722,7 +780,7 @@ function addMap(){
 					});
 
 					json.map(function(row) {
-						bodyRows += '<tr style="text-align: left; padding-left: 2px; padding-right: 2px; padding-top: 1px; padding-bottom: 1px; border-bottom: 1px solid #ddd;">';
+						bodyRows += '<tr style="text-align: left; padding-left: 3px; padding-right: 3px; padding-top: 1px; padding-bottom: 1px; border-bottom: 1px solid #ddd;">';
 
 						cols.map(function(colName) {
 							bodyRows += '<td>' + row[colName] + '</td>';
