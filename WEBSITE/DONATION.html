@@ -104,6 +104,14 @@ body, html {
 
 var data = [];
 
+
+// Hugh Wednesday: there's a bug here that I couldn't find. 
+// Basically the two subsets work ok but using the full dataset button
+// causes the page to slow down and chrome starts to ask if I want to kill the page
+// Checked memory usage but because all of the memory allocated to the full data chart is freed it's not that. It maxes out at ~100k used which is less than the map page. 
+// Sorry, could be because we aren't using the redraw() function from high charts. 
+
+
 // full_data query loads fine in the browser
 var full_data = "http://dev.spatialdatacapture.org:8872/acq/no/no"
 var reduced_data = "http://dev.spatialdatacapture.org:8872/timeline/group"
