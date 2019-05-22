@@ -11,6 +11,7 @@
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 	<style>
+	body,h1,h2,h3,h4,h5,h6,p {font-family: "Raleway", sans-serif}
 	.info {
 	    padding: 6px 8px;
 	    font: 14px/16px Arial, Helvetica, sans-serif;
@@ -82,7 +83,8 @@
 
 					<div style = 'position: absolute; height: 80%; margin-top: 10%;'>
 						<img style = 'position: absolute;  height: 100%; width: 100%;' id = 'artImg' src = ""> </img>
-						<table style = 'color: white; opacity: 2; border-spacing: 15px;'>
+
+						<table style = 'font-size: 15px; color: white; opacity: 2; border-spacing: 15px;'>
 							<tr>
 								<td>Title:   </td>
 								<td id = "Title"></td>
@@ -144,8 +146,8 @@
 <script type="text/javascript" src="https://d3js.org/d3.v4.min.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/crossfilter/1.3.12/crossfilter.min.js"></script>
 <script type="text/javascript" src="https://unpkg.com/dc@3.0.10/dc.js"></script>
-<script type="text/javascript" src="/js/jquery.blockUI.js"></script>
-<script type="text/javascript" src="/js/dc-tableview.min.js"></script>
+<script type="text/javascript" src="./js/jquery.blockUI.js"></script>
+<script type="text/javascript" src="./js/dc-tableview.min.js"></script>
 
 <!--This section will create an interactive visualisation using Leaflet.js for a map and dc.js for charts -->
 <script type="text/javascript">
@@ -217,13 +219,12 @@ function artInfo(objectID){
 		document.getElementById('ObjectDate').innerHTML = art.ObjectDates;
 		document.getElementById('Credit').innerHTML = art.credit_Line;
 		document.getElementById('Artist').innerHTML = art.Artist;
-		document.getElementById('artImg').src = artImg
-
+		document.getElementById('artImg').src = artImg;
 
 
 	});
 
-	document.getElementById('clusterButton').innerHTML = "<button onclick='filterCluster("+objectID+")'>GetCluster</button>";
+	document.getElementById('clusterButton').innerHTML = "<button onclick='filterCluster("+objectID+")'>Similar Artworks</button>";
 
 
 }
@@ -296,9 +297,9 @@ function addMap(){
 	function countryDefaultStyle(feature) {   //loads a default style, to be replaced when the data has loaded
 		return {
 			// fillColor: color(artworksCountryCount(feature)),    //loads as blank and then updated
-			weight: 2,
+			weight: 0,
 			opacity: 1,
-			color: 'gray',
+			color: 'black',
 			dashArray: '',
 			fillOpacity: 0.6
 		}
@@ -714,8 +715,6 @@ function addMap(){
 					classes = classes || '';
 
 
-
-
 					cols.map(function(col) {
 						headerRow += '<th>' + capitalizeFirstLetter(col) + '</th>';
 					});
@@ -730,7 +729,7 @@ function addMap(){
 						bodyRows += '</tr>';
 					});
 
-					return '<table class="' +
+					return '<table style = "border: 0px;" class="' +
 								 classes +
 								 '" style="border-collapse: collapse;border: 1px solid black;"><thead style="text-align: left; padding-left: 2px; padding-right: 2px; padding-top: 1px; padding-bottom: 1px; border-bottom: 1px solid #ddd;"><tr>' +
 								 headerRow +
