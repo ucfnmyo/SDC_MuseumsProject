@@ -2,12 +2,6 @@
 Interactive web visualization of museum data.
 
 ## map to-dos in vague order of priority
-- update Clusters info panel to provide a space for cluster name and description. 
-- create a countries filter reset button
-- change styling to differentiate between countries with zero artwork and those which have artworks but are currently filtered out.
-- grey out getimage button if there is no associated image. 
-- add the table header which gives the current date and country filters used
-- format the country stat text
 - make the country stats discount unknown/other as main class. add Medium
 - change the bar graph bar thickness.probably requires redefining the xaxis scale function.
 
