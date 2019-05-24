@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <head>
-	<title>Artwork Explorer</title>
+	<title>Artwork Explorer: Map</title>
 	<link rel='stylesheet' id='font-css'  href='./css/style.css' type='text/css' media='all' />
 	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css" integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA==" crossorigin=""/>
 	<link href='https://unpkg.com/dc@3.0.10/dc.css' rel='stylesheet' type='text/css'>
@@ -12,6 +12,7 @@
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
 	<style>
+	body,h1,h2,h3,h4,h5,h6,p {font-family: "Raleway", sans-serif}
 	.info {
 	    padding: 6px 8px;
 	    font: 14px/16px Arial, Helvetica, sans-serif;
@@ -28,26 +29,99 @@
 	.legend {
 	    line-height: 18px;
 	    color: #555;
+			width: 200px;
+
 	}
 	.legend i {
 	    width: 18px;
 	    height: 18px;
 	    float: left;
-	    margin-right: 8px;
 	    opacity: 0.7;
 	}
 	#artImg {
-		position: static;
+		position: absolute;
+		top: 0;
 	  width: 100%;
 	  text-align: center;
 		display: none;
-	}
-	.w3-bar,button {font-family: "Montserrat", sans-serif}
+		height: 100%;
+}
+.button {
+  display: inline-block;
+  border-radius: 4px;
+  background-color: #f4511e;
+  border: none;
+  color: #FFFFFF;
+  text-align: center;
+  font-size: 15px;
+  width: 140px;
+	height: 30px;
+  transition: all 0.5s;
+  cursor: pointer;
+  margin: 5px;
+}
+
+.button span {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  transition: 0.5s;
+}
+
+.button span:after {
+  content: '\00bb';
+  position: absolute;
+  opacity: 0;
+  top: 0;
+  right: -20px;
+  transition: 0.5s;
+}
+
+.button:hover span {
+  padding-right: 25px;
+}
+
+.button:hover span:after {
+  opacity: 1;
+  right: 0;
+}
+#overlay {
+	display: none;
+	width: 100%;
+	height: 55%;
+	position absolute;
+	background-color: rgba(0,0,0,0.8);
+	z-index: 2;
+	cursor: pointer;
+	padding: 10px;
+	margin-top: 30px;
+
+}
+#text{
+  position: absolute;
+  top: 33%;
+  left: 50%;
+  font-size: 20px;
+  color: white;
+  padding: 50px;
+  transform: translate(-50%,-50%);
+  -ms-transform: translate(-50%,-50%);
+	width: 1200px;
+
+}
+.my-custom-scrollbar {
+position: relative;
+height: 200px;
+overflow: auto;
+}
+.table-wrapper-scroll-y {
+display: block;
+}
+
 	</style>
 </head>
 <body>
 	<div id='wrapper'>
-		<!-- Navbar (sit on top) -->
 		<!-- Navbar (sit on top) -->
 		<div class="w3-top">
 		  <div class="w3-bar w3-white w3-card" id="myNavbar">
@@ -74,71 +148,90 @@
 								</div>
 								</div>
 				</div>
-		    </div>
-		<div style = 'margin-top: 17px;' id='main'>
-			<div style = 'width: 1700px;' id='map-canvas' >
-				<div style = 'width: 30%; background-color: white; z-index: 10;' id='selectors'>
-					<div id='year-chart-container'>
-						<div id='year-chart'>Year of Artwork (click and drag filter)
-							<a class='reset'
-							href='javascript:yearChart.filterAll();dc.redrawAll();'
-							style="display: none; float: right; margin-right: 50px;">reset</a>
+		   </div>
+
+		<div style = 'margin-top: 17px; height: 94%;' id='main'>
+			<div id='map-canvas' >
+
+						<div id = "artDetail" style = "font-family: 'Raleway', sans-serif; pointer-events: none; color: white; position: absolute; float:right; right:0; bottom:0; width: 1200px; height: 865px; background-color: rgba(0,0,0,0);">
+						<button style = 'position: absolute; margin-left: 500px; pointer-events: auto;' onclick="on()" class="w3-button w3-red w3-padding-large w3-large w3-margin-top w3-hover-opacity-on">HELP</button>
+						<div style = 'pointer-events: auto;' id="overlay" onclick="off()">
+							<div id="text">
+								<h4> The MET Art Visualiser is an interactive tool that allows the user to navigate over 400,000 works of art from the MET Art collection on a map. Various informative tools are presented to the user to enable endless exploration of over 200 types of artwork. </h4>
+								<h3> How use the dashboard:<h3>
+									<ol style = 'font-size: 18px;'>
+									<li> Select desired time range. Simply click and drag on the time range chart at the top.</li>
+									<li> 'Select Category' dropdown menu enables you to filter through over 200 categories of artwork. </li>
+									<li> 'Select Medium' allows you to filter through artworks by mateiral or techniques used in their production.</li>
+									<li> Click the countries you are interested in to display their artworks on the artwork table at the bottom of the dashboard.</li>
+									<li> The artwork table provides the name, country, medium and classification of the artwork, click on an object's name to learn more about it.</li>
+									<li> Use the Artwork Details section to look further into your selected artwork. More details about the artist and credit line are given. </li>
+									<li> Click 'Show Image' to see an image of your selected artwork. The 'Similar Artworks' button reveals artworks associated to the selected artwork through a clustering algorithm that grouped artworks of similar category, materials and techniqiues (go to about to learn more). </li>
+
+									</ol>
+								</div>
+							</div>
+							<div style = ' position: fixed; pointer-events: auto; margin-top: 2px; float: right; height: 100% ; width: 35%; right: 0; z-index: 10; background-color: rgba(0,0,0,0.6);' id='selectors'>
+								<div style = 'color: white;' id='year-chart-container'>
+									<div style = 'color: white; font-size: 20px;' id='year-chart'>Artwork per Year (click and drag to filter)
+										<a class='reset'
+										href='javascript:yearChart.filterAll();dc.redrawAll();'
+										style="display: none; float: right; margin-right: 50px;">reset</a>
+									</div>
+								</div>
+								<div style = 'font-size: 20px; margin-top: 10px;'>
+								<div style= 'width: 50%; float: left;' id='classification-chart'>Classification</div>
+								<div style = 'width: 50%; float: right:' id='medium-chart'>Medium</div>
+								<div style = 'position: absolute; margin-top: 70px;' id='countries-chart'>Countries Selected: </div>
+								</div>
+								<div style = 'margin-top: 120px;' id='table-header'></div>
+								<div style = 'pointer-events: auto; margin-top: 10px; overflow-y: scroll' id='table-container'>
+								<div class="table-wrapper-scroll-y my-custom-scrollbar" style = 'overflow-y: scroll' id='table-chart'></div>
+								</div>
+							</div>
+							<div style = 'pointer-events: auto; color: white; position: fixed; bottom:0; height: 40%; width:36%; background-color: rgba(0,0,0,0.6);'>
+								<div style = 'top:0; padding: 10px;'>
+									<h5 style = "color: white; opacity: 1; position: absolute; margin-left: 15px;"> Artwork details </h5>
+								<button class = 'button' id = 'imgButton' style ='margin-left: 40%; margin-top: 20px;' onclick="getImg()">Show Image</button>
+								<div style = 'float: right; margin-left: 20px; margin-top: 15px; margin-bottom: 10px;' id = 'clusterButton'> </div>
+								</div>
+								<div style = 'position: absolute; height: 80%;'>
+									<div>
+										<img style = 'display: none;' id = 'artImg' src = ""> </img>
+
+										<table style = ' color: white; font-size: 17px; opacity: 2; border-spacing: 15px;'>
+											<tr>
+												<td>Title:   </td>
+												<td id = "Title"></td>
+											</tr>
+											<tr>
+												<td>Artist:   </td>
+												<td id = "Artist"></td>
+											</tr>
+											<tr>
+												<td>Medium:   </td>
+												<td id = "Medium"></td>
+											</tr>
+											<tr>
+												<td>Object Dates:     </td>
+												<td id = "ObjectDate"> </td>
+											</tr>
+											<tr>
+												<td> Credit Line:  </td>
+												<td id = "Credit"> </td>
+											</tr>
+											<tr>
+												<td> Classification:  </td>
+												<td id = "classification"> </td>
+											</tr>
+										</table>
+									</div>
+
 						</div>
 					</div>
-					<div>
-					<div style= 'width: 50%; float: left;' id='classification-chart'>Classification</div>
-					<div style = 'width: 50%; float: right:' id='medium-chart'>Medium</div>
-					</div>
-					<div id='countries-chart'>Countries Selected: </div>
-					<div id='table-header'></div>
-					<div id='table-container'>
-						<div id='table-chart'></div>
-					</div>
 				</div>
-				<div id = 'cluster-container' style ='display: block;'>
-				</div>
-				<div id = "artDetail" style = "position: absolute; right:50%; bottom:0; width: 500px; height: 350px; z-index: -2;background-color: rgba(0, 0, 0, 0.6); display: none;">
-					<!--    -->
-					<div style = 'position: absolute; top: 0; width: 100%; height: 20%;'>
-						<h5 style = "color: white; opacity: 1; position: absolute; margin-top: 10px; margin-left: 5%"> Artwork details </h5>
-						<button class = 'button' id = 'imgButton' style ='color: white; background-color: red; opacity: 1; position: absolute; margin-left: 50%; margin-top: 10px;' onclick="getImg()">Show Image</button>
-						<div id = 'clusterButton' style = 'color: white; background-color: red; position: absolute; margin-top: 10px; margin-left:75%;'> </div>
-					</div>
-
-
-					<div style = 'position: absolute; height: 80%; margin-top: 10%;'>
-						<img style = 'position: absolute;  height: 100%; width: 100%; display: none;' id = 'artImg' src = ""> </img>
-
-						<table style = 'font-size: 20px; color: white; opacity: 2; border-spacing: 15px;'>
-							<tr>
-								<td>Title:   </td>
-								<td id = "Title"></td>
-							</tr>
-							<tr>
-								<td>Artist:   </td>
-								<td id = "Artist"></td>
-							</tr>
-							<tr>
-								<td>Medium:   </td>
-								<td id = "Medium"></td>
-							</tr>
-							<tr>
-								<td>Object Dates:     </td>
-								<td id = "ObjectDate"> </td>
-							</tr>
-							<tr>
-								<td> Credit Line:  </td>
-								<td id = "Credit"> </td>
-							</tr>
-						</table>
-					</div>
-				</div>
-
-			</div>
-
-		</div>
-
 	</div>
+</div>
 
 <!-- The Javascript from external websites gets Loaded Here -->
 <script type='text/javascript' src='http://code.jquery.com/jquery-1.10.2.min.js?ver=1.10.2'></script>
@@ -148,6 +241,10 @@
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/crossfilter/1.3.12/crossfilter.min.js"></script>
 <script type="text/javascript" src="https://unpkg.com/dc@3.0.10/dc.js"></script>
 <script type="text/javascript" src="./js/jquery.blockUI.js"></script>
+
+<!-- <script type="text/javascript" src="/js/jquery.blockUI.js"></script> -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.blockUI/2.70/jquery.blockUI.js"></script>
+
 
 
 <!--This section will create an interactive visualisation using Leaflet.js for a map and dc.js for charts -->
@@ -160,6 +257,15 @@ mediumChart;
 var filterCluster; //defined globally to allow selection by div but uses dc.js scoped functions
 var filterCountry; //function created here, but defined in data section
 var clusterText; //defined globally, to be sorted later...
+
+//How to use button on and off functions
+function on() {
+  document.getElementById("overlay").style.display = "block";
+}
+
+function off() {
+  document.getElementById("overlay").style.display = "none";
+}
 
 function getImg() {
 	var x = document.getElementById("artImg");
@@ -209,24 +315,28 @@ function artInfo(objectID){
 		var artNm = data.title;
 		var id = data.objectID;
 		var medium =  data.medium;
-		var yrs = data.objectBeginDate + " - " + data.objectEndDate;
+		var yrs = data.objectBeginDate + " to " + data.objectEndDate;
 		var credit = data.creditLine;
 		var c_name = data.country;
 		var artImg = data.primaryImage;
 		var artist = data.artistDisplayName + ", " + data.artistDisplayBio;
+		var classification = data.classification
 		if (data.artistDisplayName === ""){
 			artist = 'Unknown';
 		}
 		console.log(data);
 
-		var art = {"Title" : artNm, "Medium" : medium,  "ObjectDates"  : yrs, "credit_Line": credit, "Artist": artist};
+		var art = {"Title" : artNm, "Medium" : medium,  "ObjectDates"  : yrs, "credit_Line": credit, "Artist": artist, "Classification": classification};
 
 		document.getElementById('Title').innerHTML = art.Title;
 		document.getElementById('Medium').innerHTML = art.Medium;
 		document.getElementById('ObjectDate').innerHTML = art.ObjectDates;
 		document.getElementById('Credit').innerHTML = art.credit_Line;
 		document.getElementById('Artist').innerHTML = art.Artist;
+		document.getElementById('classification').innerHTML = art.Classification;
+
 		document.getElementById('artImg').src = artImg
+
 		console.log(artImg)
 		if (artImg=="") {
 			$("#imgButton").html('No Image');
@@ -237,7 +347,7 @@ function artInfo(objectID){
 
 	});
 
-	document.getElementById('clusterButton').innerHTML = "<button onclick='filterCluster("+objectID+")'>GetCluster</button>";
+	document.getElementById('clusterButton').innerHTML = "<button style = 'position: relative; right: 5; top: 10;' class = 'button' onclick='filterCluster("+objectID+")'>Similar Artworks</button>";
 
 
 }
@@ -251,7 +361,7 @@ function addMap(){
 		.setMaxBounds([[90, -180],[-90, 180]]);
 	var layer = new L.StamenTileLayer("toner-background", {attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://www.openstreetmap.org/copyright">ODbL</a>.',});
 	map.addLayer(layer);
-	var selecter = L.control({position: 'topright'});
+	var selecter = L.control({position: 'topleft'});
 	selecter.onAdd = function(map){
 		this._div = L.DomUtil.create('div', 'info cluster'); // create a div with a class "info"
 		this.update();
@@ -259,7 +369,7 @@ function addMap(){
 	};
 
 	selecter.update = function () {
-		this._div.innerHTML ='<h4>Explore the MET museum</h4><div id = "cluster-text"></div><div id ="cluster-chart"></div>'
+		this._div.innerHTML ='<h4 "style = position: relative; top: 50px; left: 2000px;" >Explore the MET museum</h4><div "style = position: relative; top: 50px; left: 2000px;"  id = "cluster-text"></div><div "style = position: relative; top: 50px; left: 2000px;" id ="cluster-chart"></div>'
 	};
 
 	selecter.addTo(map);
@@ -309,7 +419,7 @@ function addMap(){
 	function countryDefaultStyle(feature) {   //loads a default style, to be replaced when the data has loaded
 		return {
 			// fillColor: color(artworksCountryCount(feature)),    //loads as blank and then updated
-			weight: 2,
+			weight: 0,
 			opacity: 1,
 			color: 'gray',
 			dashArray: '',
@@ -392,8 +502,8 @@ function addMap(){
 		var yearRounding = 25;       //object year data is rounded to the number of years as given here.
 				yearDimension = artworks.dimension(function(d) {return d['object_begin_date']- d['object_begin_date'] % yearRounding;}),
 				yearGroup = yearDimension.group();
-				lowerbound = yearDimension.bottom(1)[0]["object_begin_date"];
-				upperbound = yearDimension.top(1)[0]["object_begin_date"];
+				<!-- lowerbound = yearDimension.bottom(1)[0]["object_begin_date"]; -->
+				<!-- upperbound = yearDimension.top(1)[0]["object_begin_date"]; -->
 		yearChart = dc.barChart('#year-chart'); //charts defined globally to allow resetting through text in divs
 		var classificationDimension = artworks.dimension(function(d) {return d.class;}),
 				classificationGroup = classificationDimension.group();
@@ -414,7 +524,7 @@ function addMap(){
 		// var cityDimension = artworks.dimension(function(d) {return d.CityMatch;}),
 		// 		cityGroup = cityDimension.group();
 		var		color = d3.scaleThreshold() //a scaling function for the map colouring
-				.range(["#f7fbff","#deebf7","#c6dbef","#9ecae1","#6baed6","#4292c6","#2171b5","#08519c","#08306b"]);
+				.range(['#ffffcc','#ffeda0','#fed976','#feb24c','#fd8d3c','#fc4e2a','#e31a1c','#bd0026','#800026']);
 		var mapZoom = false; //toggles whether country or city data displayed
 		addCharts(); //creates crossfilter charts
 		finaliseMap(); //adds the map elements that relied on data loading - the legend, info control, and colouring
@@ -424,6 +534,7 @@ function addMap(){
 		yearChart.on('filtered', function(chart) {
 			updateMap()
 		});
+
 		classificationChart.on('filtered', function(chart) {
 			updateMap()
 		});
@@ -569,17 +680,24 @@ function addMap(){
 			.dimension(yearDimension)
 			.group(yearGroup)
 			.elasticY(true)
-			// .elasticX(true)
+			<!-- .elasticX(true) -->
 			.round(dc.round.floor)
 			.alwaysUseRounding(true)
-			.x(d3.scaleLinear().domain([0,2020]))
+			.x(d3.scaleLinear().domain([-1000,2020]))
 			.renderHorizontalGridLines(true)
+			.barPadding(0)
+			.renderlet(function(yearChart){
+			    var colors = 'yellow'
+			    yearChart.selectAll('rect.bar').attr("style", "fill: " + colors);
+					// use key accessor if you are using a custom accessor
+			    });
+
 			// .yAxisLabel("Number")
 			// .xAxisLabel("Year")
-			.barPadding(0)
+
 	//		.turnOnControls(true)
-			// yearChart.xAxisMax = function() { return Math.min( 2025,upperbound); };
-			// yearChart.xAxisMin = function() { return Math.max(-2000,lowerbound); };
+			<!-- yearChart.xAxisMax = function() { return Math.min( 2025,upperbound); }; -->
+			<!-- yearChart.xAxisMin = function() { return Math.max(-2000,lowerbound); }; -->
 			// console.log()
 			classificationChart
 			.dimension(classificationDimension)
@@ -636,7 +754,7 @@ function addMap(){
 
 			updateCountriesChart=function(){
 				var countriesList = countryFilters.length===0 ? "showing all":countryFilters.join(", ");
-				var resetLink = countryFilters.length===0 ? "": "  <a href='javascript:countryFilters=[];filterCountry();'>reset</a>";
+				var resetLink = countryFilters.length===0 ? "": "  <a style = 'color: red;' href='javascript:countryFilters=[];filterCountry();'>reset</a>";
 				console.log(resetLink)
 				$("#countries-chart").html("Countries: "+countriesList+resetLink)
 			};
@@ -690,7 +808,9 @@ function addMap(){
 					var countryHTML = '<b>' + currentCountry + '</b><br/>' +
 					'Artworks:' +artworksCount(d).toLocaleString() + '<br/>' + (artworksCount(d) ?
 						'Years: '+ yearRange()  + '<br/>' + (classificationGroup.top(1) ?
-							'Main Class: '+classificationGroup.top(1)[0].key.charAt(0).toUpperCase() + name.slice(1)+ '<br/>'
+
+							'Main Class: '+classificationGroup.top(1)[0].key.charAt(0).toUpperCase() + classificationGroup.top(1)[0].key.slice(1)+ '<br/>'
+
 						:"")
 					:"");
 					countryDimension.filter(function (e) {return countryFilters.length===0 || countryFilters.includes(e);})
@@ -706,7 +826,7 @@ function addMap(){
 			function countryStyle(feature) {   //choropleth styling
 				return {
 					fillColor: (artworksCountryCount(feature)===0 && artworksUnfilteredCountryCount(feature)!=0) ? 'gray': color(artworksCountryCount(feature)),
-					weight: 2,
+					weight: 0,
 					opacity: 1,
 					color: 'gray',
 					dashArray: '',
@@ -749,11 +869,11 @@ function addMap(){
 				for (var i = 0; i < data.length; i++){
 					//Generate link for artwork image
 					var artNm = capitalizeFirstLetter(data[i].object_name);
-					var imgLbl =  "<a href='javascript:artInfo("+data[i]['Object ID']+");'>"+data[i].object_name+"</a>"
+					var imgLbl =  "<a style = 'color: white;' href='javascript:artInfo("+data[i]['Object ID']+");'>"+data[i].object_name+"</a>"
 					// "<button onclick = 'artInfo(" +  + ")'>"+ data[i].object_name + "</button>";
 					//try and catch for any null values, push art object clusterID, imgLbl, object_begin_date
 
-					artList.push({"Name" : imgLbl, "Country" : capitalizeFirstLetter(data[i].country),  "Begin Date"  : data[i].object_begin_date, "Medium": capitalizeFirstLetter(data[i].onclear_medium), "Classification" : capitalizeFirstLetter(data[i]["class"])});
+					artList.push({"Name" : imgLbl, "Country" : capitalizeFirstLetter(data[i].country),  "Begin Date"  : data[i].object_begin_date, "Medium": capitalizeFirstLetter(data[i].onclear_medium)});
 				}
 				document.getElementById('table-chart').innerHTML = json2table(artList, 'table');
 				//This function transforms JSON objects to html table for side panel
@@ -777,7 +897,7 @@ function addMap(){
 					});
 
 					json.map(function(row) {
-						bodyRows += '<tr style="text-align: left; padding-left: 3px; padding-right: 3px; padding-top: 1px; padding-bottom: 1px; border-bottom: 1px solid #ddd;">';
+						bodyRows += '<tr style="text-align: left;">';
 
 						cols.map(function(colName) {
 							bodyRows += '<td>' + row[colName] + '</td>';
@@ -786,11 +906,13 @@ function addMap(){
 						bodyRows += '</tr>';
 					});
 
-					return '<table style = "border: 0px; font-size: 20px;" class="' +
-								 classes +
-								 '" style="border-collapse: collapse;border: 1px solid black;"><thead style="text-align: left; padding-left: 2px; padding-right: 2px; padding-top: 1px; padding-bottom: 1px; border-bottom: 1px solid #ddd;"><tr>' +
+
+					return '<table style = "font-size: 20px; border-spacing: 5px; text-align: left; overflow-y-y: scroll" class="table table-bordered table-striped mb-0">'
+								  + '<col width = 250 > <col width = 100 > <col width = 100> <col width = 200>'
+
+								  + '<tr>' +
 								 headerRow +
-								 '</tr></thead><tbody>' +
+								 '</tr></thead "style = display: block; font-size: 20px;"><tbody "style = display: block; overflow-y;">' +
 								 bodyRows +
 								 '</tbody></table>';
 				}
