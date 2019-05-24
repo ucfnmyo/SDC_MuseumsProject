@@ -85,12 +85,11 @@ html, body, #wrapper{
 }
 
 #countries-chart{
-  height: 40px;
+  height: 30px;
   width: 100%;
   padding-left: 10px;
   clear: both;
-  overflow-x: scroll;
-  overflow-y: hidden;
+  overflow: scroll;
 }
 
 
@@ -106,7 +105,7 @@ html, body, #wrapper{
 #table-container{
   clear: both;
   width: 100%;
-  height: calc(100% - 355px);
+  height: calc(100% - 350px);
   padding-left: 10px;
   padding-right: 10px;
   padding-bottom: 10px;
